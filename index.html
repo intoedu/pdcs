@@ -13,7 +13,7 @@
 <meta name="theme-color" content="#0E2245">
 <link rel="icon" href="assets/img/logo.png">
 <link rel="preload" href="assets/fonts/PretendardVariable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/style.css?v=08e2be67">
+<link rel="stylesheet" href="assets/css/style.css?v=913229e4">
 </head>
 <body>
 <a class="skip-link" href="#main">본문 바로가기</a>
@@ -61,7 +61,9 @@
   <!-- 히어로 -->
   <section class="hero">
     <div class="hero__media" aria-hidden="true">
-      <img src="assets/img/hero-main.jpg" alt="">
+      <div class="hero__slide is-active"><img src="assets/img/hero-main.jpg" alt=""></div>
+      <div class="hero__slide"><img src="assets/img/hero-nature.jpg" alt=""></div>
+      <div class="hero__slide"><img src="assets/img/hero-dorm.jpg" alt=""></div>
     </div>
     <div class="hero__veil" aria-hidden="true"></div>
     <div class="wrap">
@@ -73,6 +75,13 @@
           <a class="btn btn--primary" href="admission.html#form">입학 상담 신청하기</a>
           <a class="btn btn--ghost" href="#gallery">학교 둘러보기</a>
         </div>
+      </div>
+    </div>
+    <div class="hero__marks">
+      <div class="wrap">
+        <button class="hero__mark" type="button" data-go="0" aria-current="true" aria-label="본관 전경 사진 보기"></button>
+        <button class="hero__mark" type="button" data-go="1" aria-label="운동장 사진 보기"></button>
+        <button class="hero__mark" type="button" data-go="2" aria-label="기숙사동 사진 보기"></button>
       </div>
     </div>
     <div class="hero__scroll" aria-hidden="true">
@@ -203,6 +212,10 @@
           <h2 class="section-title">세계 140여 개국이<br>함께 쓰는 교육과정</h2>
           <p class="section-lead">검정 교과서를 따라가는 대신, 학생 각자가 자기 속도로 나아가는 자기주도 커리큘럼을 씁니다.</p>
           <p style="margin-top:26px"><a class="btn btn--outline" href="about.html">교육철학 보기</a></p>
+          <figure class="curriculum__photo">
+            <img src="assets/img/study.jpg" alt="칸막이로 나뉜 개인 책상에서 학생들이 각자 공부하는 학습실" loading="lazy">
+            <figcaption>한 교실에 같은 진도로 앉히지 않습니다. 각자의 자리에서, 각자의 속도로 나아갑니다.</figcaption>
+          </figure>
         </div>
         <div class="curriculum__list">
           <article class="curr-card reveal">
@@ -414,6 +427,6 @@
   <a class="btn btn--primary" href="admission.html#form">입학 상담 신청</a>
 </div>
 
-<script src="assets/js/main.js?v=d3410816"></script>
+<script src="assets/js/main.js?v=cf8d973e"></script>
 </body>
 </html>

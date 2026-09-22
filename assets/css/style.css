@@ -176,7 +176,21 @@ ul { margin: 0; padding: 0; list-style: none; }
 /* ── 히어로 ───────────────────────────── */
 .hero { position: relative; overflow: hidden; background: var(--navy-deep); min-height: min(100svh, 860px); }
 .hero__media { position: absolute; inset: -6% 0; will-change: transform; }
-.hero__media img { width: 100%; height: 100%; object-fit: cover; animation: kenBurns 16s ease-out forwards; }
+.hero__slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.4s var(--ease); }
+.hero__slide.is-active { opacity: 1; }
+.hero__slide img { width: 100%; height: 100%; object-fit: cover; }
+.hero__slide.is-active img { animation: kenBurns 9s ease-out forwards; }
+
+/* 지금 몇 번째인지만 조용히 알린다 — 숫자도, 재생 버튼도 두지 않는다 */
+.hero__marks { position: absolute; left: 0; right: 0; bottom: 40px; z-index: 3; }
+.hero__marks .wrap { display: flex; gap: 8px; }
+.hero__mark {
+  position: relative; width: 42px; height: 2px; padding: 0; border: 0; cursor: pointer;
+  background: rgba(255, 255, 255, .3); transition: background-color .4s var(--ease);
+}
+.hero__mark::before { content: ""; position: absolute; inset: -14px -3px; }
+.hero__mark:hover { background: rgba(255, 255, 255, .75); }
+.hero__mark[aria-current="true"] { background: var(--gold); }
 
 /* 장막 — 가로 그라데이션 + 위아래 비네팅 */
 .hero__veil { position: absolute; inset: 0; }
@@ -285,6 +299,9 @@ ul { margin: 0; padding: 0; list-style: none; }
 /* ── 커리큘럼 ─────────────────────────── */
 .curriculum { display: grid; grid-template-columns: 420px 1fr; gap: 64px; align-items: center; }
 .curriculum__list { display: flex; flex-direction: column; gap: 15px; }
+.curriculum__photo { margin: 34px 0 0; }
+.curriculum__photo img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 10px; }
+.curriculum__photo figcaption { margin-top: 13px; font-size: 14.5px; color: var(--muted); line-height: 1.8; }
 .curr-card {
   background: var(--paper); border: 1px solid var(--line); border-radius: 10px;
   padding: 26px 30px; display: flex; align-items: center; gap: 24px;
@@ -538,6 +555,8 @@ ul { margin: 0; padding: 0; list-style: none; }
   .hero__veil::after { display: none; }
   .hero__actions .btn { flex: 1 1 100%; }
   .hero__scroll { display: none; }
+  .hero__marks { bottom: 26px; }
+  .hero__mark { width: 34px; }
 
   .stats__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 0; padding: 28px 0; }
   .stats__item { padding: 0 20px; }
@@ -572,7 +591,8 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .hero__media img { animation: none !important; }
+  .hero__slide img { animation: none !important; }
+  .hero__slide { transition: none !important; }
   .hero__media { transform: none !important; }
   .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
   * { transition-duration: .01ms !important; }

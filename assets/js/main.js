@@ -48,6 +48,38 @@
     }, { passive: true });
   }
 
+  /* 히어로 사진 — 조용히 넘어간다 */
+  var slides = document.querySelectorAll('.hero__slide');
+  var marks = document.querySelectorAll('.hero__mark');
+  if (slides.length > 1) {
+    var idx = 0, timer = null, HOLD = 7000;
+
+    var show = function (i) {
+      idx = (i + slides.length) % slides.length;
+      for (var a = 0; a < slides.length; a++) slides[a].classList.toggle('is-active', a === idx);
+      for (var c = 0; c < marks.length; c++) {
+        if (c === idx) marks[c].setAttribute('aria-current', 'true');
+        else marks[c].removeAttribute('aria-current');
+      }
+    };
+    var start = function () { if (!reduced && !timer) timer = setInterval(function () { show(idx + 1); }, HOLD); };
+    var stop = function () { if (timer) { clearInterval(timer); timer = null; } };
+
+    start();
+
+    Array.prototype.forEach.call(marks, function (mark) {
+      mark.addEventListener('click', function () {
+        show(parseInt(mark.getAttribute('data-go'), 10) || 0);
+        stop(); start();
+      });
+    });
+
+    /* 다른 탭에 가 있는 동안에는 돌리지 않는다 */
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) stop(); else start();
+    });
+  }
+
   /* 스크롤 등장 */
   var targets = document.querySelectorAll('.reveal');
   if (reduced || !('IntersectionObserver' in window)) {
