@@ -75,9 +75,9 @@ ul { margin: 0; padding: 0; list-style: none; }
   text-transform: uppercase; color: var(--gold-dark);
 }
 .eyebrow--light { color: var(--gold); }
-.section-title { font-size: clamp(28px, 4vw, 46px); color: var(--navy-deep); margin-top: 14px; line-height: 1.3; letter-spacing: -0.03em; }
+.section-title { font-size: clamp(25px, 2.9vw, 37px); color: var(--navy-deep); margin-top: 13px; line-height: 1.38; letter-spacing: -0.022em; }
 .section-title--light { color: #fff; }
-.section-lead { margin-top: 18px; font-size: 16.5px; color: var(--muted); line-height: 1.95; }
+.section-lead { margin-top: 16px; font-size: 16px; color: var(--muted); line-height: 1.92; }
 
 .section { padding: clamp(56px, 8vw, 100px) 0; }
 .section--white { background: #fff; }
@@ -174,7 +174,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
 
 /* ── 히어로 ───────────────────────────── */
-.hero { position: relative; overflow: hidden; background: var(--navy-deep); height: 100svh; min-height: 620px; max-height: 1000px; }
+.hero { position: relative; overflow: hidden; background: var(--navy-deep); min-height: min(100svh, 860px); }
 .hero__media { position: absolute; inset: -6% 0; will-change: transform; }
 .hero__slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.2s var(--ease); }
 .hero__slide.is-active { opacity: 1; }
@@ -193,29 +193,29 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 .hero__inner {
   position: relative; display: flex; flex-direction: column; justify-content: center;
-  height: 100%; padding-top: 140px; padding-bottom: 130px; max-width: 900px;
+  min-height: min(100svh, 860px); padding-top: 156px; padding-bottom: 164px; max-width: 760px;
 }
 /* 라벨 — 골드 세로선을 세운다 */
 .hero .eyebrow {
-  position: relative; padding-left: 20px; font-size: 13px; letter-spacing: .26em;
+  position: relative; padding-left: 20px; font-size: 12px; letter-spacing: .24em;
 }
 .hero .eyebrow::before {
   content: ""; position: absolute; left: 0; top: 50%; width: 10px; height: 2px;
   background: var(--gold); transform: translateY(-50%);
 }
 .hero__title {
-  margin-top: 26px; font-size: clamp(38px, 6.6vw, 88px); color: #fff;
-  line-height: 1.16; letter-spacing: -0.035em; font-weight: 700;
-  text-shadow: 0 4px 34px rgba(4, 14, 30, .5);
+  margin-top: 24px; font-size: clamp(28px, 3.7vw, 54px); color: #fff;
+  line-height: 1.34; letter-spacing: -0.022em; font-weight: 700;
+  text-shadow: 0 3px 26px rgba(4, 14, 30, .46);
 }
 .hero__title em { font-style: normal; color: var(--gold); }
 .hero__lead {
-  margin-top: 30px; font-size: clamp(15px, 1.5vw, 18px); font-weight: 300;
+  margin-top: 26px; font-size: clamp(15px, 1.25vw, 17px); font-weight: 300;
   color: #DCE4F0; line-height: 1.95; text-shadow: 0 1px 14px rgba(4, 14, 30, .55);
-  max-width: 620px;
+  max-width: 560px;
 }
-.hero__actions { margin-top: 40px; display: flex; flex-wrap: wrap; gap: 12px; }
-.hero .btn { min-height: 58px; padding: 16px 36px; font-size: 16.5px; }
+.hero__actions { margin-top: 34px; display: flex; flex-wrap: wrap; gap: 11px; }
+.hero .btn { min-height: 54px; padding: 15px 32px; font-size: 16px; }
 /* 슬라이드 조작 — 멈추고, 넘기고, 어디쯤인지 보인다 */
 .hero__controls {
   position: absolute; left: 0; right: 0; bottom: 38px; z-index: 3;
@@ -273,7 +273,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .stats__item { padding: 0 26px; border-right: 1px solid var(--navy-line); }
 .stats__item:first-child { padding-left: 0; }
 .stats__item:last-child { border-right: 0; padding-right: 0; }
-.stats__num { font-size: clamp(24px, 2.9vw, 36px); font-weight: 700; color: var(--gold); line-height: 1.2; letter-spacing: -0.02em; }
+.stats__num { font-size: clamp(21px, 2.1vw, 28px); font-weight: 700; color: var(--gold); line-height: 1.3; letter-spacing: -0.015em; }
 .stats__label { margin-top: 6px; font-size: 13.5px; color: var(--on-navy-dim); line-height: 1.6; }
 
 /* ── 인사말 ───────────────────────────── */
@@ -559,8 +559,8 @@ ul { margin: 0; padding: 0; list-style: none; }
   .gnb a::after { display: none; }
   .gnb .btn { margin: 14px var(--gutter) 18px; }
 
-  .hero { height: 100svh; min-height: 560px; }
-  .hero__inner { justify-content: flex-end; padding-top: 104px; padding-bottom: 150px; }
+  .hero { min-height: min(100svh, 720px); }
+  .hero__inner { min-height: min(100svh, 720px); justify-content: flex-end; padding-top: 104px; padding-bottom: 148px; }
   .hero .btn { min-height: 54px; font-size: 16px; }
   .hero__lead { margin-top: 22px; }
   .hero__actions { margin-top: 28px; }
