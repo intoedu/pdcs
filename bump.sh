@@ -7,7 +7,7 @@ python3 - <<'PY'
 import pathlib, hashlib, re
 v = {p: hashlib.sha1(pathlib.Path(p).read_bytes()).hexdigest()[:8]
      for p in ("assets/css/style.css", "assets/js/main.js")}
-for name in ("index.html", "about.html", "admission.html"):
+for name in ("index.html", "about.html", "admission.html", "privacy.html"):
     p = pathlib.Path(name); s = p.read_text(encoding="utf-8")
     s = re.sub(r'href="assets/css/style\.css(\?v=[0-9a-f]+)?"',
                f'href="assets/css/style.css?v={v["assets/css/style.css"]}"', s)
