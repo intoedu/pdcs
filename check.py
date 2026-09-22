@@ -81,8 +81,20 @@ def check_source():
         for t in set(re.findall(r"0\d{1,2}-\d{3,4}-\d{4}", s)):
             if t not in TEL_OK:
                 fail(f"{name}: 학교 번호가 아닌 전화번호가 적혀 있다 — {t}")
+    # 상담 신청은 메일 한 곳으로만 간다.
+    # 예전엔 휴대폰이면 문자로 갈라져 신청을 놓치기 쉬웠다. 그 분기가 되살아나면 실패시킨다
+    js = open(os.path.join(ROOT, "assets/js/main.js"), encoding="utf-8").read()
+    if "sms:" in js:
+        fail("main.js: 신청이 문자로 가는 경로가 남아 있다 — 메일로 통일할 것")
+    if "mailto:" not in js:
+        fail("main.js: 신청을 보낼 메일 주소가 없다")
+    for name in PAGES:
+        s = open(os.path.join(ROOT, name), encoding="utf-8").read()
+        if re.search(r"내용이 담긴 <b>문자", s):
+            fail(f"{name}: 신청이 문자로 간다고 안내하고 있다 — 지금은 메일로만 간다")
+
     if not fails:
-        ok("금지어 · 제작용 흔적 · 죽은 링크 · 캐시 해시 — 이상 없음")
+        ok("금지어 · 제작용 흔적 · 죽은 링크 · 캐시 해시 · 신청 경로 — 이상 없음")
 
 
 # ── 브라우저로 띄워봐야 아는 것 ──────────────────────────────

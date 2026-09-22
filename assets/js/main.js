@@ -134,10 +134,11 @@
     }
   }
 
-  /* 상담 신청 — 서버 없이, 문자나 메일로 바로 보낸다 */
+  /* 상담 신청 — 서버 없이, 메일 한 곳으로 모은다.
+     예전에는 휴대폰이면 문자, 컴퓨터면 메일로 갈라졌다. 신청이 두 군데로
+     흩어져 놓치기 쉬웠으므로 기기와 상관없이 메일로 통일한다. */
   var form = document.getElementById('inquiry-form');
   if (form) {
-    var SMS_TO = '010-9665-7391';
     var MAIL_TO = 'bcia_k@naver.com';
 
     var val = function (id) {
@@ -187,23 +188,21 @@
       if (lack) { say('<b>' + lack + '</b>을(를) 입력해 주세요.'); return; }
 
       var body = compose();
-      var phone = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-      if (phone) {
-        location.href = 'sms:' + SMS_TO + '?body=' + encodeURIComponent(body);
-        say('문자 앱이 열립니다. <b>보내기</b>를 눌러 주세요.<br>열리지 않으면 아래 <b>작성 내용 복사</b>를 눌러 ' + SMS_TO + ' 로 보내 주십시오.');
-      } else {
-        location.href = 'mailto:' + MAIL_TO
-          + '?subject=' + encodeURIComponent('[입학 상담 신청] ' + (val('pname') || ''))
-          + '&body=' + encodeURIComponent(body);
-        say('메일 프로그램이 열립니다. <b>보내기</b>를 눌러 주세요.<br>열리지 않으면 아래 <b>작성 내용 복사</b>를 눌러 ' + MAIL_TO + ' 로 보내 주십시오.');
-      }
+      location.href = 'mailto:' + MAIL_TO
+        + '?subject=' + encodeURIComponent('[입학 상담 신청] ' + (val('pname') || ''))
+        + '&body=' + encodeURIComponent(body);
+      // 메일 앱이 설정돼 있지 않으면 아무 일도 일어나지 않는다.
+      // 그때 학부모가 막히지 않도록 복사 버튼과 받는 주소를 같이 알린다.
+      say('메일 앱이 열립니다. <b>보내기</b>를 눌러 주세요.'
+        + '<br>열리지 않으면 아래 <b>작성 내용 복사</b>를 누르고 <b>' + MAIL_TO + '</b> 로 보내 주십시오.'
+        + '<br>메일이 어려우시면 <a href="tel:041-425-0085" style="color:inherit"><b>041-425-0085</b></a> 로 전화 주셔도 됩니다.');
     });
 
     var copyBtn = document.getElementById('copy-form');
     if (copyBtn) {
       copyBtn.addEventListener('click', function () {
         var text = compose();
-        var done = function () { say('작성하신 내용을 복사했습니다. 문자나 메일에 붙여넣어 보내 주십시오.<br>문자 ' + SMS_TO + ' · 메일 ' + MAIL_TO); };
+        var done = function () { say('작성하신 내용을 복사했습니다. 메일에 붙여넣어 <b>' + MAIL_TO + '</b> 로 보내 주십시오.'); };
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(text).then(done, function () { say('<pre style="white-space:pre-wrap;margin:0;font-family:inherit">' + text + '</pre>'); });
         } else {
