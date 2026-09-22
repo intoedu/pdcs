@@ -49,63 +49,36 @@
     }, { passive: true });
   }
 
-  /* 히어로 사진 — 무엇을 보고 있는지만 알리고, 멈출 수 있게 한다 */
-  var hero = document.querySelector('.hero');
-  var slides = hero ? hero.querySelectorAll('.hero__slide') : [];
-  var cap = document.getElementById('hero-caption');
-  var holdBtn = hero ? hero.querySelector('.hero__hold') : null;
-
-  if (hero && slides.length > 1) {
-    var idx = 0, timer = null, paused = false;
-    var HOLD = 9000;
-
-    var tick = function () {
-      hero.classList.remove('is-playing');
-      void hero.offsetWidth;
-      if (!paused && !reduced) hero.classList.add('is-playing');
-    };
+  /* 히어로 사진 — 조용히 넘어간다 */
+  var slides = document.querySelectorAll('.hero__slide');
+  var marks = document.querySelectorAll('.hero__mark');
+  if (slides.length > 1) {
+    var idx = 0, timer = null, HOLD = 7000;
 
     var show = function (i) {
-      var prev = idx;
       idx = (i + slides.length) % slides.length;
-      if (prev === idx) return;
-      slides[prev].classList.add('is-leaving');
-      slides[prev].classList.remove('is-active');
-      setTimeout(function () { slides[prev].classList.remove('is-leaving'); }, 1200);
-      slides[idx].classList.add('is-active');
-      if (cap) cap.textContent = slides[idx].getAttribute('data-caption') || '';
-      tick();
+      for (var a = 0; a < slides.length; a++) slides[a].classList.toggle('is-active', a === idx);
+      for (var c = 0; c < marks.length; c++) {
+        if (c === idx) marks[c].setAttribute('aria-current', 'true');
+        else marks[c].removeAttribute('aria-current');
+      }
     };
+    var start = function () { if (!reduced && !timer) timer = setInterval(function () { show(idx + 1); }, HOLD); };
+    var stop = function () { if (timer) { clearInterval(timer); timer = null; } };
 
-    var start = function () {
-      if (reduced || paused || timer) return;
-      timer = setInterval(function () { show(idx + 1); }, HOLD);
-      tick();
-    };
-    var stop = function () {
-      if (timer) { clearInterval(timer); timer = null; }
-      hero.classList.remove('is-playing');
-    };
+    start();
 
-    if (holdBtn) {
-      if (reduced) holdBtn.hidden = true;
-      holdBtn.addEventListener('click', function () {
-        paused = !paused;
-        holdBtn.setAttribute('aria-pressed', String(paused));
-        holdBtn.textContent = paused ? '자동 전환 켜기' : '자동 전환 멈춤';
-        if (paused) stop(); else start();
+    Array.prototype.forEach.call(marks, function (mark) {
+      mark.addEventListener('click', function () {
+        show(parseInt(mark.getAttribute('data-go'), 10) || 0);
+        stop(); start();
       });
-    }
+    });
 
-    hero.addEventListener('mouseenter', stop);
-    hero.addEventListener('focusin', stop);
-    hero.addEventListener('mouseleave', start);
-    hero.addEventListener('focusout', start);
+    /* 다른 탭에 가 있는 동안에는 돌리지 않는다 */
     document.addEventListener('visibilitychange', function () {
       if (document.hidden) stop(); else start();
     });
-
-    start();
   }
 
   /* 스크롤 등장 */

@@ -173,282 +173,79 @@ ul { margin: 0; padding: 0; list-style: none; }
 .nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
 .nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
 
-/* ── 히어로 — 사실 먼저 ─────────────── */
-:root {
-  --hero-hold: 9s;   /* main.js 의 HOLD(9000)와 반드시 같은 값 */
-  --hero-fade: 1.2s;
-  --cta-h: 74px;     /* 모바일 하단 고정 바 실측 높이 (12 + 50 + 12) */
-}
-
-/* 고정 헤더(유틸 44 + 헤더 84 = 128px) 밑으로 앵커가 숨지 않게 */
-html { scroll-behavior: smooth; scroll-padding-top: 140px; }
-@media (max-width: 860px) { html { scroll-padding-top: 84px; } }
-
-/* JS가 깨져도 첫 화면은 보인다 — <head>에 js 클래스 1줄이 필요하다.
-   현재는 main.js가 404 한 번이면 본문 36블록이 통째로 백지가 된다. */
-.reveal { opacity: 1; transform: none; }
-.js .reveal {
-  opacity: 0; transform: translateY(20px);
-  transition: opacity .68s var(--ease), transform .68s var(--ease);
-}
-.js .reveal.is-in { opacity: 1; transform: none; }
-.js .reveal[data-delay="1"] { transition-delay: .09s; }
-.js .reveal[data-delay="2"] { transition-delay: .18s; }
-.js .reveal[data-delay="3"] { transition-delay: .27s; }
-
-/* ── 무대 ────────────────────────────────────────────────── */
-.hero {
-  position: relative; display: flex; align-items: center; overflow: hidden;
-  background: var(--navy-deep);
-  min-height: min(100vh, 920px);       /* svh 미지원 폴백 — 이 줄을 지우지 말 것 */
-  min-height: min(100svh, 920px);
-}
-@media (min-width: 1600px) {
-  .hero { min-height: min(100vh, 1000px); min-height: min(100svh, 1000px); }
-}
-
-/* ── 사진 : 배경이 아니라 증거 ───────────────────────────── */
-.hero__media { position: absolute; inset: -5% 0 0; }
-.hero__slide {
-  position: absolute; inset: 0; opacity: 0;
-  transition: opacity var(--hero-fade) var(--ease);
-}
+/* ── 히어로 ───────────────────────────── */
+.hero { position: relative; overflow: hidden; background: var(--navy-deep); min-height: min(100svh, 940px); }
+.hero__media { position: absolute; inset: -6% 0; will-change: transform; }
+.hero__slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.4s var(--ease); }
 .hero__slide.is-active { opacity: 1; }
-.hero__slide img {
-  width: 100%; height: 100%; object-fit: cover;
-  filter: brightness(.88) contrast(1.05) saturate(.92);
-  transform: scale(1.055);              /* 애니메이션 종료 상태 = 기본값 → 스냅 없음 */
-}
-/* 주제를 장막이 옅은 우측 대역으로 민다.
-   1번(운동장)은 78%로 밀어 좌측 25% 지점의 송전탑을 장막 최짙은 구간에 묻는다. */
-.hero__slide:nth-child(1) img { object-position: 78% 55%; }  /* 운동장 · 뒷산 */
-.hero__slide:nth-child(2) img { object-position: 70% 50%; }  /* 본관 */
-.hero__slide:nth-child(3) img { object-position: 66% 48%; }  /* 기숙사동 */
+.hero__slide img { width: 100%; height: 100%; object-fit: cover; filter: brightness(.9) contrast(1.04); }
+.hero__slide:nth-child(1) img { object-position: 70% 50%; }
+.hero__slide:nth-child(2) img { object-position: 78% 55%; }
+.hero__slide:nth-child(3) img { object-position: 66% 48%; }
+.hero__slide.is-active img { animation: kenBurns 9s ease-out forwards; }
 
-/* 두 셀렉터가 같은 애니메이션을 선언 → 클래스가 바뀌어도 재시작하지 않는다.
-   현재는 is-active가 빠지는 순간 scale(1)로 튀는데 그 슬라이드는
-   1.4초간 아직 보이는 중이라 매 전환마다 화면 전체가 덜컥거린다. */
-.hero__slide.is-active img,
-.hero__slide.is-leaving img {
-  animation: heroDrift calc(var(--hero-hold) + var(--hero-fade)) linear both;
+/* 지금 몇 번째인지만 조용히 알린다 — 숫자도, 재생 버튼도 두지 않는다 */
+.hero__marks { position: absolute; left: 0; right: 0; bottom: 40px; z-index: 3; }
+.hero__marks .wrap { display: flex; gap: 8px; }
+.hero__mark {
+  position: relative; width: 42px; height: 2px; padding: 0; border: 0; cursor: pointer;
+  background: rgba(255, 255, 255, .3); transition: background-color .4s var(--ease);
 }
-@keyframes heroDrift { from { transform: scale(1); } to { transform: scale(1.055); } }
+.hero__mark::before { content: ""; position: absolute; inset: -14px -3px; }
+.hero__mark:hover { background: rgba(255, 255, 255, .75); }
+.hero__mark[aria-current="true"] { background: var(--gold); }
 
-/* ── 장막 : 글자 뒤만 지키고 사진 주제는 비워 둔다 ────────── */
-/* 현재 합성 피복률 74.5% → 약 56%. 볼 만한 곳을 가리고 빈 곳만
-   보여주던 상태가 뒤집힌다. */
-.hero__veil { position: absolute; inset: 0; pointer-events: none; }
+/* 장막 — 가로 그라데이션 + 위아래 비네팅 */
+.hero__veil { position: absolute; inset: 0; }
 .hero__veil::before, .hero__veil::after { content: ""; position: absolute; inset: 0; }
 .hero__veil::before {
-  background: linear-gradient(101deg,
-    rgba(8,20,42,.90) 0%, rgba(8,20,42,.76) 26%,
-    rgba(8,20,42,.44) 52%, rgba(8,20,42,.30) 72%, rgba(8,20,42,.54) 100%);
+  background: linear-gradient(101deg, rgba(8, 20, 42, .90) 0%, rgba(8, 20, 42, .76) 28%, rgba(8, 20, 42, .44) 56%, rgba(8, 20, 42, .30) 78%, rgba(8, 20, 42, .50) 100%);
 }
 .hero__veil::after {
-  background: linear-gradient(180deg,
-    rgba(8,20,42,.46) 0%, rgba(8,20,42,0) 20%,
-    rgba(8,20,42,0) 58%, rgba(8,20,42,.62) 100%);
+  background: linear-gradient(180deg, rgba(8, 20, 42, .55) 0%, rgba(8, 20, 42, 0) 26%, rgba(8, 20, 42, 0) 52%, rgba(8, 20, 42, .72) 100%);
 }
 
-/* ── 그릇 : 히어로만 컨테이너를 해제한다 ─────────────────── */
-.hero .hero__wrap {
-  position: relative; z-index: 2; width: 100%;
-  max-width: min(1680px, 92vw); margin: 0 auto;
-  padding: clamp(116px, 11vw, 176px) clamp(24px, 2.4vw, 48px) clamp(104px, 9vw, 150px);
+.hero__inner {
+  position: relative; display: flex; flex-direction: column; justify-content: center;
+  min-height: min(100svh, 940px); padding-top: clamp(130px, 12vw, 180px); padding-bottom: clamp(100px, 9vw, 140px);
+  max-width: min(1000px, 72%);
 }
-@media (min-width: 1180px) {
-  .hero .hero__wrap {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) clamp(318px, 25vw, 420px);
-    gap: clamp(48px, 4.6vw, 96px);
-    align-items: center;
-  }
-}
-
-/* ── 좌측 : 말하는 쪽 ────────────────────────────────────── */
-/* .hero__inner 의 min-height / justify-content 는 제거됐다 —
-   이제 그리드 칼럼 안의 평범한 블록이다. */
-.hero__inner { position: relative; }
-
+/* 라벨 — 골드 세로선을 세운다 */
 .hero .eyebrow {
-  position: relative; padding-left: 48px;
-  font-size: clamp(12.5px, .85vw, 14.5px); font-weight: 600;
-  letter-spacing: .18em; line-height: 1.55; text-transform: none;
-  text-shadow: 0 1px 3px rgba(4,14,30,.6);
+  position: relative; padding-left: 20px; font-size: 12px; letter-spacing: .24em;
 }
-/* 골드 룰 10px → 34px. 눈에 "이만큼이 34px"이라는 자를 쥐여 주면
-   그 옆 헤드라인이 실제로 더 커 보인다. */
 .hero .eyebrow::before {
-  content: ""; position: absolute; left: 0; top: 50%;
-  width: 34px; height: 2px; background: var(--gold); transform: translateY(-50%);
+  content: ""; position: absolute; left: 0; top: 50%; width: 10px; height: 2px;
+  background: var(--gold); transform: translateY(-50%);
 }
-
 .hero__title {
-  margin-top: 20px; color: #fff; font-weight: 700;
+  margin-top: 24px; color: #fff; font-weight: 700;
   font-size: clamp(33px, 9.4vw, 50px);
-  line-height: 1.20; letter-spacing: -0.03em;
-  /* 타이트한 그림자가 획 경계를 세우고, 넓은 그림자가 사진에서 띄운다.
-     현재 26px 블러는 54px 글자 잉크 높이의 67%라 획을 뭉개 지각 크기를 깎는다. */
-  text-shadow: 0 1px 3px rgba(4,14,30,.55), 0 12px 48px rgba(4,14,30,.30);
+  line-height: 1.24; letter-spacing: -0.03em;
+  text-shadow: 0 1px 3px rgba(4, 14, 30, .55), 0 12px 48px rgba(4, 14, 30, .3);
 }
-.hero__title em { font-style: normal; color: var(--gold); }
-
 @media (min-width: 1180px) {
   .hero__title {
     margin-top: 26px;
-    font-size: clamp(50px, 4.3vw, 90px);   /* 최장 줄 7.905em → 화면 폭의 34.0% 고정 */
-    line-height: 1.10; letter-spacing: -0.04em;
+    font-size: clamp(50px, 4.3vw, 90px);   /* 2000px→86px · 1440px→62px · 1280px→55px */
+    line-height: 1.16; letter-spacing: -0.035em;
   }
 }
-
+.hero__title em { font-style: normal; color: var(--gold); }
 .hero__lead {
-  margin-top: 26px; max-width: 34em;
-  font-size: clamp(16px, 1.15vw, 21px); font-weight: 400;
-  line-height: 1.62; letter-spacing: -0.01em; color: #E3EAF6;
-  text-shadow: 0 1px 2px rgba(4,14,30,.6);
+  margin-top: 26px; font-size: clamp(15px, 1.25vw, 17px); font-weight: 300;
+  color: #DCE4F0; line-height: 1.95; text-shadow: 0 1px 14px rgba(4, 14, 30, .55);
+  max-width: 34em;
 }
-.hero__lead b { font-weight: 600; color: #fff; }
-
-.hero__actions { margin-top: 34px; display: flex; flex-wrap: wrap; gap: 12px; }
-.hero .btn { min-height: 58px; padding: 16px 34px; font-size: 17px; }
-.hero .btn--ghost {
-  background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.62);
-  backdrop-filter: blur(3px);
-}
-.hero .btn--ghost:hover { background: rgba(255,255,255,.16); border-color: #fff; }
-
-/* ── 우측 : 증명하는 쪽 ──────────────────────────────────── */
-.hero__card {
-  position: relative;
-  padding: clamp(24px,1.9vw,32px) clamp(22px,1.7vw,30px) clamp(20px,1.5vw,26px);
-  border-left: 2px solid var(--gold);
-  background: linear-gradient(180deg, rgba(6,16,34,.80), rgba(6,16,34,.64));
-  backdrop-filter: blur(3px) saturate(1.05);
-  box-shadow: 0 26px 60px rgba(4,12,28,.34);
-}
-.hero__card-h {
-  font-size: 13px; font-weight: 700; letter-spacing: .14em;
-  color: var(--gold); line-height: 1.5;
-}
-.hero__facts { margin: 0; }
-.hero__fact { padding: 13px 0; border-top: 1px solid rgba(255,255,255,.13); }
-.hero__fact:first-child { margin-top: 14px; }
-.hero__fact dt {
-  font-size: 12.5px; font-weight: 600; letter-spacing: .16em;
-  color: var(--gold); line-height: 1.5;
-}
-.hero__fact dd {
-  margin: 5px 0 0; font-size: clamp(15.5px, 1.05vw, 18px);
-  line-height: 1.55; letter-spacing: -0.01em; color: #E7EDF8;
-}
-.hero__fact--ask dd { color: #CFDAEC; }
-.hero__fact--ask a { color: #fff; border-bottom: 1px solid var(--gold); text-decoration: none; }
-
-.hero__tel {
-  display: block; margin-top: 18px; padding-top: 18px;
-  border-top: 2px solid var(--gold); text-decoration: none;
-}
-.hero__tel span { display: block; font-size: 12.5px; letter-spacing: .16em; color: var(--gold); }
-.hero__tel b {
-  display: block; margin-top: 6px; font-weight: 700; color: #fff;
-  font-size: clamp(23px, 1.6vw, 31px); line-height: 1.1; letter-spacing: -0.02em;
-}
-.hero__tel small { display: block; margin-top: 8px; font-size: 13px; line-height: 1.6; color: #B9C6DC; }
-.hero__tel:hover b { color: var(--gold); }
-
-/* ── 하단 : 캡션 + 진행선 + 글자 정지 버튼 ───────────────── */
-/* 점 3개도, 숫자도, 재생 버튼도 없다.
-   지금 무엇을 보고 있는지만 알려주고, 멈출 수 있게 한다 (WCAG 2.2.2). */
-.hero__note { position: absolute; left: 0; right: 0; bottom: 98px; z-index: 6; }
-.hero__note .wrap {
-  max-width: min(1680px, 92vw); padding: 0 clamp(24px, 2.4vw, 48px);
-  display: flex; align-items: flex-end; justify-content: space-between; gap: 20px;
-}
-.hero__note-txt {
-  display: flex; align-items: baseline; gap: 10px;
-  font-size: 13px; letter-spacing: .06em; color: #B9C6DC;
-  text-shadow: 0 1px 3px rgba(4,14,30,.7);
-}
-.hero__note-label { color: #8FA2BE; }
-.hero__caption { position: relative; color: #fff; font-weight: 500; }
-.hero__caption::before, .hero__caption::after {
-  content: ""; position: absolute; left: 0; bottom: -9px; height: 2px;
-}
-.hero__caption::before { right: 0; background: rgba(255,255,255,.20); }
-.hero__caption::after  { width: 0; background: var(--gold); }
-.hero.is-playing .hero__caption::after { animation: heroTick var(--hero-hold) linear infinite; }
-@keyframes heroTick { from { width: 0; } to { width: 100%; } }
-
-.hero__hold {
-  padding: 0 0 2px; margin: 0; border: 0;
-  border-bottom: 1px dotted rgba(255,255,255,.45);
-  background: none; cursor: pointer; color: #B9C6DC;
-  font: inherit; font-size: 12.5px; letter-spacing: .08em;
-  text-shadow: 0 1px 3px rgba(4,14,30,.7);
-}
-.hero__hold:hover { color: #fff; border-bottom-color: #fff; }
-
-/* 어두운 면 위에서는 포커스 링을 흰색으로.
-   골드 단색은 밝은 섹션에서 대비 2.1:1이라 사실상 보이지 않는다. */
-.hero :focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
-
-/* ── 태블릿 ──────────────────────────────────────────────── */
-@media (max-width: 1179px) {
-  .hero { min-height: min(100vh, 820px); min-height: min(100svh, 820px); }
-  .hero__card { margin-top: 38px; }
+.hero__actions { margin-top: 34px; display: flex; flex-wrap: wrap; gap: 11px; }
+.hero .btn { min-height: 54px; padding: 15px 32px; font-size: 16px; }
+.hero__scroll {
+  position: absolute; right: var(--gutter); bottom: 38px; z-index: 3;
+  display: flex; align-items: center; gap: 9px;
+  font-size: 12px; letter-spacing: .08em; color: #A8B8D2;
 }
 
-/* ── 모바일 ──────────────────────────────────────────────── */
-@media (max-width: 860px) {
-  .hero { min-height: auto; align-items: stretch; }
-  .hero .hero__wrap {
-    padding: 104px var(--gutter) calc(var(--cta-h) + 84px);
-  }
-  /* 2.4:1 파노라마를 세로 화면에 cover로 넣으면 가로 80%가 잘린다.
-     세로 크롭본(750×1000)을 만들면 <picture>로 교체하는 것이 정공법이다. */
-  .hero__slide img { object-position: 56% 40%; }
-  /* 22% 지점 알파를 .30 → .70으로 올려 골드 <em>과 밝은 청기와의 대비를 확보한다 */
-  .hero__veil::before {
-    background: linear-gradient(180deg,
-      rgba(8,20,42,.60) 0%, rgba(8,20,42,.70) 28%,
-      rgba(8,20,42,.84) 66%, rgba(8,20,42,.94) 100%);
-  }
-  .hero__lead { margin-top: 20px; }
-  .hero__actions { margin-top: 26px; }
-  .hero__card { margin-top: 32px; padding: 24px 20px 20px; }
-  .hero__facts { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); column-gap: 20px; }
-  .hero__fact--ask, .hero__tel { grid-column: 1 / -1; }
-  .hero__fact dd { font-size: 15.5px; }
-  .hero__note { bottom: calc(var(--cta-h) + 60px); }
-  .hero__note .wrap { padding: 0 var(--gutter); }
-}
-@media (max-width: 420px) {
-  .hero__facts { grid-template-columns: 1fr; }
-}
-
-/* ── 히어로의 밑변 : 지표 스트립을 걸쳐 올려 접힘선을 만든다 ── */
-/* 현재는 히어로 하단 비네팅(.72)과 .stats 배경(#0A1B38)이 거의 같은 색이라
-   첫 화면이 어디서 끝나는지 눈으로 찾을 수 없다. SCROLL 표시가 필요했던 이유다. */
-.stats { background: transparent; margin-top: -72px; position: relative; z-index: 5; }
-.stats__grid {
-  background: var(--navy-dark); border-top: 3px solid var(--gold);
-  padding: 38px 44px; box-shadow: 0 24px 50px rgba(6,16,34,.35);
-}
-.stats__item:first-child { padding-left: 26px; }
-@media (max-width: 860px) {
-  .stats { margin-top: -48px; }
-  .stats__grid { padding: 24px 20px; }
-  .stats__item:first-child { padding-left: 20px; }
-}
-
-/* ── 움직임 최소화 ───────────────────────────────────────── */
-@media (prefers-reduced-motion: reduce) {
-  .hero__slide img { animation: none !important; transform: none !important; }
-  .hero__slide { transition: none !important; }
-  .hero__media { transform: none !important; }
-  .hero__caption::after { animation: none !important; }
-  .js .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
-}
+@keyframes kenBurns { from { transform: scale(1); } to { transform: scale(1.08); } }
 
 /* ── 서브 페이지 헤더 ──────────────────── */
 .subhero { position: relative; overflow: hidden; background: var(--navy-deep); }
@@ -721,6 +518,18 @@ html { scroll-behavior: smooth; scroll-padding-top: 140px; }
 .faq p { padding: 0 30px 26px 56px; font-size: 15.5px; color: var(--body); line-height: 1.95; }
 
 
+/* ── 스크롤 등장 ───────────────────────── */
+/* JS가 한 번만 깨져도 본문이 백지가 되지 않게, 기본값은 '보임'이다 */
+.reveal { opacity: 1; transform: none; }
+.js .reveal {
+  opacity: 0; transform: translateY(22px);
+  transition: opacity .68s var(--ease), transform .68s var(--ease);
+}
+.js .reveal.is-in { opacity: 1; transform: none; }
+.js .reveal[data-delay="1"] { transition-delay: .09s; }
+.js .reveal[data-delay="2"] { transition-delay: .18s; }
+.js .reveal[data-delay="3"] { transition-delay: .27s; }
+
 /* ── 반응형 ───────────────────────────── */
 @media (max-width: 1080px) {
   .greeting, .curriculum, .visit, .film, .form-area { grid-template-columns: 1fr; gap: 40px; }
@@ -738,6 +547,17 @@ html { scroll-behavior: smooth; scroll-padding-top: 140px; }
 }
 
 @media (max-width: 860px) {
+  .hero { min-height: min(100svh, 720px); }
+  .hero__inner { min-height: min(100svh, 760px); justify-content: flex-end; padding-top: 104px; padding-bottom: 92px; max-width: none; }
+  .hero .btn { min-height: 54px; font-size: 16px; }
+  .hero__lead { margin-top: 22px; }
+  .hero__actions { margin-top: 28px; }
+  .hero__veil::before { background: linear-gradient(180deg, rgba(8, 20, 42, .50) 0%, rgba(8, 20, 42, .30) 22%, rgba(8, 20, 42, .80) 62%, rgba(8, 20, 42, .95) 100%); }
+  .hero__veil::after { display: none; }
+  .hero__actions .btn { flex: 1 1 100%; }
+  .hero__scroll { display: none; }
+  .hero__marks { bottom: 26px; }
+  .hero__mark { width: 34px; }
   .utility { display: none; }
   .header .wrap { height: 68px; }
   .brand img { width: 40px; height: 40px; }
