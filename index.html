@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>폴앤다니엘기독학교 — 영성·지성·공동체성을 훈련하는 기독 기숙학교</title>
 <meta name="description" content="충남 아산의 기독 기숙학교. 매일 세 번의 예배와 말씀, 자기주도학습, 기숙사 공동생활로 영성과 지성과 공동체성을 함께 훈련합니다.">
 <meta property="og:type" content="website">
@@ -12,8 +12,9 @@
 <meta property="og:locale" content="ko_KR">
 <meta name="theme-color" content="#0E2245">
 <link rel="icon" href="assets/img/logo.png">
-<link rel="preload" href="assets/fonts/PretendardVariable.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/style.css?v=913229e4">
+<script>document.documentElement.className += ' js';</script>
+<link rel="preload" as="image" href="assets/img/hero-nature.jpg" fetchpriority="high">
+<link rel="stylesheet" href="assets/css/style.css?v=b53291f7">
 </head>
 <body>
 <a class="skip-link" href="#main">본문 바로가기</a>
@@ -21,10 +22,10 @@
 <div class="site-top">
   <div class="utility">
     <div class="wrap">
-      <span>대안교육기관 · 충청남도 아산 · 초 · 중 · 고 통합 기숙형 기독학교</span>
+      <span>충청남도 아산 · 기숙형 대안교육기관</span>
       <span class="utility__links">
         <span class="utility__tel">입학 문의 041-425-0096</span>
-        <a href="#news">공지사항</a>
+        <a href="#news">전화 주시기 전에</a>
         <a href="#visit">오시는 길</a>
       </span>
     </div>
@@ -58,35 +59,64 @@
 
 <main id="main">
 
-  <!-- 히어로 -->
   <section class="hero">
     <div class="hero__media" aria-hidden="true">
-      <div class="hero__slide is-active"><img src="assets/img/hero-main.jpg" alt=""></div>
-      <div class="hero__slide"><img src="assets/img/hero-nature.jpg" alt=""></div>
-      <div class="hero__slide"><img src="assets/img/hero-dorm.jpg" alt=""></div>
+      <div class="hero__slide is-active" data-caption="운동장과 뒷산">
+        <img src="assets/img/hero-nature.jpg" alt="" width="2400" height="1000" fetchpriority="high" decoding="async">
+      </div>
+      <div class="hero__slide" data-caption="본관 전경">
+        <img src="assets/img/hero-main.jpg" alt="" width="2400" height="1000" fetchpriority="low" decoding="async">
+      </div>
+      <div class="hero__slide" data-caption="기숙사동">
+        <img src="assets/img/hero-dorm.jpg" alt="" width="2400" height="1000" fetchpriority="low" decoding="async">
+      </div>
     </div>
+
     <div class="hero__veil" aria-hidden="true"></div>
-    <div class="wrap">
+
+    <div class="wrap hero__wrap">
       <div class="hero__inner">
-        <p class="eyebrow eyebrow--light reveal">For Christ, For All Nations</p>
-        <h1 class="hero__title reveal" data-delay="1">흔들리는 시대에,<br>흔들리지 않는<br><em>다음 세대</em>를 세웁니다</h1>
-        <p class="hero__lead reveal" data-delay="2">매일 세 번의 예배와 말씀, 자기주도학습, 그리고 기숙사 공동생활.<br>충남 아산의 <b style="font-weight:500;color:#fff">대안교육기관</b>, 폴앤다니엘기독학교입니다.</p>
+        <p class="eyebrow eyebrow--light reveal">충청남도 아산 · 2010년 개교</p>
+        <h1 class="hero__title reveal" data-delay="1"><em>아침 산행</em>으로<br>하루를 여는 기숙학교</h1>
+        <p class="hero__lead reveal" data-delay="2">전원이 기숙사에서 함께 생활합니다. 하루 세 번 말씀과 기도로 모이고, 공부는 <b>각자의 책상에서 각자의 진도로</b> 갑니다.</p>
         <div class="hero__actions reveal" data-delay="3">
           <a class="btn btn--primary" href="admission.html#form">입학 상담 신청하기</a>
-          <a class="btn btn--ghost" href="#gallery">학교 둘러보기</a>
+          <a class="btn btn--ghost" href="#day">하루 일과 보기</a>
         </div>
       </div>
+
+      <aside class="hero__card reveal" data-delay="2" aria-labelledby="hero-card-h">
+        <h2 class="hero__card-h" id="hero-card-h">한눈에 보는 폴앤다니엘</h2>
+        <dl class="hero__facts">
+          <div class="hero__fact">
+            <dt>생활</dt>
+            <dd>전원 기숙 · 아침 산행으로 여는 하루</dd>
+          </div>
+          <div class="hero__fact">
+            <dt>학습</dt>
+            <dd>한 사람에 한 책상, 각자의 진도로</dd>
+          </div>
+          <div class="hero__fact hero__fact--ask">
+            <dt>학력 · 진학</dt>
+            <dd>본교는 대안교육기관입니다. 가정마다 상황이 달라, 학력과 진학 경로는 <a href="tel:041-425-0096">전화로 정확하게</a> 안내드립니다.</dd>
+          </div>
+        </dl>
+        <a class="hero__tel" href="tel:041-425-0096">
+          <span>입학 상담</span>
+          <b>041-425-0096</b>
+          <small>평일 09:00 – 17:00 · 부재 시 010-9665-7391로 문자 주시면 연락드립니다</small>
+        </a>
+      </aside>
     </div>
-    <div class="hero__marks">
+
+    <div class="hero__note">
       <div class="wrap">
-        <button class="hero__mark" type="button" data-go="0" aria-current="true" aria-label="본관 전경 사진 보기"></button>
-        <button class="hero__mark" type="button" data-go="1" aria-label="운동장 사진 보기"></button>
-        <button class="hero__mark" type="button" data-go="2" aria-label="기숙사동 사진 보기"></button>
+        <p class="hero__note-txt">
+          <span class="hero__note-label">지금 보이는 곳</span>
+          <span class="hero__caption" id="hero-caption" aria-live="polite">운동장과 뒷산</span>
+        </p>
+        <button class="hero__hold" type="button" aria-pressed="false">자동 전환 멈춤</button>
       </div>
-    </div>
-    <div class="hero__scroll" aria-hidden="true">
-      SCROLL
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C89B3C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"></path></svg>
     </div>
   </section>
 
@@ -103,8 +133,8 @@
           <p class="stats__label">성경공부 · 기도 · 예배</p>
         </div>
         <div class="stats__item reveal" data-delay="2">
-          <p class="stats__num"><span data-count="140" data-suffix="+">0</span>개국</p>
-          <p class="stats__label">School of Tomorrow 커리큘럼 사용</p>
+          <p class="stats__num">선생님 <span data-count="16">0</span>명</p>
+          <p class="stats__label">학생 곁에서 함께 생활합니다</p>
         </div>
         <div class="stats__item reveal" data-delay="3">
           <p class="stats__num">전원 기숙</p>
@@ -117,11 +147,12 @@
   <!-- 인사말 -->
   <section class="section">
     <div class="wrap">
-      <div class="greeting">
-        <div class="greeting__photo reveal">［ 교장 김남주 사진 ］<br><small>세로 4:5 · 학생들과 함께 있는 컷 권장</small></div>
-        <div class="reveal" data-delay="1">
+      <div class="greeting greeting--text">
+        <div class="reveal">
           <p class="eyebrow">Greeting</p>
           <h2 class="section-title">혼탁한 교육 상황에<br>신선한 샘물 같은 학교를</h2>
+        </div>
+        <div class="reveal" data-delay="1">
           <p>21세기 우리는 심각한 가치관의 혼돈 속에 살아가고 있습니다. 불확신과 황금만능주의, 개인주의와 극단적 상대주의가 학교와 가정과 자녀들의 마음 깊은 곳까지 스며들고 있습니다.</p>
           <p>폴앤다니엘기독학교는 이러한 시대적 위기 앞에서, 성경적 가치관으로 다음 세대를 교육하기 위해 세워졌습니다. 영성과 공동체성과 지성을 함께 훈련합니다.</p>
           <div class="sign">
@@ -163,7 +194,7 @@
   </section>
 
   <!-- 하루 일과 -->
-  <section class="section section--navy">
+  <section class="section section--navy" id="day">
     <div class="wrap">
       <div class="section-head reveal">
         <div>
@@ -199,7 +230,6 @@
           <p class="day__desc">하루를 말씀으로 닫고, 공동생활로 서로를 배웁니다.</p>
         </div>
       </div>
-      <p class="note">※ 시간표는 학교 확인 후 실제 일과로 교체합니다. 현재는 배치 예시입니다.</p>
     </div>
   </section>
 
@@ -232,13 +262,6 @@
               <p>온라인 학습 관리로 학생 개개인의 진도와 성취를 교사가 함께 확인합니다.</p>
             </div>
           </article>
-          <article class="curr-card reveal" data-delay="2">
-            <span class="curr-card__badge">ACSI</span>
-            <div>
-              <h3>ACSI 가입교 <small>［학교 확인 후 확정 표기］</small></h3>
-              <p>국제기독학교협회 가입교로서의 지위와 인증 범위를 정확히 확인해 표기합니다.</p>
-            </div>
-          </article>
         </div>
       </div>
     </div>
@@ -252,7 +275,7 @@
           <p class="eyebrow">Campus</p>
           <h2 class="section-title">학교 둘러보기</h2>
         </div>
-        <a class="more-link" href="#gallery">갤러리 전체보기 ›</a>
+        
       </div>
       <div class="gallery">
         <div class="gallery__cell gallery__cell--wide gallery__cell--tall reveal">
@@ -270,57 +293,31 @@
     </div>
   </section>
 
-  <!-- 영상 -->
-  <section class="section section--navy-dark">
-    <div class="wrap">
-      <div class="film">
-        <div class="film__frame reveal">
-          <span class="film__play" aria-hidden="true">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M8 5.5v13l11-6.5z"></path></svg>
-          </span>
-          ［ 유튜브 영상 임베드 ］
-        </div>
-        <div class="reveal" data-delay="1">
-          <p class="eyebrow eyebrow--light">Film</p>
-          <h2 class="section-title section-title--light">글로 설명하기 어려운 것은<br>영상이 대신 말합니다</h2>
-          <p style="margin-top:20px;color:#AFBBD2;font-size:16px;line-height:1.95">학교 소개 영상, 예배 실황, 졸업생 인터뷰를 유튜브 채널과 연결합니다. 학부모님은 상담 전에 이미 학교를 절반쯤 보고 오십니다.</p>
-          <p style="margin-top:26px"><a class="btn btn--ghost" href="#">유튜브 채널 바로가기</a></p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 공지 -->
+  <!-- 먼저 안내 -->
   <section class="section" id="news">
     <div class="wrap">
       <div class="section-head reveal">
-        <h2 class="section-title" style="margin-top:0">공지 · 소식</h2>
-        <nav class="tabs" aria-label="공지 분류">
-          <a href="#news" aria-current="true">전체</a>
-          <a href="#news">입학</a>
-          <a href="#news">학사</a>
-          <a href="#news">학교 소식</a>
-        </nav>
+        <div>
+          <p class="eyebrow">Before You Call</p>
+          <h2 class="section-title" style="margin-top:0">전화 주시기 전에</h2>
+        </div>
       </div>
       <div class="news">
-        <a class="news__item reveal" href="#news">
-          <span class="tag tag--red">입학</span>
-          <p class="news__title">［ 2026학년도 신입생 모집 안내 ］</p>
-          <p class="news__desc">모집 요강, 설명회 일정 등 학부모가 가장 먼저 찾는 글을 맨 앞에 둡니다.</p>
-          <p class="news__date">2026.09.22</p>
-        </a>
-        <a class="news__item reveal" data-delay="1" href="#news">
-          <span class="tag tag--gold">학사</span>
-          <p class="news__title">［ 공지 제목이 들어갑니다 ］</p>
-          <p class="news__desc">학사 일정과 안내 사항을 적는 자리입니다.</p>
-          <p class="news__date">2026.09.15</p>
-        </a>
-        <a class="news__item reveal" data-delay="2" href="#news">
-          <span class="tag tag--navy">학교 소식</span>
-          <p class="news__title">［ 공지 제목이 들어갑니다 ］</p>
-          <p class="news__desc">행사와 학교 소식을 사진과 함께 전하는 자리입니다.</p>
-          <p class="news__date">2026.09.08</p>
-        </a>
+        <div class="news__item reveal">
+          <span class="tag tag--red">상담</span>
+          <p class="news__title">언제든 전화로 물어보셔도 됩니다</p>
+          <p class="news__desc">평일 09:00 – 17:00, 041-425-0096. 부재 시 010-9665-7391로 문자 주시면 연락드립니다.</p>
+        </div>
+        <div class="news__item reveal" data-delay="1">
+          <span class="tag tag--gold">방문</span>
+          <p class="news__title">학교 방문은 사전 예약으로 진행됩니다</p>
+          <p class="news__desc">기숙학교라 학생들이 생활하는 공간입니다. 미리 연락 주시면 편한 시간으로 안내드립니다.</p>
+        </div>
+        <div class="news__item reveal" data-delay="2">
+          <span class="tag tag--navy">진학</span>
+          <p class="news__title">학력과 진학은 가정마다 상황이 다릅니다</p>
+          <p class="news__desc">본교는 대안교육기관입니다. 자녀의 학년과 상황에 맞게 전화로 정확히 안내드리겠습니다.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -340,8 +337,8 @@
             </li>
             <li>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C89B3C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3h3.5l1.8 4.4-2.2 1.6a12 12 0 0 0 5.9 5.9l1.6-2.2L20 16.5V20a1.5 1.5 0 0 1-1.7 1.5A17 17 0 0 1 3.5 4.7 1.5 1.5 0 0 1 5 3z"></path></svg>
-              <span><a href="tel:041-425-0096">041-425-0096</a> · 041-425-0085 · 042-623-7067
-                <small>휴대전화 010-9665-7391 / 010-6628-8290 (부재 시 문자 주시면 연락드립니다)</small></span>
+              <span><a href="tel:041-425-0096" style="font-size:22px;font-weight:700;letter-spacing:-.02em">041-425-0096</a>
+                <small>부재 시 010-9665-7391로 문자 주시면 연락드립니다<br>그 밖의 번호 041-425-0085 · 042-623-7067</small></span>
             </li>
             <li>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C89B3C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5.2l3.3 2"></path></svg>
@@ -400,24 +397,15 @@
           <ul>
             <li><a href="admission.html">입학 안내</a></li>
             <li><a href="admission.html#form">상담 신청</a></li>
-            <li><a href="#news">공지사항</a></li>
+            <li><a href="#news">전화 주시기 전에</a></li>
             <li><a href="admission.html#faq">자주 묻는 질문</a></li>
-          </ul>
-        </div>
-        <div class="footer__col">
-          <h4>함께하기</h4>
-          <ul>
-            <li><a href="#">유튜브</a></li>
-            <li><a href="#">인스타그램</a></li>
-            <li><a href="#">네이버 블로그</a></li>
-            <li><a href="#">후원 안내</a></li>
           </ul>
         </div>
       </div>
     </div>
     <div class="footer__bottom">
       <span>© 2026 Paul and Daniel Christian School. All rights reserved.</span>
-      <span><a href="#">개인정보처리방침</a> &nbsp;·&nbsp; <a href="#">이메일무단수집거부</a></span>
+      <span><a href="privacy.html">개인정보처리방침</a> &nbsp;·&nbsp; <span>이메일 주소 무단 수집을 거부합니다</span></span>
     </div>
   </div>
 </footer>
@@ -427,6 +415,6 @@
   <a class="btn btn--primary" href="admission.html#form">입학 상담 신청</a>
 </div>
 
-<script src="assets/js/main.js?v=cf8d973e"></script>
+<script src="assets/js/main.js?v=74c85ca6"></script>
 </body>
 </html>
