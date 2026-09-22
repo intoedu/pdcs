@@ -18,40 +18,43 @@
 <body>
 <a class="skip-link" href="#main">본문 바로가기</a>
 
-<div class="utility">
-  <div class="wrap">
-    <span>충청남도 아산 · 초 · 중 · 고 통합 기숙형 기독학교</span>
-    <span class="utility__links">
-      <span class="utility__tel">입학 문의 041-425-0096</span>
-      <a href="#news">공지사항</a>
-      <a href="#visit">오시는 길</a>
-    </span>
+<div class="site-top">
+  <div class="utility">
+    <div class="wrap">
+      <span>대안교육기관 · 충청남도 아산 · 초 · 중 · 고 통합 기숙형 기독학교</span>
+      <span class="utility__links">
+        <span class="utility__tel">입학 문의 041-425-0096</span>
+        <a href="#news">공지사항</a>
+        <a href="#visit">오시는 길</a>
+      </span>
+    </div>
   </div>
+
+  <header class="header">
+    <div class="wrap">
+      <a class="brand" href="index.html">
+        <img src="assets/img/logo.png" alt="" width="50" height="50">
+        <span>
+          <span class="brand__ko">폴앤다니엘기독학교</span>
+          <span class="brand__en">PAUL AND DANIEL CHRISTIAN SCHOOL</span>
+        </span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="gnb" aria-label="메뉴 열기">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="gnb" id="gnb" aria-label="주 메뉴">
+        <a href="about.html">학교소개</a>
+        <a href="#curriculum">교육과정</a>
+        <a href="admission.html">입학안내</a>
+        <a href="#news">공지 · 소식</a>
+        <a href="#gallery">갤러리</a>
+        <a href="#visit">오시는 길</a>
+        <a class="btn btn--primary btn--sm" href="admission.html#form">입학 상담 신청</a>
+      </nav>
+    </div>
+  </header>
 </div>
 
-<header class="header">
-  <div class="wrap">
-    <a class="brand" href="index.html">
-      <img src="assets/img/logo.png" alt="" width="50" height="50">
-      <span>
-        <span class="brand__ko">폴앤다니엘기독학교</span>
-        <span class="brand__en">PAUL AND DANIEL CHRISTIAN SCHOOL</span>
-      </span>
-    </a>
-    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="gnb" aria-label="메뉴 열기">
-      <span></span><span></span><span></span>
-    </button>
-    <nav class="gnb" id="gnb" aria-label="주 메뉴">
-      <a href="about.html">학교소개</a>
-      <a href="#curriculum">교육과정</a>
-      <a href="admission.html">입학안내</a>
-      <a href="#news">공지 · 소식</a>
-      <a href="#gallery">갤러리</a>
-      <a href="#visit">오시는 길</a>
-      <a class="btn btn--primary btn--sm" href="admission.html#form">입학 상담 신청</a>
-    </nav>
-  </div>
-</header>
 
 <main id="main">
 
@@ -67,17 +70,26 @@
       <div class="hero__inner">
         <p class="eyebrow eyebrow--light reveal">For Christ, For All Nations</p>
         <h1 class="hero__title reveal" data-delay="1">흔들리는 시대에,<br>흔들리지 않는 다음 세대를<br>세웁니다</h1>
-        <p class="hero__lead reveal" data-delay="2">매일 세 번의 예배와 말씀, 자기주도학습, 그리고 기숙사 공동생활.<br>폴앤다니엘기독학교는 영성과 지성과 공동체성을 함께 훈련하는<br>충남 아산의 기독 기숙학교입니다.</p>
+        <p class="hero__lead reveal" data-delay="2">매일 세 번의 예배와 말씀, 자기주도학습, 그리고 기숙사 공동생활.<br>영성과 지성과 공동체성을 함께 훈련하는<br>충남 아산의 <b style="font-weight:500;color:#fff">대안교육기관</b> 기숙형 기독학교입니다.</p>
         <div class="hero__actions reveal" data-delay="3">
           <a class="btn btn--primary" href="admission.html#form">입학 상담 신청하기</a>
           <a class="btn btn--ghost" href="#gallery">학교 둘러보기</a>
         </div>
       </div>
     </div>
-    <div class="hero__bars" aria-hidden="true">
-      <span class="hero__bar"><i></i></span>
-      <span class="hero__bar"><i></i></span>
-      <span class="hero__bar"><i></i></span>
+    <div class="hero__controls">
+      <div class="wrap">
+        <button class="hero__btn" type="button" id="hero-toggle" aria-label="슬라이드 멈춤">
+          <svg class="ico-pause" width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><rect x="2" y="1" width="3.5" height="12" rx="1"></rect><rect x="8.5" y="1" width="3.5" height="12" rx="1"></rect></svg>
+          <svg class="ico-play" width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true" hidden><path d="M3 1.5v11l9.5-5.5z"></path></svg>
+        </button>
+        <div class="hero__dots">
+          <button class="hero__dot" type="button" data-go="0" aria-current="true" aria-label="1번 사진 보기">1</button>
+          <button class="hero__dot" type="button" data-go="1" aria-label="2번 사진 보기">2</button>
+          <button class="hero__dot" type="button" data-go="2" aria-label="3번 사진 보기">3</button>
+        </div>
+        <div class="hero__progress" aria-hidden="true"><i></i></div>
+      </div>
     </div>
     <div class="hero__scroll" aria-hidden="true">
       SCROLL

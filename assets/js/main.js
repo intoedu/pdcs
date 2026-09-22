@@ -21,6 +21,84 @@
 
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* 상단 바 — 내리면 흰 바탕으로 */
+  var siteTop = document.querySelector('.site-top');
+  if (siteTop) {
+    var stuck = null;
+    var syncTop = function () {
+      var next = window.scrollY > 40;
+      if (next !== stuck) { stuck = next; siteTop.classList.toggle('is-stuck', next); }
+    };
+    syncTop();
+    window.addEventListener('scroll', syncTop, { passive: true });
+  }
+
+  /* 히어로 슬라이드 — 멈추고, 넘기고, 어디쯤인지 보인다 */
+  var slides = document.querySelectorAll('.hero__slide');
+  var dots = document.querySelectorAll('.hero__dot');
+  var bar = document.querySelector('.hero__progress i');
+  var playBtn = document.getElementById('hero-toggle');
+  var HOLD = 5500;
+
+  if (slides.length) {
+    var idx = 0, playing = !reduced, started = 0, raf = null;
+
+    var show = function (i) {
+      idx = (i + slides.length) % slides.length;
+      for (var s = 0; s < slides.length; s++) {
+        slides[s].classList.toggle('is-active', s === idx);
+      }
+      for (var d = 0; d < dots.length; d++) {
+        if (d === idx) { dots[d].setAttribute('aria-current', 'true'); }
+        else { dots[d].removeAttribute('aria-current'); }
+      }
+      started = performance.now();
+      if (bar) bar.style.width = '0%';
+    };
+
+    var frame = function (now) {
+      if (!playing) return;
+      var p = (now - started) / HOLD;
+      if (bar) bar.style.width = Math.min(p, 1) * 100 + '%';
+      if (p >= 1) show(idx + 1);
+      raf = requestAnimationFrame(frame);
+    };
+
+    var setPlaying = function (on) {
+      playing = on;
+      if (playBtn) {
+        playBtn.setAttribute('aria-label', on ? '슬라이드 멈춤' : '슬라이드 재생');
+        var pause = playBtn.querySelector('.ico-pause');
+        var play = playBtn.querySelector('.ico-play');
+        if (pause) pause.hidden = !on;
+        if (play) play.hidden = on;
+      }
+      if (on) { started = performance.now(); raf = requestAnimationFrame(frame); }
+      else if (raf) { cancelAnimationFrame(raf); raf = null; }
+    };
+
+    /* 아이콘과 타이머 상태를 JS가 한 번에 확정한다 */
+    show(0);
+    var want = playing;
+    playing = false;
+    setPlaying(want);
+
+    if (playBtn) playBtn.addEventListener('click', function () { setPlaying(!playing); });
+
+    Array.prototype.forEach.call(dots, function (dot) {
+      dot.addEventListener('click', function () {
+        show(parseInt(dot.getAttribute('data-go'), 10) || 0);
+        if (playing) { started = performance.now(); }
+      });
+    });
+
+    /* 다른 탭으로 가 있는 동안은 돌리지 않는다 */
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) { if (raf) { cancelAnimationFrame(raf); raf = null; } }
+      else if (playing) { started = performance.now(); raf = requestAnimationFrame(frame); }
+    });
+  }
+
   /* 스크롤 등장 */
   var targets = document.querySelectorAll('.reveal');
   if (reduced || !('IntersectionObserver' in window)) {
