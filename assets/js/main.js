@@ -33,6 +33,21 @@
     window.addEventListener('scroll', syncTop, { passive: true });
   }
 
+  /* 히어로 배경 — 스크롤보다 느리게 따라온다 */
+  var heroMedia = document.querySelector('.hero__media');
+  if (heroMedia && !reduced) {
+    var pending = false;
+    var moveHero = function () {
+      var limit = window.innerHeight;
+      var y = Math.min(window.scrollY, limit);
+      heroMedia.style.transform = 'translate3d(0,' + (y * 0.26).toFixed(1) + 'px,0)';
+      pending = false;
+    };
+    window.addEventListener('scroll', function () {
+      if (!pending) { pending = true; requestAnimationFrame(moveHero); }
+    }, { passive: true });
+  }
+
   /* 히어로 슬라이드 — 멈추고, 넘기고, 어디쯤인지 보인다 */
   var slides = document.querySelectorAll('.hero__slide');
   var dots = document.querySelectorAll('.hero__dot');
