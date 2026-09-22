@@ -140,6 +140,8 @@ ul { margin: 0; padding: 0; list-style: none; }
 .site-top:not(.is-stuck) .gnb > a:not(.btn)::after { background: var(--gold); }
 .site-top:not(.is-stuck) .nav-toggle { background: rgba(255, 255, 255, .14); border-color: rgba(255, 255, 255, .4); }
 .site-top:not(.is-stuck) .nav-toggle span { background: #fff; }
+/* 네이비 엠블럼이 네이비 배경에 묻히지 않게 미세한 그림자를 준다 */
+.site-top:not(.is-stuck) .brand img { filter: drop-shadow(0 1px 7px rgba(4, 14, 30, .55)); }
 
 /* 서브 페이지는 히어로가 짧아 헤더 높이만큼 띄운다 */
 .subhero__inner { padding-top: clamp(126px, 12vw, 160px) !important; }
