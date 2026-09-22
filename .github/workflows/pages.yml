@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - claude/affectionate-goodall-x7t5gf
   workflow_dispatch:
 
 permissions:
