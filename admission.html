@@ -161,13 +161,18 @@
               </label>
             </div>
 
-            <p style="margin-top:26px"><button class="btn btn--primary btn--block" type="submit" style="min-height:58px;font-size:17px">상담 신청하기</button></p>
+            <p style="margin-top:26px"><button class="btn btn--primary btn--block" type="submit" style="min-height:58px;font-size:17px">상담 신청 보내기</button></p>
+            <p style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap">
+              <button class="btn btn--outline btn--sm" type="button" id="copy-form" style="flex:1">작성 내용 복사</button>
+              <a class="btn btn--outline btn--sm" href="tel:041-425-0096" style="flex:1">전화로 문의</a>
+            </p>
+            <p style="margin-top:14px;font-size:13.5px;color:var(--muted);line-height:1.8">
+              버튼을 누르면 작성하신 내용이 담긴 <b>문자</b>(휴대전화) 또는 <b>메일</b>(컴퓨터)이 자동으로 열립니다.
+              보내기만 누르시면 됩니다.
+            </p>
 
             <p id="form-message" tabindex="-1" hidden
-               style="margin-top:18px;padding:16px 18px;background:#FDF6F6;border-left:3px solid var(--red);border-radius:0 6px 6px 0;font-size:15px;line-height:1.8">
-              지금은 <b>디자인 시안</b>이라 실제로 전송되지 않습니다.<br>
-              실제 홈페이지에서는 이 버튼을 누르면 담당 선생님께 문자와 메일로 바로 전달됩니다.
-            </p>
+               style="margin-top:18px;padding:16px 18px;background:#FDF6F6;border-left:3px solid var(--red);border-radius:0 6px 6px 0;font-size:15px;line-height:1.8"></p>
           </form>
         </div>
 
@@ -190,7 +195,17 @@
               </div>
             </dl>
           </div>
-          <div class="map-frame" style="margin-top:16px">［ 지도 ］<br><small>충남 아산시 음봉면 아산온천로 148-39<br>길찾기 · 주차 안내 버튼 포함</small></div>
+          <div class="map-frame" style="margin-top:16px">
+            <iframe title="폴앤다니엘기독학교 위치" loading="lazy" allowfullscreen
+              referrerpolicy="no-referrer-when-downgrade"
+              src="https://www.google.com/maps?q=%EC%B6%A9%EC%B2%AD%EB%82%A8%EB%8F%84+%EC%95%84%EC%82%B0%EC%8B%9C+%EC%9D%8C%EB%B4%89%EB%A9%B4+%EC%95%84%EC%82%B0%EC%98%A8%EC%B2%9C%EB%A1%9C+148-39&amp;hl=ko&amp;z=16&amp;output=embed"></iframe>
+          </div>
+          <p style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+            <a class="btn btn--outline btn--sm" style="flex:1" target="_blank" rel="noopener"
+               href="https://map.kakao.com/link/search/충청남도 아산시 음봉면 아산온천로 148-39">카카오맵으로 길찾기</a>
+            <a class="btn btn--outline btn--sm" style="flex:1" target="_blank" rel="noopener"
+               href="https://www.google.com/maps/dir/?api=1&amp;destination=충청남도+아산시+음봉면+아산온천로+148-39">구글지도로 길찾기</a>
+          </p>
         </div>
       </div>
     </div>

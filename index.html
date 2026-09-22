@@ -61,9 +61,7 @@
   <!-- 히어로 -->
   <section class="hero">
     <div class="hero__media" aria-hidden="true">
-      <div class="hero__slide"><img src="assets/img/hero-main.jpg" alt=""></div>
-      <div class="hero__slide"><img src="assets/img/hero-nature.jpg" alt=""></div>
-      <div class="hero__slide"><img src="assets/img/hero-dorm.jpg" alt=""></div>
+      <img src="assets/img/hero-main.jpg" alt="">
     </div>
     <div class="hero__veil" aria-hidden="true"></div>
     <div class="wrap">
@@ -75,20 +73,6 @@
           <a class="btn btn--primary" href="admission.html#form">입학 상담 신청하기</a>
           <a class="btn btn--ghost" href="#gallery">학교 둘러보기</a>
         </div>
-      </div>
-    </div>
-    <div class="hero__controls">
-      <div class="wrap">
-        <button class="hero__btn" type="button" id="hero-toggle" aria-label="슬라이드 멈춤">
-          <svg class="ico-pause" width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><rect x="2" y="1" width="3.5" height="12" rx="1"></rect><rect x="8.5" y="1" width="3.5" height="12" rx="1"></rect></svg>
-          <svg class="ico-play" width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true" hidden><path d="M3 1.5v11l9.5-5.5z"></path></svg>
-        </button>
-        <div class="hero__dots">
-          <button class="hero__dot" type="button" data-go="0" aria-current="true" aria-label="1번 사진 보기">1</button>
-          <button class="hero__dot" type="button" data-go="1" aria-label="2번 사진 보기">2</button>
-          <button class="hero__dot" type="button" data-go="2" aria-label="3번 사진 보기">3</button>
-        </div>
-        <div class="hero__progress" aria-hidden="true"><i></i></div>
       </div>
     </div>
     <div class="hero__scroll" aria-hidden="true">
@@ -309,19 +293,19 @@
         <a class="news__item reveal" href="#news">
           <span class="tag tag--red">입학</span>
           <p class="news__title">［ 2026학년도 신입생 모집 안내 ］</p>
-          <p class="news__desc">게시판 최신 글 3건이 자동으로 올라옵니다. 관리자 페이지에서 글만 쓰시면 됩니다.</p>
+          <p class="news__desc">모집 요강, 설명회 일정 등 학부모가 가장 먼저 찾는 글을 맨 앞에 둡니다.</p>
           <p class="news__date">2026.09.22</p>
         </a>
         <a class="news__item reveal" data-delay="1" href="#news">
           <span class="tag tag--gold">학사</span>
           <p class="news__title">［ 공지 제목이 들어갑니다 ］</p>
-          <p class="news__desc">본문 앞부분이 두 줄까지 자동으로 요약되어 보입니다.</p>
+          <p class="news__desc">학사 일정과 안내 사항을 적는 자리입니다.</p>
           <p class="news__date">2026.09.15</p>
         </a>
         <a class="news__item reveal" data-delay="2" href="#news">
           <span class="tag tag--navy">학교 소식</span>
           <p class="news__title">［ 공지 제목이 들어갑니다 ］</p>
-          <p class="news__desc">사진이 있는 글은 썸네일이 함께 보이도록 설정할 수 있습니다.</p>
+          <p class="news__desc">행사와 학교 소식을 사진과 함께 전하는 자리입니다.</p>
           <p class="news__date">2026.09.08</p>
         </a>
       </div>
@@ -356,7 +340,19 @@
             <a class="btn btn--outline" href="tel:041-425-0096">전화로 문의</a>
           </p>
         </div>
-        <div class="map-frame reveal" data-delay="1">［ 지도 ］<br><small>카카오맵 또는 구글지도 임베드<br>길찾기 버튼 · 주차 안내 함께 표기</small></div>
+        <div class="reveal" data-delay="1">
+          <div class="map-frame">
+            <iframe title="폴앤다니엘기독학교 위치" loading="lazy" allowfullscreen
+              referrerpolicy="no-referrer-when-downgrade"
+              src="https://www.google.com/maps?q=%EC%B6%A9%EC%B2%AD%EB%82%A8%EB%8F%84+%EC%95%84%EC%82%B0%EC%8B%9C+%EC%9D%8C%EB%B4%89%EB%A9%B4+%EC%95%84%EC%82%B0%EC%98%A8%EC%B2%9C%EB%A1%9C+148-39&amp;hl=ko&amp;z=16&amp;output=embed"></iframe>
+          </div>
+          <p style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+            <a class="btn btn--outline btn--sm" style="flex:1" target="_blank" rel="noopener"
+               href="https://map.kakao.com/link/search/충청남도 아산시 음봉면 아산온천로 148-39">카카오맵 길찾기</a>
+            <a class="btn btn--outline btn--sm" style="flex:1" target="_blank" rel="noopener"
+               href="https://www.google.com/maps/dir/?api=1&amp;destination=충청남도+아산시+음봉면+아산온천로+148-39">구글지도 길찾기</a>
+          </p>
+        </div>
       </div>
     </div>
   </section>
