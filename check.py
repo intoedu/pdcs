@@ -29,6 +29,12 @@ BANNED = ["School of Tomorrow", "IGNITIA", "ACSI", r"140여? ?개국", "S\\.O\\.
 # 제작용 흔적
 LEFTOVER = [r"［[^］]*］", r"\bTODO\b", r"\bFIXME\b", "lorem ipsum", "여기에 내용"]
 
+# 학교 대표번호 — 눌렀을 때 걸리는 번호는 이것뿐이어야 한다 (CLAUDE.md 참조)
+TEL_MAIN = "041-425-0085"
+# 화면에 적어도 되는 번호 (tel: 링크가 아닌 안내용 표기 포함)
+TEL_OK = {"041-425-0085", "041-425-0096", "042-623-7067", "010-9665-7391", "010-6628-8290",
+          "010-0000-0000"}   # 마지막은 입력칸 예시 (placeholder)
+
 CHROME = "/opt/pw-browsers/chromium-1194/chrome-linux/chrome"
 
 fails = []
@@ -68,6 +74,13 @@ def check_source():
             fail(f"{name}: 422KB 원본 로고를 화면에서 쓰고 있다 (logo-96.png를 쓸 것)")
         if "?v=" not in s:
             fail(f"{name}: 스타일·스크립트에 해시가 없다 — ./bump.sh 를 실행할 것")
+        # 전화번호 — 학교가 대표번호를 바꾼 적이 있다. 한 페이지만 옛 번호로 남는 것을 막는다
+        for t in set(re.findall(r'href="tel:([^"]+)"', s)):
+            if t != TEL_MAIN:
+                fail(f"{name}: 전화 링크가 대표번호가 아니다 — {t} (대표 {TEL_MAIN})")
+        for t in set(re.findall(r"0\d{1,2}-\d{3,4}-\d{4}", s)):
+            if t not in TEL_OK:
+                fail(f"{name}: 학교 번호가 아닌 전화번호가 적혀 있다 — {t}")
     if not fails:
         ok("금지어 · 제작용 흔적 · 죽은 링크 · 캐시 해시 — 이상 없음")
 
