@@ -206,6 +206,40 @@ def check_browser(save_shots=False):
                                 fail(f"{page} {w}px: 멈춤 버튼을 눌러도 아이콘이 바뀌지 않는다")
                             btn.click(); pg.wait_for_timeout(150)
 
+                # 상단 바가 세 상태에서 모두 읽히는지 — 투명 / 내린 뒤 / 메뉴 열림.
+                # 투명할 때만 흰 글자로 바꾸는 구조라, 한 상태만 빠뜨리면 글자가 사라진다
+                head = pg.evaluate("""() => {
+                  const t = document.querySelector('.site-top'); if (!t) return null;
+                  // 색에 transition 이 걸려 있어 클래스를 바꾼 직후에 읽으면
+                  // 바뀌는 도중의 값(거의 원래 색)이 나온다. 먼저 전환을 끈다
+                  const off = document.createElement('style');
+                  off.textContent = '*{transition:none !important}';
+                  document.head.appendChild(off);
+                  const pick = () => {
+                    const a = t.querySelector('.gnb a:not(.btn)');
+                    const k = t.querySelector('.brand__ko');
+                    return { 메뉴: a && getComputedStyle(a).color, 교명: k && getComputedStyle(k).color,
+                             바탕: getComputedStyle(t).backgroundColor };
+                  };
+                  const before = t.className;
+                  t.classList.remove('is-stuck', 'is-open');
+                  const 투명 = pick();
+                  t.classList.add('is-stuck');
+                  const 내림 = pick();
+                  t.classList.remove('is-stuck'); t.classList.add('is-open');
+                  const 열림 = pick();
+                  t.className = before;
+                  off.remove();
+                  return { 투명, 내림, 열림 };
+                }""")
+                if head:
+                    # 밝은 바탕이 되는 두 상태에서 글자가 흰색이면 안 보인다
+                    for 상태 in ("내림", "열림"):
+                        for 무엇 in ("메뉴", "교명"):
+                            c = head[상태][무엇]
+                            if c and re.match(r"rgba?\(\s*2[45]\d,\s*2[45]\d,\s*2[45]\d", c):
+                                fail(f"{page} {w}px: 상단이 흰 바탕인데({상태}) {무엇} 글자가 흰색이다 — {c}")
+
                 # 모바일 메뉴를 실제로 열어본다 — 한 번 놓쳐서 배포된 적이 있다
                 if w <= 860:
                     tog = pg.query_selector(".nav-toggle")

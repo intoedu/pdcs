@@ -5,18 +5,21 @@
   /* 모바일 메뉴 */
   var toggle = document.querySelector('.nav-toggle');
   var gnb = document.getElementById('gnb');
+  var top0 = document.querySelector('.site-top');
+  /* 메뉴가 열리면 상단 바탕이 흰색이 된다. 그 사실을 상단 전체에 알려
+     글자색 규칙이 "내려간 상태"와 똑같이 걸리게 한다.
+     예전에 이 처리가 없어 흰 바탕에 흰 글씨로 배포된 적이 있다. */
+  var setOpen = function (on) {
+    if (toggle) { toggle.setAttribute('aria-expanded', String(on)); }
+    if (gnb) { gnb.classList.toggle('is-open', on); gnb.setAttribute('aria-hidden', String(!on)); }
+    if (top0) { top0.classList.toggle('is-open', on); }
+  };
   if (toggle && gnb) {
     toggle.addEventListener('click', function () {
-      var open = toggle.getAttribute('aria-expanded') === 'true';
-      toggle.setAttribute('aria-expanded', String(!open));
-      gnb.classList.toggle('is-open', !open);
-      gnb.setAttribute('aria-hidden', String(open));
+      setOpen(toggle.getAttribute('aria-expanded') !== 'true');
     });
     gnb.addEventListener('click', function (e) {
-      if (e.target.tagName === 'A' && window.matchMedia('(max-width: 860px)').matches) {
-        toggle.setAttribute('aria-expanded', 'false');
-        gnb.classList.remove('is-open');
-      }
+      if (e.target.tagName === 'A' && window.matchMedia('(max-width: 860px)').matches) setOpen(false);
     });
   }
 
