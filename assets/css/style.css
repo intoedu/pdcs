@@ -413,6 +413,8 @@ ul { margin: 0; padding: 0; list-style: none; }
 .footer__col ul { margin-top: 14px; display: flex; flex-direction: column; gap: 10px; }
 .footer__col a { font-size: 13.5px; color: var(--on-navy-dim); text-decoration: none; }
 .footer__col a:hover { color: #fff; }
+/* 바깥 사이트로 나간다는 표시 — 새 탭으로 열리므로 학교 사이트는 닫히지 않는다 */
+.footer__col .ext { margin-left: 5px; font-size: 11px; opacity: .7; }
 .footer__bottom {
   padding: 22px 0; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
   font-size: 12.5px; color: #93A6C2;
