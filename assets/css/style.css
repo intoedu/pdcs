@@ -204,6 +204,10 @@ ul { margin: 0; padding: 0; list-style: none; }
 .hero__slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.4s var(--ease); }
 .hero__slide.is-active { opacity: 1; }
 .hero__slide img { width: 100%; height: 100%; object-fit: cover; filter: contrast(1.05) saturate(1.04); }
+.hero__slide picture { display: block; width: 100%; height: 100%; }
+/* 항공샷은 건물이 화면 위쪽(세로 12~48%)에 있다. 잘릴 때 건물이 남도록 기준점을 위로 올린다.
+   좁은 화면에서는 건물 중심으로 미리 세로로 자른 사진을 따로 내려보낸다 (picture) */
+.hero__slide img[src*="hero-aerial"] { object-position: center 34%; }
 .hero__slide:nth-child(1) img { object-position: 70% 50%; }
 .hero__slide:nth-child(2) img { object-position: 78% 55%; }
 .hero__slide:nth-child(3) img { object-position: 66% 48%; }

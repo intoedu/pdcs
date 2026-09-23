@@ -15,7 +15,7 @@
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 <script>document.documentElement.className += ' js';</script>
 <link rel="preload" as="image" href="assets/img/hero-nature.jpg" fetchpriority="high">
-<link rel="stylesheet" href="assets/css/style.css?v=90d53907">
+<link rel="stylesheet" href="assets/css/style.css?v=d7f6b42f">
 </head>
 <body>
 <a class="skip-link" href="#main">본문 바로가기</a>
@@ -64,7 +64,8 @@
 
   <section class="hero">
     <div class="hero__media" aria-hidden="true">
-      <div class="hero__slide is-active"><img src="assets/img/hero-main.jpg" alt=""></div>
+      <div class="hero__slide is-active"><picture><source media="(max-width: 700px)" srcset="assets/img/hero-aerial-m.jpg"><img src="assets/img/hero-aerial.jpg" alt="" fetchpriority="high"></picture></div>
+      <div class="hero__slide"><img src="assets/img/hero-main.jpg" alt=""></div>
       <div class="hero__slide"><img src="assets/img/hero-nature.jpg" alt=""></div>
       <div class="hero__slide"><img src="assets/img/hero-dorm.jpg" alt=""></div>
     </div>
@@ -82,9 +83,10 @@
     </div>
     <div class="hero__marks">
       <div class="wrap">
-        <button class="hero__mark" type="button" data-go="0" aria-current="true" aria-label="본관 전경 사진 보기"></button>
-        <button class="hero__mark" type="button" data-go="1" aria-label="운동장 사진 보기"></button>
-        <button class="hero__mark" type="button" data-go="2" aria-label="기숙사동 사진 보기"></button>
+        <button class="hero__mark" type="button" data-go="0" aria-current="true" aria-label="학교 항공 전경 사진 보기"></button>
+        <button class="hero__mark" type="button" data-go="1" aria-label="본관 전경 사진 보기"></button>
+        <button class="hero__mark" type="button" data-go="2" aria-label="운동장 사진 보기"></button>
+        <button class="hero__mark" type="button" data-go="3" aria-label="기숙사동 사진 보기"></button>
       </div>
     </div>
     <div class="hero__scroll" aria-hidden="true">
