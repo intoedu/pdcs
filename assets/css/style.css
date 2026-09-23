@@ -111,6 +111,22 @@ ul { margin: 0; padding: 0; list-style: none; }
 .utility a:hover { color: #fff; }
 .utility__links { display: flex; gap: 20px; align-items: center; }
 .utility__tel { color: var(--gold); font-weight: 500; }
+/* 충남교육청 등록 표시 — 대안교육기관이라는 사실을 상단에서 먼저 말한다 */
+.utility__badge {
+  display: inline-block; margin-right: 8px; padding: 1px 8px;
+  border: 1px solid rgba(200, 155, 60, .55); border-radius: 3px;
+  color: var(--gold); font-size: 11.5px; font-weight: 500; line-height: 19px; letter-spacing: -.01em;
+}
+/* 카카오 오픈채팅 — 학교가 실제로 쓰는 상담 창구다 */
+.kakao-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 0 12px; height: 27px; border-radius: 14px;
+  background: #FEE500; color: #3C1E1E !important;
+  font-size: 12.5px; font-weight: 600; line-height: 1; white-space: nowrap;
+}
+.kakao-link:hover { background: #F5DC00; color: #3C1E1E !important; }
+.kakao-link svg { flex: none; }
+.utility__kakao { display: inline-flex; }
 
 /* 상단 전체 — 히어로 위에 투명하게 얹히고, 내리면 흰 바탕으로 */
 .site-top {
@@ -149,6 +165,11 @@ ul { margin: 0; padding: 0; list-style: none; }
 .brand img { width: 50px; height: 50px; }
 .brand__ko { display: block; font-size: 18px; font-weight: 700; color: var(--navy-deep); letter-spacing: -0.02em; }
 .brand__en { display: block; font-size: 10px; letter-spacing: 0.15em; color: var(--gold-dark); margin-top: 2px; }
+.brand__kind {
+  display: block; font-size: 11px; font-weight: 600; letter-spacing: .02em;
+  color: var(--gold-dark); margin-bottom: 1px;
+}
+.site-top:not(.is-stuck) .brand__kind { color: var(--gold); text-shadow: 0 1px 10px rgba(4, 14, 30, .5); }
 
 .gnb { display: flex; align-items: center; gap: 30px; }
 .gnb a {
@@ -312,10 +333,11 @@ ul { margin: 0; padding: 0; list-style: none; }
 .pillar p { margin-top: 14px; font-size: 15.5px; color: var(--body); line-height: 1.95; }
 
 /* ── 하루 일과 ────────────────────────── */
-.day { margin-top: 46px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border-top: 1px solid var(--navy-line); }
-.day__item { padding: 30px 24px 0 0; border-right: 1px solid var(--navy-line); }
+.day { margin-top: 46px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--navy-line); }
+.day__item:nth-child(4n) { border-right: 0; }
+.day__item { padding: 30px 24px 30px 0; border-right: 1px solid var(--navy-line); }
 .day__item:last-child { border-right: 0; }
-.day__item:not(:first-child) { padding-left: 24px; }
+.day__item:not(:nth-child(4n+1)) { padding-left: 24px; }
 .day__time { font-size: 24px; font-weight: 700; color: var(--gold); }
 .day__name { margin-top: 10px; font-size: 16px; font-weight: 500; color: #fff; }
 .day__desc { margin-top: 8px; font-size: 14.5px; color: #9FB0CB; line-height: 1.9; }
@@ -415,6 +437,15 @@ ul { margin: 0; padding: 0; list-style: none; }
 .footer__col a:hover { color: #fff; }
 /* 바깥 사이트로 나간다는 표시 — 새 탭으로 열리므로 학교 사이트는 닫히지 않는다 */
 .footer__col .ext { margin-left: 5px; font-size: 11px; opacity: .7; }
+.sns { margin-top: 22px; display: flex; gap: 10px; flex-wrap: wrap; }
+.sns a {
+  width: 38px; height: 38px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--navy-line); color: var(--on-navy-dim);
+  transition: background .25s var(--ease), color .25s var(--ease), border-color .25s var(--ease);
+}
+.sns a:hover { background: var(--gold); border-color: var(--gold); color: var(--navy-deep); }
+.sns a.sns--kakao:hover { background: #FEE500; border-color: #FEE500; color: #3C1E1E; }
 .footer__bottom {
   padding: 22px 0; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
   font-size: 12.5px; color: #93A6C2;
@@ -470,7 +501,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .staff__role { margin-top: 6px; font-size: 14px; color: var(--muted); }
 
 /* ── 입학 절차 ────────────────────────── */
-.steps { margin-top: 38px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 15px; }
+.steps { margin-top: 38px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 15px; }
 .step { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 26px 22px; }
 .step--last { background: var(--navy-deep); border-color: var(--navy-deep); }
 .step__no { font-size: 30px; font-weight: 700; color: var(--gold); line-height: 1; }
@@ -558,7 +589,8 @@ ul { margin: 0; padding: 0; list-style: none; }
   .staff { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .day { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .day__item { border-bottom: 1px solid var(--navy-line); padding-bottom: 26px; }
-  .day__item:not(:first-child) { padding-left: 24px; }
+  .day__item:not(:nth-child(2n+1)) { padding-left: 24px; }
+  .day__item:nth-child(2n+1) { padding-left: 0; }
   .day__item:nth-child(2n) { border-right: 0; }
 }
 
@@ -574,7 +606,11 @@ ul { margin: 0; padding: 0; list-style: none; }
   .hero__scroll { display: none; }
   .hero__marks { bottom: 26px; }
   .hero__mark { width: 34px; }
-  .utility { display: none; }
+  /* 모바일에서는 유틸바를 카카오 상담 버튼 한 줄로 줄인다 */
+  .utility > .wrap > span:first-child { display: none; }
+  .utility__links > *:not(.utility__kakao) { display: none; }
+  .utility .wrap, .utility__links { justify-content: center; width: 100%; }
+  .utility { line-height: 42px; }
   .header .wrap { height: 68px; }
   .brand img { width: 40px; height: 40px; }
   .brand__ko { font-size: 16px; }

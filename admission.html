@@ -13,7 +13,7 @@
 <link rel="icon" href="assets/img/favicon-64.png" sizes="64x64">
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 <script>document.documentElement.className += ' js';</script>
-<link rel="stylesheet" href="assets/css/style.css?v=302ccfae">
+<link rel="stylesheet" href="assets/css/style.css?v=90d53907">
 </head>
 <body>
 <a class="skip-link" href="#main">본문 바로가기</a>
@@ -21,8 +21,9 @@
 <div class="site-top">
   <div class="utility">
     <div class="wrap">
-      <span>충청남도 아산 · 기숙형 대안교육기관</span>
+      <span><span class="utility__badge">충남교육청 등록</span>대안교육기관 · 충청남도 아산 기숙형</span>
       <span class="utility__links">
+        <span class="utility__kakao"><a class="kakao-link" href="https://open.kakao.com/me/pdcs_daniel" target="_blank" rel="noopener"><svg width="15" height="14" viewBox="0 0 24 22" aria-hidden="true"><path fill="currentColor" d="M12 1C5.9 1 1 4.86 1 9.62c0 3.06 2.04 5.74 5.11 7.25-.22.8-.82 2.98-.94 3.44-.14.58.21.57.45.42.18-.12 2.93-1.99 4.12-2.79.74.1 1.5.16 2.26.16 6.08 0 11-3.86 11-8.48S18.08 1 12 1z"/></svg>카카오톡 상담</a></span>
         <span class="utility__tel">입학 문의 041-425-0085</span>
         <a href="index.html#news">공지사항</a>
         <a href="index.html#visit">오시는 길</a>
@@ -35,6 +36,7 @@
       <a class="brand" href="index.html">
         <img src="assets/img/logo-96.png" srcset="assets/img/logo-96.png 1x, assets/img/logo-192.png 2x" alt="" width="50" height="50" fetchpriority="high">
         <span>
+          <span class="brand__kind">대안교육기관</span>
           <span class="brand__ko">폴앤다니엘기독학교</span>
           <span class="brand__en">PAUL AND DANIEL CHRISTIAN SCHOOL</span>
         </span>
@@ -74,32 +76,46 @@
     <div class="wrap">
       <div class="section-head reveal">
         <h2 class="section-title" style="margin-top:0">입학 절차</h2>
-        <p style="font-size:14px;color:var(--muted)">※ 실제 전형 일정 · 서류는 학교 확인 후 확정합니다.</p>
       </div>
       <div class="steps">
         <article class="step reveal">
           <p class="step__no">01</p>
-          <p class="step__name">상담 신청</p>
-          <p>홈페이지 양식 또는 전화로 신청합니다.</p>
+          <p class="step__name">입학 상담</p>
+          <p>전화 · 카카오톡 · 메일 어느 쪽이든 편하신 방법으로 문의하십시오.</p>
         </article>
         <article class="step reveal" data-delay="1">
           <p class="step__no">02</p>
-          <p class="step__name">학교 방문</p>
-          <p>학교를 둘러보고 교육 과정을 안내받습니다.</p>
+          <p class="step__name">1차 입학 서류 작성</p>
+          <p>안내드리는 1차 서류를 작성해 제출합니다.</p>
         </article>
         <article class="step reveal" data-delay="2">
           <p class="step__no">03</p>
-          <p class="step__name">학부모 · 학생 면담</p>
-          <p>가정의 신앙과 교육관을 함께 나눕니다.</p>
+          <p class="step__name">1차 서류 검토</p>
+          <p>학교에서 제출하신 내용을 살펴봅니다.</p>
         </article>
         <article class="step reveal" data-delay="3">
           <p class="step__no">04</p>
-          <p class="step__name">서류 제출</p>
-          <p>지원서와 안내 서류를 제출합니다.</p>
+          <p class="step__name">2차 입학 서류 작성</p>
+          <p>1차 검토 후 2차 서류를 작성합니다.</p>
+        </article>
+        <article class="step reveal" data-delay="3">
+          <p class="step__no">05</p>
+          <p class="step__name">2차 서류 검토</p>
+          <p>자녀의 상황을 좀 더 자세히 확인합니다.</p>
+        </article>
+        <article class="step reveal" data-delay="3">
+          <p class="step__no">06</p>
+          <p class="step__name">학부모 · 학생 대면 면접</p>
+          <p>학교에 오셔서 가정의 교육관과 자녀의 이야기를 함께 나눕니다.</p>
+        </article>
+        <article class="step reveal" data-delay="3">
+          <p class="step__no">07</p>
+          <p class="step__name">최종 검토</p>
+          <p>면접과 서류를 종합해 최종적으로 검토합니다.</p>
         </article>
         <article class="step step--last reveal" data-delay="3">
-          <p class="step__no">05</p>
-          <p class="step__name">입학 확정</p>
+          <p class="step__no">08</p>
+          <p class="step__name">입학</p>
           <p>입학 안내와 기숙 생활 오리엔테이션을 진행합니다.</p>
         </article>
       </div>
@@ -161,7 +177,8 @@
               </label>
             </div>
 
-            <p style="margin-top:26px"><button class="btn btn--primary btn--block" type="submit" style="min-height:58px;font-size:17px">상담 신청 보내기</button></p>
+            <p style="margin-top:26px"><button class="btn btn--primary btn--block" type="submit" style="min-height:58px;font-size:17px">메일로 상담 신청 보내기</button></p>
+            <p style="margin-top:10px"><a class="kakao-link" href="https://open.kakao.com/me/pdcs_daniel" target="_blank" rel="noopener" style="display:flex;justify-content:center;width:100%;height:54px;border-radius:8px;font-size:16px;gap:8px"><svg width="19" height="18" viewBox="0 0 24 22" aria-hidden="true"><path fill="currentColor" d="M12 1C5.9 1 1 4.86 1 9.62c0 3.06 2.04 5.74 5.11 7.25-.22.8-.82 2.98-.94 3.44-.14.58.21.57.45.42.18-.12 2.93-1.99 4.12-2.79.74.1 1.5.16 2.26.16 6.08 0 11-3.86 11-8.48S18.08 1 12 1z"/></svg>카카오톡으로 바로 상담하기</a></p>
             <p style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap">
               <button class="btn btn--outline btn--sm" type="button" id="copy-form" style="flex:1">작성 내용 복사</button>
               <a class="btn btn--outline btn--sm" href="tel:041-425-0085" style="flex:1">전화로 문의</a>
@@ -185,6 +202,10 @@
               <div class="row">
                 <dt>유선</dt>
                 <dd><a href="tel:041-425-0085" style="color:#fff">041-425-0085</a><br>041-425-0096 · 042-623-7067</dd>
+              </div>
+              <div class="row">
+                <dt>카카오톡</dt>
+                <dd><a href="https://open.kakao.com/me/pdcs_daniel" target="_blank" rel="noopener" style="color:#fff">오픈채팅으로 상담</a></dd>
               </div>
               <div class="row">
                 <dt>메일</dt>
@@ -257,6 +278,13 @@
           </div>
         </div>
         <p class="footer__addr">충청남도 아산시 음봉면 아산온천로 148-39<br>대표 041-425-0085 · 운영시간 평일 09:00 – 17:00<br>교장 김남주</p>
+        <div class="sns">
+          <a class="sns--kakao" href="https://open.kakao.com/me/pdcs_daniel" target="_blank" rel="noopener" aria-label="카카오톡 오픈채팅으로 상담하기"><svg width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M12 4C7.58 4 4 6.8 4 10.25c0 2.22 1.48 4.16 3.7 5.26-.16.58-.6 2.16-.68 2.5-.1.42.15.41.32.3.13-.08 2.13-1.44 3-2.02.53.07 1.08.11 1.66.11 4.42 0 8-2.8 8-6.15S16.42 4 12 4z"/></svg></a>
+          <a href="https://www.youtube.com/@PDCS-Daniel" target="_blank" rel="noopener" aria-label="유튜브 채널 (새 창)"><svg width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M21.6 7.2a2.5 2.5 0 0 0-1.76-1.77C18.25 5 12 5 12 5s-6.25 0-7.84.43A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.76 1.77C5.75 19 12 19 12 19s6.25 0 7.84-.43a2.5 2.5 0 0 0 1.76-1.77A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8zM10 15V9l5.2 3-5.2 3z"/></svg></a>
+          <a href="https://blog.naver.com/pdcs_daniel" target="_blank" rel="noopener" aria-label="네이버 블로그 (새 창)"><svg width="22" height="22" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" d="M5 4.6h9.4L19 9.2V19a1.4 1.4 0 0 1-1.4 1.4H5A1.4 1.4 0 0 1 3.6 19V6A1.4 1.4 0 0 1 5 4.6z"/><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" d="M7.6 11.4h8M7.6 15.2h5.4"/></svg></a>
+          <a href="https://www.instagram.com/pdcs.daniel/" target="_blank" rel="noopener" aria-label="인스타그램 (새 창)"><svg width="22" height="22" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.7" d="M7.6 3.6h8.8a4 4 0 0 1 4 4v8.8a4 4 0 0 1-4 4H7.6a4 4 0 0 1-4-4V7.6a4 4 0 0 1 4-4z"/><circle cx="12" cy="12" r="3.6" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="17.1" cy="6.9" r="1.15" fill="currentColor"/></svg></a>
+          <a href="https://www.facebook.com/pdcs.daniel" target="_blank" rel="noopener" aria-label="페이스북 (새 창)"><svg width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M13.5 21v-8h2.7l.4-3.1h-3.1V7.9c0-.9.25-1.5 1.55-1.5h1.65V3.63A22 22 0 0 0 14.3 3.5c-2.4 0-4 1.46-4 4.14V9.9H7.6V13h2.7v8z"/></svg></a>
+        </div>
       </div>
       <div class="footer__cols">
         <div class="footer__col">
