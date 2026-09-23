@@ -51,6 +51,10 @@ body {
 }
 
 img { max-width: 100%; display: block; }
+/* hidden 이 붙은 요소는 무조건 숨긴다.
+   브라우저 기본 규칙은 명시도가 낮아 다른 규칙에 밀린다.
+   실제로 히어로의 멈춤·재생 아이콘이 둘 다 보인 적이 있다. */
+[hidden] { display: none !important; }
 a { color: var(--navy-deep); }
 h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.02em; line-height: 1.4; }
 p { margin: 0; }
@@ -103,19 +107,19 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 /* ── 상단 유틸 · 헤더 ──────────────────── */
 .utility {
-  background: var(--navy-dark); color: var(--on-navy-dim);
+  background: #EEF1F6; color: #4B5568;
   font-size: 13px; line-height: 44px;
 }
 .utility .wrap { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
-.utility a { color: var(--on-navy-dim); text-decoration: none; }
-.utility a:hover { color: #fff; }
+.utility a { color: #4B5568; text-decoration: none; }
+.utility a:hover { color: var(--navy-deep); }
 .utility__links { display: flex; gap: 20px; align-items: center; }
-.utility__tel { color: var(--gold); font-weight: 500; }
+.utility__tel { color: var(--navy-deep); font-weight: 600; }
 /* 충남교육청 등록 표시 — 대안교육기관이라는 사실을 상단에서 먼저 말한다 */
 .utility__badge {
   display: inline-block; margin-right: 8px; padding: 1px 8px;
-  border: 1px solid rgba(200, 155, 60, .55); border-radius: 3px;
-  color: var(--gold); font-size: 11.5px; font-weight: 500; line-height: 19px; letter-spacing: -.01em;
+  border: 1px solid rgba(14, 34, 69, .3); border-radius: 3px;
+  color: var(--navy-deep); font-size: 11.5px; font-weight: 500; line-height: 19px; letter-spacing: -.01em;
 }
 /* 카카오 오픈채팅 — 학교가 실제로 쓰는 상담 창구다 */
 .kakao-link {
@@ -133,30 +137,24 @@ ul { margin: 0; padding: 0; list-style: none; }
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   transition: background-color .32s var(--ease), box-shadow .32s;
 }
-.site-top .utility { background: rgba(8, 20, 42, .32); backdrop-filter: blur(6px); color: #D5DEEC; }
-.site-top .utility a { color: #D5DEEC; }
-.site-top.is-stuck { background: rgba(255, 255, 255, .97); backdrop-filter: blur(10px); box-shadow: 0 1px 14px rgba(14, 34, 69, .1); }
-.site-top.is-stuck .utility { background: var(--navy-dark); color: var(--on-navy-dim); }
-.site-top.is-stuck .utility a { color: var(--on-navy-dim); }
+/* 기존 홈페이지처럼 사진 위에 밝은 띠가 얹힌다. 내려도 같은 색, 그림자만 생긴다 */
+.site-top { background: rgba(255, 255, 255, .93); backdrop-filter: blur(10px); }
+.site-top.is-stuck { background: rgba(255, 255, 255, .985); box-shadow: 0 1px 16px rgba(14, 34, 69, .13); }
+.site-top .utility { background: #EEF1F6; color: #4B5568; border-bottom: 1px solid rgba(14, 34, 69, .07); }
+.site-top .utility a { color: #4B5568; }
+.site-top .utility a:hover { color: var(--navy-deep); }
 
 .header {
   background: transparent;
-  border-bottom: 1px solid rgba(255, 255, 255, .16);
+  border-bottom: 1px solid var(--line);
   transition: border-color .32s;
 }
 .header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 20px; height: 84px; }
 .site-top.is-stuck .header { border-bottom-color: var(--line); }
 
-/* 투명 상태에서는 글자를 흰색으로 */
-.site-top:not(.is-stuck) .brand__ko { color: #fff; text-shadow: 0 1px 10px rgba(4, 14, 30, .4); }
-.site-top:not(.is-stuck) .brand__en { color: var(--gold); }
-.site-top:not(.is-stuck) .gnb > a:not(.btn) { color: #fff; text-shadow: 0 1px 10px rgba(4, 14, 30, .4); }
-.site-top:not(.is-stuck) .gnb > a:not(.btn):hover { color: var(--gold); }
-.site-top:not(.is-stuck) .gnb > a:not(.btn)::after { background: var(--gold); }
-.site-top:not(.is-stuck) .nav-toggle { background: rgba(255, 255, 255, .14); border-color: rgba(255, 255, 255, .4); }
-.site-top:not(.is-stuck) .nav-toggle span { background: #fff; }
-/* 네이비 엠블럼이 네이비 배경에 묻히지 않게 미세한 그림자를 준다 */
-.site-top:not(.is-stuck) .brand img { filter: drop-shadow(0 1px 7px rgba(4, 14, 30, .55)); }
+/* 상단이 항상 밝으므로 글자는 늘 어두운 색이다.
+   예전에는 투명 헤더일 때만 흰 글자로 바꾸는 규칙이 있었는데,
+   모바일에서 메뉴를 열면 흰 바탕에 흰 글씨가 되어 배포된 적이 있다. 그 규칙을 통째로 없앴다. */
 
 /* 서브 페이지는 히어로가 짧아 헤더 높이만큼 띄운다 */
 .subhero__inner { padding-top: clamp(126px, 12vw, 160px) !important; }
@@ -169,7 +167,6 @@ ul { margin: 0; padding: 0; list-style: none; }
   display: block; font-size: 11px; font-weight: 600; letter-spacing: .02em;
   color: var(--gold-dark); margin-bottom: 1px;
 }
-.site-top:not(.is-stuck) .brand__kind { color: var(--gold); text-shadow: 0 1px 10px rgba(4, 14, 30, .5); }
 
 .gnb { display: flex; align-items: center; gap: 30px; }
 .gnb a {
@@ -214,6 +211,43 @@ ul { margin: 0; padding: 0; list-style: none; }
 .hero__slide.is-active img { animation: kenBurns 9s ease-out forwards; }
 
 /* 지금 몇 번째인지만 조용히 알린다 — 숫자도, 재생 버튼도 두지 않는다 */
+/* 기존 홈페이지의 메인 카피 — 영문 대문자 슬로건이 앞, 한글이 부제 */
+.hero__title-en {
+  display: block; color: #fff; font-weight: 800;
+  font-size: clamp(38px, 10.4vw, 60px); line-height: 1.02;
+  letter-spacing: -0.022em; word-break: keep-all;
+  text-shadow: 0 2px 10px rgba(4, 14, 30, .5), 0 8px 34px rgba(4, 14, 30, .38);
+}
+.hero__title-ko {
+  display: block; margin-top: 20px; color: #fff; font-weight: 500;
+  font-size: clamp(17px, 4.4vw, 22px); letter-spacing: -0.02em;
+  text-shadow: 0 1px 8px rgba(4, 14, 30, .62), 0 4px 20px rgba(4, 14, 30, .45);
+}
+@media (min-width: 1180px) {
+  .hero__title-en { font-size: clamp(60px, 5.1vw, 104px); letter-spacing: -0.026em; }
+  .hero__title-ko { margin-top: 24px; font-size: 23px; }
+}
+
+/* 슬라이더 조작 — 일시정지 · 이전 · 번호 · 다음 (기존 홈페이지와 같은 배치) */
+.hero__ctrl { position: absolute; left: 0; right: 0; bottom: 46px; z-index: 3; }
+.hero__ctrl .wrap { display: flex; align-items: center; gap: 14px; }
+.hero__btn {
+  width: 34px; height: 34px; padding: 0; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: rgba(255, 255, 255, .16); border: 1px solid rgba(255, 255, 255, .5);
+  border-radius: 50%; color: #fff;
+  transition: background-color .3s var(--ease), border-color .3s var(--ease);
+}
+.hero__btn:hover { background: rgba(255, 255, 255, .34); border-color: #fff; }
+.hero__nums { display: flex; align-items: center; gap: 12px; }
+.hero__num {
+  padding: 0; border: 0; background: none; cursor: pointer;
+  font-family: inherit; font-size: 15px; font-weight: 600; line-height: 1;
+  color: rgba(255, 255, 255, .62); transition: color .3s var(--ease);
+  text-shadow: 0 1px 6px rgba(4, 14, 30, .6);
+}
+.hero__num:hover { color: #fff; }
+.hero__num[aria-current="true"] { color: var(--gold); }
 .hero__marks { position: absolute; left: 0; right: 0; bottom: 40px; z-index: 3; }
 .hero__marks .wrap { display: flex; gap: 8px; }
 .hero__mark {
@@ -227,11 +261,12 @@ ul { margin: 0; padding: 0; list-style: none; }
 /* 장막 — 가로 그라데이션 + 위아래 비네팅 */
 .hero__veil { position: absolute; inset: 0; }
 .hero__veil::before, .hero__veil::after { content: ""; position: absolute; inset: 0; }
+/* 기존 홈페이지처럼 사진을 그대로 보여준다. 글자가 읽히는 만큼만 아주 옅게 깐다 */
 .hero__veil::before {
-  background: linear-gradient(101deg, rgba(8, 20, 42, .86) 0%, rgba(8, 20, 42, .66) 30%, rgba(8, 20, 42, .30) 56%, rgba(8, 20, 42, .12) 78%, rgba(8, 20, 42, .18) 100%);
+  background: linear-gradient(104deg, rgba(8, 20, 42, .50) 0%, rgba(8, 20, 42, .30) 34%, rgba(8, 20, 42, .10) 60%, rgba(8, 20, 42, 0) 82%);
 }
 .hero__veil::after {
-  background: linear-gradient(180deg, rgba(8, 20, 42, .34) 0%, rgba(8, 20, 42, 0) 22%, rgba(8, 20, 42, 0) 60%, rgba(8, 20, 42, .44) 100%);
+  background: linear-gradient(180deg, rgba(8, 20, 42, .22) 0%, rgba(8, 20, 42, 0) 20%, rgba(8, 20, 42, 0) 62%, rgba(8, 20, 42, .30) 100%);
 }
 
 .hero__inner {
@@ -604,7 +639,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   .hero .btn { min-height: 54px; font-size: 16px; }
   .hero__lead { margin-top: 22px; }
   .hero__actions { margin-top: 28px; }
-  .hero__veil::before { background: linear-gradient(180deg, rgba(8, 20, 42, .40) 0%, rgba(8, 20, 42, .18) 24%, rgba(8, 20, 42, .62) 60%, rgba(8, 20, 42, .86) 100%); }
+  .hero__veil::before { background: linear-gradient(180deg, rgba(8, 20, 42, .30) 0%, rgba(8, 20, 42, .10) 26%, rgba(8, 20, 42, .42) 62%, rgba(8, 20, 42, .66) 100%); }
   .hero__veil::after { display: none; }
   .hero__actions .btn { flex: 1 1 100%; }
   .hero__scroll { display: none; }

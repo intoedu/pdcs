@@ -15,7 +15,7 @@
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 <script>document.documentElement.className += ' js';</script>
 <link rel="preload" as="image" href="assets/img/hero-nature.jpg" fetchpriority="high">
-<link rel="stylesheet" href="assets/css/style.css?v=d7f6b42f">
+<link rel="stylesheet" href="assets/css/style.css?v=4714746d">
 </head>
 <body>
 <a class="skip-link" href="#main">본문 바로가기</a>
@@ -72,21 +72,36 @@
     <div class="hero__veil" aria-hidden="true"></div>
     <div class="wrap">
       <div class="hero__inner">
-        <p class="eyebrow eyebrow--light reveal">충청남도 아산 · 대안교육기관</p>
-        <h1 class="hero__title reveal" data-delay="1">흔들리는 시대에,<br>흔들리지 않는<br><em>다음 세대</em>를 세웁니다</h1>
-        <p class="hero__lead reveal" data-delay="2">매일 세 번의 예배와 말씀, 자기주도학습, 그리고 기숙사 공동생활.<br>충남 아산의 <b style="font-weight:500;color:#fff">대안교육기관</b>, 폴앤다니엘기독학교입니다.</p>
+        <p class="eyebrow eyebrow--light reveal">충청남도 아산 · 충남교육청 등록 대안교육기관</p>
+        <h1 class="hero__title reveal" data-delay="1">
+          <span class="hero__title-en">FOR CHRIST!<br>FOR ALL NATIONS!</span>
+          <span class="hero__title-ko">대안교육기관 폴앤다니엘기독학교</span>
+        </h1>
+        <p class="hero__lead reveal" data-delay="2">매일 세 번의 예배와 말씀, 자기주도학습, 그리고 기숙사 공동생활.</p>
         <div class="hero__actions reveal" data-delay="3">
           <a class="btn btn--primary" href="admission.html#form">입학 상담 신청하기</a>
           <a class="btn btn--ghost" href="#day">하루 일과 보기</a>
         </div>
       </div>
     </div>
-    <div class="hero__marks">
+    <div class="hero__ctrl">
       <div class="wrap">
-        <button class="hero__mark" type="button" data-go="0" aria-current="true" aria-label="학교 항공 전경 사진 보기"></button>
-        <button class="hero__mark" type="button" data-go="1" aria-label="본관 전경 사진 보기"></button>
-        <button class="hero__mark" type="button" data-go="2" aria-label="운동장 사진 보기"></button>
-        <button class="hero__mark" type="button" data-go="3" aria-label="기숙사동 사진 보기"></button>
+        <button class="hero__btn" type="button" id="hero-play" aria-label="사진 자동 넘김 멈추기">
+          <svg width="11" height="12" viewBox="0 0 12 14" aria-hidden="true" data-icon="pause"><rect x="1" y="1" width="3.4" height="12" rx="1" fill="currentColor"/><rect x="7.6" y="1" width="3.4" height="12" rx="1" fill="currentColor"/></svg>
+          <svg width="11" height="12" viewBox="0 0 12 14" aria-hidden="true" data-icon="play" hidden><path d="M1.6 1.4 11 7l-9.4 5.6z" fill="currentColor"/></svg>
+        </button>
+        <button class="hero__btn" type="button" id="hero-prev" aria-label="이전 사진">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+        </button>
+        <span class="hero__nums">
+          <button class="hero__num" type="button" data-go="0" aria-current="true" aria-label="1번 사진 — 학교 항공 전경">1</button>
+          <button class="hero__num" type="button" data-go="1" aria-label="2번 사진 — 본관 전경">2</button>
+          <button class="hero__num" type="button" data-go="2" aria-label="3번 사진 — 운동장">3</button>
+          <button class="hero__num" type="button" data-go="3" aria-label="4번 사진 — 기숙사동">4</button>
+        </span>
+        <button class="hero__btn" type="button" id="hero-next" aria-label="다음 사진">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
       </div>
     </div>
     <div class="hero__scroll" aria-hidden="true">
@@ -484,6 +499,6 @@
   <a class="btn btn--primary" href="admission.html#form">입학 상담 신청</a>
 </div>
 
-<script src="assets/js/main.js?v=2670aa65"></script>
+<script src="assets/js/main.js?v=f1e04cdb"></script>
 </body>
 </html>

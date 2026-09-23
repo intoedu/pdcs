@@ -49,35 +49,66 @@
     }, { passive: true });
   }
 
-  /* 히어로 사진 — 조용히 넘어간다 */
+  /* 히어로 사진 — 자동으로 넘어가고, 직접 넘길 수도 있다 */
   var slides = document.querySelectorAll('.hero__slide');
-  var marks = document.querySelectorAll('.hero__mark');
+  var nums = document.querySelectorAll('.hero__num');
   if (slides.length > 1) {
     var idx = 0, timer = null, HOLD = 7000;
+    var playBtn = document.getElementById('hero-play');
+    var pauseIcon = playBtn && playBtn.querySelector('[data-icon="pause"]');
+    var playIcon = playBtn && playBtn.querySelector('[data-icon="play"]');
 
     var show = function (i) {
       idx = (i + slides.length) % slides.length;
       for (var a = 0; a < slides.length; a++) slides[a].classList.toggle('is-active', a === idx);
-      for (var c = 0; c < marks.length; c++) {
-        if (c === idx) marks[c].setAttribute('aria-current', 'true');
-        else marks[c].removeAttribute('aria-current');
+      for (var c = 0; c < nums.length; c++) {
+        if (c === idx) nums[c].setAttribute('aria-current', 'true');
+        else nums[c].removeAttribute('aria-current');
       }
     };
     var start = function () { if (!reduced && !timer) timer = setInterval(function () { show(idx + 1); }, HOLD); };
     var stop = function () { if (timer) { clearInterval(timer); timer = null; } };
 
-    start();
+    /* 버튼 모양은 HTML 의 hidden 에 기대지 않고 항상 여기서 맞춘다.
+       예전에 멈춤과 재생 아이콘이 동시에 보인 적이 있다 */
+    /* SVG 요소에는 hidden 프로퍼티가 없다(HTMLElement 에만 있다).
+       el.hidden = true 로는 화면이 바뀌지 않아 멈춤·재생 아이콘이 둘 다 보였다.
+       속성을 직접 붙였다 뗀다. */
+    var setHidden = function (el, on) {
+      if (!el) return;
+      if (on) el.setAttribute('hidden', ''); else el.removeAttribute('hidden');
+    };
+    var paint = function () {
+      var running = !!timer;
+      setHidden(pauseIcon, !running);
+      setHidden(playIcon, running);
+      if (playBtn) playBtn.setAttribute('aria-label', running ? '사진 자동 넘김 멈추기' : '사진 자동 넘김 다시 하기');
+    };
+    var restart = function () { stop(); start(); paint(); };
 
-    Array.prototype.forEach.call(marks, function (mark) {
-      mark.addEventListener('click', function () {
-        show(parseInt(mark.getAttribute('data-go'), 10) || 0);
-        stop(); start();
+    start(); paint();
+
+    Array.prototype.forEach.call(nums, function (n) {
+      n.addEventListener('click', function () {
+        show(parseInt(n.getAttribute('data-go'), 10) || 0);
+        restart();
       });
+    });
+    var prev = document.getElementById('hero-prev');
+    var next = document.getElementById('hero-next');
+    if (prev) prev.addEventListener('click', function () { show(idx - 1); restart(); });
+    if (next) next.addEventListener('click', function () { show(idx + 1); restart(); });
+    if (playBtn) playBtn.addEventListener('click', function () {
+      if (timer) { stop(); } else { start(); }
+      paint();
     });
 
     /* 다른 탭에 가 있는 동안에는 돌리지 않는다 */
+    var wasRunning = true;
     document.addEventListener('visibilitychange', function () {
-      if (document.hidden) stop(); else start();
+      if (document.hidden) { wasRunning = !!timer; stop(); }
+      else if (wasRunning) { start(); }
+      paint();
     });
   }
 

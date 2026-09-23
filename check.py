@@ -182,6 +182,30 @@ def check_browser(save_shots=False):
                 for e in errs:
                     fail(f"{page} {w}px: {e}")
 
+                # 히어로 슬라이더를 실제로 눌러본다 —
+                # SVG 에는 hidden 프로퍼티가 없어서 멈춤·재생 아이콘이 둘 다 보인 적이 있다
+                if page == "index.html":
+                    shown = pg.evaluate("""() => {
+                      const v = s => { const e = document.querySelector(s);
+                        return e ? e.getBoundingClientRect().width > 0 : null; };
+                      return { 멈춤: v('[data-icon="pause"]'), 재생: v('[data-icon="play"]') };
+                    }""")
+                    if shown["멈춤"] is not None:
+                        if shown["멈춤"] and shown["재생"]:
+                            fail(f"{page} {w}px: 멈춤과 재생 아이콘이 동시에 보인다")
+                        if not shown["멈춤"] and not shown["재생"]:
+                            fail(f"{page} {w}px: 멈춤·재생 아이콘이 둘 다 안 보인다")
+                        btn = pg.query_selector("#hero-play")
+                        if btn:
+                            btn.click(); pg.wait_for_timeout(250)
+                            after = pg.evaluate("""() => {
+                              const v = s => document.querySelector(s).getBoundingClientRect().width > 0;
+                              return { 멈춤: v('[data-icon="pause"]'), 재생: v('[data-icon="play"]') };
+                            }""")
+                            if after == shown:
+                                fail(f"{page} {w}px: 멈춤 버튼을 눌러도 아이콘이 바뀌지 않는다")
+                            btn.click(); pg.wait_for_timeout(150)
+
                 # 모바일 메뉴를 실제로 열어본다 — 한 번 놓쳐서 배포된 적이 있다
                 if w <= 860:
                     tog = pg.query_selector(".nav-toggle")
