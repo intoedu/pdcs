@@ -588,9 +588,40 @@ ul { margin: 0; padding: 0; list-style: none; }
 .creed__item p { margin-top: 10px; font-size: 16px; line-height: 1.95; }
 
 .staff { margin-top: 26px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
-.staff__item { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 22px 20px; }
-.staff__name { font-size: 17px; font-weight: 700; color: var(--navy-deep); }
-.staff__role { margin-top: 6px; font-size: 14px; color: var(--muted); }
+/* 펼쳐지는 카드만 높아지도록. 기본값이면 같은 줄 카드가 통째로 늘어나 빈 상자가 생긴다 */
+.staff__item { align-self: start; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 22px 20px; }
+.staff__head { display: block; }
+.staff__name { display: block; font-size: 17px; font-weight: 700; color: var(--navy-deep); }
+.staff__role { display: block; margin-top: 6px; font-size: 14px; color: var(--muted); }
+
+/* 약력이 있는 분 — 눌러서 펼친다. <details> 라 자바스크립트 없이 동작한다 */
+.staff__item--bio { transition: border-color .25s var(--ease), box-shadow .25s var(--ease); }
+.staff__item--bio:hover { border-color: #CBC2AB; box-shadow: 0 2px 12px rgba(14, 34, 69, .07); }
+.staff__item--bio[open] { border-color: var(--navy-deep); box-shadow: 0 3px 16px rgba(14, 34, 69, .1); }
+.staff__item--bio > summary {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;
+  cursor: pointer; list-style: none;
+}
+.staff__item--bio > summary::-webkit-details-marker { display: none; }
+.staff__item--bio > summary:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; border-radius: 4px; }
+.staff__more {
+  flex: none; display: inline-flex; align-items: center; gap: 2px;
+  font-size: 12px; font-weight: 600; letter-spacing: -.01em; color: var(--gold-dark);
+}
+.staff__chev { transition: transform .25s var(--ease); }
+.staff__item--bio[open] .staff__chev { transform: rotate(180deg); }
+.staff__bio {
+  margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line);
+  display: flex; flex-direction: column; gap: 8px;
+}
+.staff__bio li {
+  position: relative; padding-left: 12px;
+  font-size: 13.5px; line-height: 1.7; color: var(--body); word-break: keep-all;
+}
+.staff__bio li::before {
+  content: ""; position: absolute; left: 0; top: 9px;
+  width: 4px; height: 4px; border-radius: 50%; background: var(--gold);
+}
 
 /* ── 입학 절차 ────────────────────────── */
 .steps { margin-top: 38px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 15px; }
