@@ -791,7 +791,9 @@ ul { margin: 0; padding: 0; list-style: none; }
   .hero .btn { min-height: 54px; font-size: 16px; }
   .hero__lead { margin-top: 22px; }
   .hero__actions { margin-top: 28px; }
-  .hero__veil::before { background: linear-gradient(180deg, rgba(8, 20, 42, .30) 0%, rgba(8, 20, 42, .10) 26%, rgba(8, 20, 42, .42) 62%, rgba(8, 20, 42, .66) 100%); }
+  /* 휴대폰은 건물이 화면을 꽉 채워 사진이 밝다.
+     글자가 얹히는 구간(위쪽 눈썹, 가운데 제목)을 충분히 눌러 준다 */
+  .hero__veil::before { background: linear-gradient(180deg, rgba(8, 20, 42, .52) 0%, rgba(8, 20, 42, .34) 20%, rgba(8, 20, 42, .46) 42%, rgba(8, 20, 42, .66) 72%, rgba(8, 20, 42, .82) 100%); }
   .hero__veil::after { display: none; }
   .hero__actions .btn { flex: 1 1 100%; }
   .hero__scroll { display: none; }
