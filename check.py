@@ -201,6 +201,29 @@ def check_browser(save_shots=False):
                 for e in errs:
                     fail(f"{page} {w}px: {e}")
 
+                # 목록의 표시(점 · Q)가 첫 글자를 덮지 않는지.
+                # 질문 목록 스타일을 빌려 쓰면서 여백만 줄여 "스마트폰"이
+                # "☗마트폰"으로 보인 적이 있다
+                bump_ = pg.evaluate("""() => {
+                  const out = [];
+                  for (const li of document.querySelectorAll('li')) {
+                    const bf = getComputedStyle(li, '::before');
+                    if (bf.content === 'none' || bf.position !== 'absolute') continue;
+                    const padL = parseFloat(getComputedStyle(li).paddingLeft) || 0;
+                    const left = parseFloat(bf.left) || 0;
+                    const w = bf.content && bf.content !== '""'
+                      ? parseFloat(bf.fontSize) * 0.7
+                      : (parseFloat(bf.width) || 0);
+                    if (padL < left + w + 3) {
+                      out.push(li.textContent.trim().slice(0, 16) + ' (여백 ' + Math.round(padL)
+                               + ' < 표시 ' + Math.round(left + w) + ')');
+                    }
+                  }
+                  return out;
+                }""")
+                for t in bump_:
+                    fail(f"{page} {w}px: 목록 표시가 첫 글자를 덮는다 — {t}")
+
                 # 글자가 제 상자 밖으로 삐져나오지 않는지 —
                 # 라디오 버튼이 글자 입력칸 규칙(width:100%)을 물려받아
                 # 선택지 글자가 테두리 밖으로 나간 적이 있다

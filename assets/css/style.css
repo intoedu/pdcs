@@ -395,6 +395,8 @@ ul { margin: 0; padding: 0; list-style: none; }
   background: linear-gradient(90deg, rgba(10, 27, 56, .94) 0%, rgba(10, 27, 56, .84) 44%, rgba(10, 27, 56, .46) 100%);
 }
 .subhero__inner { position: relative; padding: clamp(50px, 7vw, 86px) 0; }
+/* 정책 페이지는 사진 없이 남색 띠만 쓴다 */
+.subhero--plain { background: var(--navy-deep); }
 .breadcrumb { font-size: 13px; color: #A8B8D2; }
 .breadcrumb b { color: var(--gold); font-weight: 500; }
 .subhero__title { margin-top: 14px; font-size: clamp(28px, 4vw, 42px); color: #fff; }
@@ -867,6 +869,20 @@ ul { margin: 0; padding: 0; list-style: none; }
   content: "Q"; position: absolute; left: 22px; top: 18px;
   font-weight: 700; color: var(--gold);
 }
+/* 질문 목록이 아닌 곳 — Q 대신 점을 찍는다.
+   .ask-list 를 빌려 쓰면서 인라인으로 여백만 줄여 Q 가 첫 글자를 덮은 적이 있다 */
+.rule-list { display: grid; gap: 2px; }
+.rule-list li {
+  position: relative; padding: 16px 22px 16px 40px;
+  background: #fff; border: 1px solid var(--line); border-radius: 8px;
+  font-size: 16px; color: var(--body); line-height: 1.75; word-break: keep-all;
+}
+.rule-list li::before {
+  content: ""; position: absolute; left: 22px; top: 27px;
+  width: 5px; height: 5px; border-radius: 50%; background: var(--gold);
+}
+.rule-list li b { color: var(--ink); }
+
 .ask-cta {
   margin-top: 22px; padding: 26px 30px;
   background: var(--navy-deep); border-radius: 10px;
@@ -885,6 +901,8 @@ ul { margin: 0; padding: 0; list-style: none; }
   .gnb.is-open { visibility: visible; transition: max-height .3s var(--ease), visibility 0s; }
   .ask-list li { font-size: 16px; padding: 16px 18px 16px 46px; }
   .ask-list li::before { left: 18px; top: 16px; }
+  .rule-list li { font-size: 15.5px; padding: 15px 18px 15px 34px; }
+  .rule-list li::before { left: 18px; top: 25px; }
   .ask-cta { padding: 22px 20px; }
   .greeting--text { grid-template-columns: 1fr; }
 }
