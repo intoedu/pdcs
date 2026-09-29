@@ -85,7 +85,13 @@ def check_source():
             if "width=" not in tag:
                 src = re.search(r'src="([^"]+)"', tag)
                 fail(f"{name}: 사진에 크기가 없다 — {src.group(1) if src else tag[:40]}")
-        if 'rel="canonical"' not in s:
+        # 404 는 예외다. 없는 주소를 정식 주소로 가리키면 안 되고, noindex 라야 한다
+        if name == "404.html":
+            if "noindex" not in s:
+                fail("404.html: noindex 가 없다 — 검색에 잡히면 안 된다")
+            if 'rel="canonical"' in s:
+                fail("404.html: canonical 이 있다 — 404 에는 넣지 않는다")
+        elif 'rel="canonical"' not in s:
             fail(f"{name}: canonical 주소가 없다")
         # 전화번호 — 학교가 대표번호를 바꾼 적이 있다. 한 페이지만 옛 번호로 남는 것을 막는다
         for t in set(re.findall(r'href="tel:([^"]+)"', s)):
