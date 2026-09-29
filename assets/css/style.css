@@ -623,6 +623,33 @@ ul { margin: 0; padding: 0; list-style: none; }
   width: 4px; height: 4px; border-radius: 50%; background: var(--gold);
 }
 
+/* ── 자주 묻는 것 — 답할 수 있는 것은 펼쳐서 답한다 ── */
+.faq-head { font-size: 13px; font-weight: 700; letter-spacing: .02em; color: var(--gold-dark); }
+.faq {
+  margin-top: 10px; background: #fff; border: 1px solid var(--line); border-radius: 10px;
+  padding: 16px 18px; align-self: start;
+  transition: border-color .25s var(--ease), box-shadow .25s var(--ease);
+}
+.faq:hover { border-color: #CBC2AB; }
+.faq[open] { border-color: var(--navy-deep); box-shadow: 0 3px 16px rgba(14, 34, 69, .1); }
+.faq > summary {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+  cursor: pointer; list-style: none;
+  font-size: 15.5px; font-weight: 600; color: var(--navy-deep); line-height: 1.6; word-break: keep-all;
+}
+.faq > summary > span:first-child { flex: 1 1 auto; }
+.faq > summary::-webkit-details-marker { display: none; }
+.faq > summary:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; border-radius: 4px; }
+.faq__mark { flex: none; color: var(--gold-dark); display: inline-flex; }
+.faq__mark svg { transition: transform .25s var(--ease); }
+.faq[open] .faq__mark svg { transform: rotate(180deg); }
+.faq__body { margin-top: 14px; padding-top: 13px; border-top: 1px solid var(--line); }
+.faq__body p { font-size: 14.5px; line-height: 1.9; color: var(--body); word-break: keep-all; }
+.faq__body p + p { margin-top: 10px; }
+.faq__note { margin-top: 12px !important; font-size: 13.5px !important; color: var(--muted) !important; }
+.faq__note a { color: var(--gold-dark); font-weight: 600; text-decoration: none; }
+.faq__note a:hover { text-decoration: underline; }
+
 /* ── 입학 절차 ────────────────────────── */
 .steps { margin-top: 38px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 15px; }
 .step { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 26px 22px; }
@@ -667,25 +694,8 @@ ul { margin: 0; padding: 0; list-style: none; }
 .contact-card .row { padding-bottom: 15px; border-bottom: 1px solid var(--navy-line); }
 .contact-card .row:last-child { padding-bottom: 0; border-bottom: 0; }
 
-/* ── FAQ ──────────────────────────────── */
-.faq { background: #fff; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
-.faq details { border-bottom: 1px solid #F0EBDF; }
-.faq details:last-child { border-bottom: 0; }
-.faq summary {
-  display: flex; align-items: center; justify-content: space-between; gap: 18px;
-  padding: 24px 30px; cursor: pointer; list-style: none;
-  font-size: 17px; font-weight: 500; transition: background .2s;
-}
-.faq summary::-webkit-details-marker { display: none; }
-.faq summary:hover { background: var(--paper); }
-.faq summary::after {
-  content: ""; flex-shrink: 0; width: 11px; height: 11px;
-  border-right: 2px solid #8A7C5E; border-bottom: 2px solid #8A7C5E;
-  transform: rotate(45deg) translate(-3px, -3px); transition: transform .25s var(--ease);
-}
-.faq details[open] summary::after { transform: rotate(-135deg) translate(-3px, -3px); }
-.faq summary .q { color: var(--gold); font-weight: 700; margin-right: 12px; }
-.faq p { padding: 0 30px 26px 56px; font-size: 15.5px; color: var(--body); line-height: 1.95; }
+/* 옛 FAQ 아코디언 규칙은 삭제했다. 쓰는 마크업이 없는데 새 .faq 와 충돌해
+   꺾쇠가 두 개로 보였다. 새 규칙은 위쪽 「자주 묻는 것」 블록에 있다 */
 
 
 /* ── 스크롤 등장 ───────────────────────── */
@@ -767,8 +777,6 @@ ul { margin: 0; padding: 0; list-style: none; }
   .form-card { padding: 30px 24px; }
   .steps, .staff { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .verse { padding: 30px 26px; }
-  .faq summary { padding: 20px 22px; font-size: 16px; }
-  .faq p { padding: 0 22px 22px 46px; }
 
   .mobile-cta { display: flex; }
   body { padding-bottom: 78px; }
