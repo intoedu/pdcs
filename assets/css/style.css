@@ -828,12 +828,14 @@ ul { margin: 0; padding: 0; list-style: none; }
   .stats__item:nth-child(2n+1) { padding-left: 0; }
 
   .pillars, .news, .creed { grid-template-columns: 1fr; }
-  .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* 좁은 화면에서는 묶음을 풀어 사진 한 장이 한 칸을 갖게 한다.
+     display: contents 로 자식이 곧바로 격자 칸이 된다.
+     이게 없으면 묶음이 한 칸 안에서 다시 둘로 쪼개져 74px 짜리 썸네일이 된다 */
+  .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
   .gallery__cell--wide { grid-column: span 2; }
-  .gallery__cell--tall { height: 210px; }
-  .gallery__cell--half { height: 130px; }
-  .gallery__stack { flex-direction: row; }
-  .gallery__stack .gallery__cell { flex: 1; }
+  .gallery__cell--tall { height: 200px; }
+  .gallery__cell--half { height: 200px; }
+  .gallery__stack { display: contents; }
   .field-grid { grid-template-columns: 1fr; }
   .form-card { padding: 30px 24px; }
   .steps, .staff { grid-template-columns: repeat(2, minmax(0, 1fr)); }
