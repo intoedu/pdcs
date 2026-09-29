@@ -21,7 +21,7 @@ import json
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 PORT = 0   # 0이면 비어 있는 포트를 운영체제가 준다
-PAGES = ["index.html", "about.html", "admission.html", "privacy.html"]
+PAGES = ["index.html", "about.html", "admission.html", "privacy.html", "404.html"]
 VIEWPORTS = [(2400, 1300), (1920, 1080), (1440, 900), (1180, 800), (860, 900), (390, 844), (360, 640)]
 
 # 학교가 쓰지 말라고 한 말 (CLAUDE.md 참조)
@@ -74,6 +74,19 @@ def check_source():
             fail(f"{name}: 422KB 원본 로고를 화면에서 쓰고 있다 (logo-96.png를 쓸 것)")
         if "?v=" not in s:
             fail(f"{name}: 스타일·스크립트에 해시가 없다 — ./bump.sh 를 실행할 것")
+        # 작은 라벨과 큰 제목이 같은 말을 반복하면 아마추어처럼 읽힌다
+        for m in re.finditer(r'<p class="eyebrow[^"]*">([^<]+)</p>\s*<h2[^>]*>([^<]*)', s):
+            lab = m.group(1).strip()
+            head = re.sub(r"<[^>]+>", "", m.group(2)).strip()
+            if lab and head and (lab == head or lab in head or head in lab):
+                fail(f"{name}: 라벨과 제목이 같은 말이다 — \"{lab}\" / \"{head}\"")
+        # 크기 없는 사진은 불러오는 동안 화면을 밀어 올린다
+        for tag in re.findall(r"<img [^>]*>", s):
+            if "width=" not in tag:
+                src = re.search(r'src="([^"]+)"', tag)
+                fail(f"{name}: 사진에 크기가 없다 — {src.group(1) if src else tag[:40]}")
+        if 'rel="canonical"' not in s:
+            fail(f"{name}: canonical 주소가 없다")
         # 전화번호 — 학교가 대표번호를 바꾼 적이 있다. 한 페이지만 옛 번호로 남는 것을 막는다
         for t in set(re.findall(r'href="tel:([^"]+)"', s)):
             if t != TEL_MAIN:
@@ -171,7 +184,7 @@ def check_browser(save_shots=False):
                 errs = []
                 pg.on("pageerror", lambda e: errs.append(str(e)))
                 pg.on("response", lambda r: errs.append(f"{r.status} {r.url.split('/')[-1]}") if r.status >= 400 else None)
-                pg.goto(f"http://localhost:{PORT}/{page}", wait_until="networkidle")
+                pg.goto(f"http://localhost:{PORT}/pdcs/{page}", wait_until="networkidle")
                 pg.wait_for_timeout(500)
 
                 r = pg.evaluate(PROBE)
@@ -272,6 +285,16 @@ def check_browser(save_shots=False):
 
 
 class Quiet(http.server.SimpleHTTPRequestHandler):
+    """배포본은 /pdcs/ 아래에 놓인다. 404.html 이 절대경로를 쓰므로
+    검사도 같은 주소 구조로 해야 의미가 있다."""
+
+    def translate_path(self, path):
+        if path.startswith("/pdcs/"):
+            path = path[len("/pdcs"):]
+        elif path == "/pdcs":
+            path = "/"
+        return super().translate_path(path)
+
     def log_message(self, *args):
         pass
 

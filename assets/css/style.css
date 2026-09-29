@@ -51,6 +51,19 @@ body {
 }
 
 img { max-width: 100%; display: block; }
+
+/* 메뉴를 눌러 섹션으로 갈 때 제목이 고정 헤더 뒤로 숨지 않게 한다.
+   헤더(36+70=106px)보다 조금 더 띄운다 */
+[id] { scroll-margin-top: 124px; }
+
+/* 한글은 단어 중간에서 끊으면 읽기 나쁘다. 본문 전체에 적용한다 */
+body { word-break: keep-all; overflow-wrap: break-word; }
+
+/* 글자를 끌어 선택했을 때도 학교 색으로 */
+::selection { background: rgba(200, 155, 60, .3); color: var(--navy-deep); }
+
+/* 키보드로 다니는 분을 위해 — 따로 지정하지 않은 곳의 기본 표시 */
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 3px; }
 /* hidden 이 붙은 요소는 무조건 숨긴다.
    브라우저 기본 규칙은 명시도가 낮아 다른 규칙에 밀린다.
    실제로 히어로의 멈춤·재생 아이콘이 둘 다 보인 적이 있다. */
@@ -549,6 +562,23 @@ ul { margin: 0; padding: 0; list-style: none; }
   font-size: 12.5px; color: #93A6C2;
 }
 .footer__bottom a { color: var(--on-navy-dim); text-decoration: none; }
+
+/* ── 404 ─────────────────────────────── */
+.notfound {
+  min-height: 100svh; display: flex; align-items: center; justify-content: center;
+  text-align: center; background: var(--paper); padding: 60px 0;
+}
+.notfound__logo { width: 62px; height: 62px; margin: 0 auto; }
+.notfound__code {
+  margin-top: 26px; font-size: 13px; font-weight: 700; letter-spacing: .22em; color: var(--gold-dark);
+}
+.notfound__title {
+  margin-top: 10px; font-size: clamp(26px, 4.4vw, 38px); font-weight: 700;
+  color: var(--navy-deep); letter-spacing: -.03em;
+}
+.notfound__lead { margin-top: 18px; font-size: 16px; line-height: 1.95; color: var(--body); }
+.notfound__actions { margin-top: 32px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.notfound__foot { margin-top: 40px; font-size: 13px; color: var(--muted); }
 
 /* ── 모바일 하단 고정 바 ──────────────── */
 .mobile-cta {
