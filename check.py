@@ -201,6 +201,23 @@ def check_browser(save_shots=False):
                 for e in errs:
                     fail(f"{page} {w}px: {e}")
 
+                # 글자가 제 상자 밖으로 삐져나오지 않는지 —
+                # 라디오 버튼이 글자 입력칸 규칙(width:100%)을 물려받아
+                # 선택지 글자가 테두리 밖으로 나간 적이 있다
+                spill = pg.evaluate("""() => {
+                  const out = [];
+                  for (const el of document.querySelectorAll('.choice, .btn, .staff__item, .faq > summary')) {
+                    const r = el.getBoundingClientRect();
+                    if (!r.width) continue;
+                    if (el.scrollWidth > Math.ceil(r.width) + 2) {
+                      out.push(el.textContent.trim().slice(0, 20) + ' (' + el.scrollWidth + ' > ' + Math.round(r.width) + ')');
+                    }
+                  }
+                  return out;
+                }""")
+                for t in spill:
+                    fail(f"{page} {w}px: 글자가 상자 밖으로 나간다 — {t}")
+
                 # 히어로 슬라이더를 실제로 눌러본다 —
                 # SVG 에는 hidden 프로퍼티가 없어서 멈춤·재생 아이콘이 둘 다 보인 적이 있다
                 if page == "index.html":

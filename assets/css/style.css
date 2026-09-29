@@ -703,18 +703,27 @@ ul { margin: 0; padding: 0; list-style: none; }
 .field { display: flex; flex-direction: column; gap: 8px; }
 .field label { font-size: 14px; font-weight: 500; }
 .field .req { color: var(--red); }
-.field input, .field select, .field textarea {
+/* 라디오·체크박스는 글자 입력칸이 아니다.
+   빼지 않으면 padding 14px 이 붙어 동그라미가 52px 짜리 상자가 된다 */
+.field input:not([type="radio"]):not([type="checkbox"]), .field select, .field textarea {
   font-family: inherit; font-size: 15.5px; color: var(--ink);
   padding: 14px 16px; border: 1px solid #D8D0BE; border-radius: 4px; background: #FCFBF7;
 }
-.field input, .field select { height: 52px; }
+.field input:not([type="radio"]):not([type="checkbox"]), .field select { height: 52px; }
 .field textarea { line-height: 1.8; resize: vertical; min-height: 130px; }
 .choices { display: flex; gap: 10px; flex-wrap: wrap; }
 .choice {
-  display: flex; align-items: center; gap: 9px; padding: 12px 18px;
+  /* flex: 0 0 auto — 줄어들지 않게 한다. 기본값이면 글자가 짜부라져
+     "전화 상담" 이 두 줄로 접히고 상자가 정사각형이 된다 */
+  flex: 0 0 auto;
+  display: inline-flex; align-items: center; gap: 9px; padding: 12px 18px;
   border: 1px solid #D8D0BE; border-radius: 4px; background: #FCFBF7;
-  font-size: 15px; cursor: pointer; transition: border-color .2s, background .2s;
+  font-size: 15px; line-height: 1.4; white-space: nowrap; cursor: pointer;
+  transition: border-color .2s, background .2s;
 }
+.choice input { flex: none; width: 17px; height: 17px; margin: 0; }
+/* 고른 항목이 눈에 띄게 */
+.choice:has(input:checked) { border-color: var(--red); background: #FDF6F6; }
 .choice:hover { border-color: var(--navy); }
 .choice input { accent-color: var(--red); }
 .agree { margin-top: 18px; display: flex; gap: 10px; align-items: flex-start; }
@@ -764,8 +773,15 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 
 @media (max-width: 860px) {
-  .hero { min-height: min(100svh, 720px); }
-  .hero__inner { min-height: min(100svh, 760px); justify-content: flex-end; padding-top: 104px; padding-bottom: 92px; max-width: none; }
+  /* 세로로 긴 화면에서는 가로로 넓은 건물이 다 안 들어온다.
+     보이는 사진 폭 = 390 x 사진높이(872) / 히어로높이 이므로,
+     건물(600px)이 들어오려면 히어로가 520px 이하여야 한다 */
+  /* 휴대폰에서는 헤더가 사진을 덮지 않는다. 덮으면 건물 윗부분이 가린다 */
+  .site-top { position: sticky; }
+  .hero { min-height: min(56svh, 470px); }
+  .hero__inner { min-height: min(56svh, 470px); justify-content: flex-end; padding-top: 24px; padding-bottom: 58px; max-width: none; }
+  .hero__lead { display: none; }   /* 자리를 만들기 위해 휴대폰에서는 뺀다 */
+  .hero__ctrl { bottom: 12px; }    /* 버튼과 겹치지 않게 아래로 내린다 */
   .hero .btn { min-height: 54px; font-size: 16px; }
   .hero__lead { margin-top: 22px; }
   .hero__actions { margin-top: 28px; }
@@ -780,6 +796,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   .utility__links > *:not(.utility__kakao) { display: none; }
   .utility .wrap, .utility__links { justify-content: center; width: 100%; }
   .utility { line-height: 42px; }
+  .subhero__inner { padding-top: 42px !important; }
   .header .wrap { height: 68px; }
   .brand img { width: 40px; height: 40px; }
   .brand__ko { font-size: 16px; }
@@ -878,5 +895,5 @@ ul { margin: 0; padding: 0; list-style: none; }
 /* ── 그리드 자식이 내용보다 작아지지 못해 가로로 삐져나오던 문제 ── */
 .form-area > *, .page > *, .greeting > *, .curriculum > *, .visit > * { min-width: 0; }
 .form-card, .contact-card, .map-frame, .field, .field-grid { min-width: 0; max-width: 100%; }
-.field input, .field select, .field textarea { width: 100%; }
+.field input:not([type="radio"]):not([type="checkbox"]), .field select, .field textarea { width: 100%; }
 @media (min-width: 1081px) { .page--faq { grid-template-columns: 320px minmax(0, 1fr); } }
