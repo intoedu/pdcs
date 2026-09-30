@@ -22,7 +22,10 @@ import json
 ROOT = os.path.dirname(os.path.abspath(__file__))
 PORT = 0   # 0이면 비어 있는 포트를 운영체제가 준다
 PAGES = ["index.html", "about.html", "admission.html", "privacy.html", "404.html"]
-VIEWPORTS = [(2400, 1300), (1920, 1080), (1440, 900), (1180, 800), (860, 900), (390, 844), (360, 640)]
+# 1366x768 · 1280x800 은 한국에서 가장 흔한 노트북 해상도다.
+# 히어로 표어가 건물 위에 얹히던 문제가 바로 이 폭에서 가장 심했다
+VIEWPORTS = [(2400, 1300), (1920, 1080), (1440, 900), (1366, 768), (1280, 800),
+             (1180, 800), (1024, 800), (860, 900), (768, 1024), (390, 844), (360, 640)]
 
 # 학교가 쓰지 말라고 한 말 (CLAUDE.md 참조)
 BANNED = ["School of Tomorrow", "IGNITIA", "ACSI", r"140여? ?개국", "S\\.O\\.T"]
@@ -174,6 +177,124 @@ PROBE = r"""
 """
 
 
+
+# ── 사진 위 글자가 읽히는지 픽셀로 재는 검사 ──────────────────
+# 글자만 잠깐 숨기고 그 자리의 사진을 찍어, 가장 밝은 부분과 흰 글자의 대비를 본다.
+# 장막(.hero__veil, .hero__inner::before)은 그대로 둔다 — 실제로 깔리는 것이기 때문이다.
+HERO_TEXT = [
+    (".hero__title-en", 3.0, "표어"),      # 큰 글자 3:1
+    (".hero__title-ko", 3.0, "학교 이름"),
+    (".hero__lead", 4.5, "리드 문장"),     # 작은 글자 4.5:1
+    (".hero .eyebrow", 4.5, "라벨"),
+]
+
+
+def _lum(px):
+    def f(c):
+        c = c / 255
+        return c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4
+    return 0.2126 * f(px[0]) + 0.7152 * f(px[1]) + 0.0722 * f(px[2])
+
+
+def check_hero_text(pg, page, w):
+    import io
+    try:
+        from PIL import Image
+    except ImportError:
+        return
+    boxes = []
+    for sel, need, 이름 in HERO_TEXT:
+        el = pg.query_selector(sel)
+        if not el:
+            continue
+        b = el.bounding_box()
+        if not b or b["width"] < 4 or b["height"] < 4:
+            continue
+        if b["y"] + b["height"] <= 0 or b["y"] >= pg.viewport_size["height"]:
+            continue
+        boxes.append((sel, need, 이름, b))
+    if not boxes:
+        return
+    # 글자만 숨긴다. 장막과 사진은 그대로다
+    pg.add_style_tag(content=(
+        ".hero .eyebrow, .hero__title, .hero__lead, .hero__actions "
+        "{ visibility: hidden !important; } "
+        ".hero__slide.is-active img { animation: none !important; }"))
+    pg.wait_for_timeout(250)
+    shot = Image.open(io.BytesIO(pg.screenshot())).convert("RGB")
+    for sel, need, 이름, b in boxes:
+        x0 = max(0, int(b["x"])); y0 = max(0, int(b["y"]))
+        x1 = min(shot.width, int(b["x"] + b["width"]))
+        y1 = min(shot.height, int(b["y"] + b["height"]))
+        if x1 - x0 < 4 or y1 - y0 < 4:
+            continue
+        crop = shot.crop((x0, y0, x1, y1))
+        crop.thumbnail((160, 160))
+        raw = crop.tobytes()
+        vals = sorted(_lum(raw[i:i + 3]) for i in range(0, len(raw) - 2, 3))
+        # 가장 밝은 10% 를 본다. 한 점만 밝은 것은 글자가 묻히는 원인이 되지 않는다
+        bright = vals[int(len(vals) * 0.90)]
+        ratio = (1.0 + 0.05) / (bright + 0.05)      # 흰 글자 기준
+        if ratio < need:
+            fail(f"{page} {w}px: 히어로 {이름}이 사진의 밝은 부분에 얹혀 묻힌다 "
+                 f"— {ratio:.2f}:1 (필요 {need}:1)")
+    pg.reload(wait_until="load")
+    pg.wait_for_timeout(300)
+
+
+
+# ── 히어로 구도 — 표어가 건물 위에 얹히지 않는지 ────────────────
+# 항공샷 hero-aerial.jpg 안에서 건물은 가로 44~70% 자리에 있다(사진에 격자를 얹어 실측).
+# object-fit: cover 는 화면 비율에 따라 사진을 잘라 옮기므로,
+# 같은 object-position 이라도 폭마다 건물이 화면의 다른 자리에 온다.
+# object-position 70% 일 때 1280px 에서 건물이 x=362 로 와서 표어(x=537까지)가 건물 벽에 얹혔다.
+# 값을 바꿀 때는 사진에 격자를 얹어 건물 구간을 다시 재고 이 상수를 고친다.
+BUILDING_X = (0.47, 0.74)     # 원본 사진 안에서 건물이 차지하는 가로 구간 (격자를 얹어 실측)
+BUILDING_Y = (0.00, 0.48)     # 세로 구간 — 건물은 사진 위쪽에 있다 (위는 지붕까지 여유를 둔다)
+GAP = 16                      # 글자 끝과 건물 사이에 최소한 남겨야 하는 여백(px)
+
+
+def check_hero_frame(pg, page, w):
+    """표어 오른쪽 끝이 건물 왼쪽 모서리보다 왼쪽에 있어야 한다."""
+    geo = pg.evaluate("""({bx, by}) => {
+      const img = document.querySelector('.hero__slide.is-active img');
+      const t = document.querySelector('.hero__title-en');
+      if (!img || !t) return null;
+      if (!/hero-aerial\\.jpg/.test(img.currentSrc)) return null;   // 휴대폰 세로 컷은 기준이 다르다
+      const r = img.getBoundingClientRect();
+      const nw = img.naturalWidth, nh = img.naturalHeight;
+      if (!nw || !nh) return null;
+      const scale = Math.max(r.width / nw, r.height / nh);
+      const posX = parseFloat(getComputedStyle(img).objectPosition) / 100;
+      const offX = (r.width - nw * scale) * posX;
+      const at = f => r.left + offX + f * nw * scale;
+      // 글자 상자가 아니라 글자 자체의 오른쪽 끝을 잰다.
+      // span 은 블록이라 상자는 단 전체 폭이다 — 그걸 쓰면 실제보다 훨씬 넓게 나온다
+      const rg = document.createRange();
+      rg.selectNodeContents(t);
+      let right = 0;
+      for (const q of rg.getClientRects()) if (q.width > 0) right = Math.max(right, q.right);
+      if (!right) right = t.getBoundingClientRect().right;
+      const atY = f => r.top + (r.height - nh * scale) * (parseFloat(getComputedStyle(img).objectPosition.split(' ')[1]) / 100) + f * nh * scale;
+      const tr = t.getBoundingClientRect();
+      return { 건물왼쪽: at(bx[0]), 건물오른쪽: at(bx[1]),
+               건물위: atY(by[0]), 건물아래: atY(by[1]),
+               글자위: tr.top, 글자아래: tr.bottom,
+               글자오른쪽: right, 화면폭: innerWidth };
+    }""", {"bx": list(BUILDING_X), "by": list(BUILDING_Y)})
+    if not geo:
+        return
+    # 글자가 건물보다 아래에 있으면 가로로 겹쳐도 상관없다.
+    # 701~1000px 에서는 아예 글자를 건물 아래로 내려 두었다
+    세로겹침 = geo["글자위"] < geo["건물아래"] and geo["글자아래"] > geo["건물위"]
+    if 세로겹침 and geo["글자오른쪽"] + GAP > geo["건물왼쪽"]:
+        fail(f"{page} {w}px: 히어로 표어가 건물 위에 얹힌다 — "
+             f"글자 끝 {geo['글자오른쪽']:.0f}px, 건물 시작 {geo['건물왼쪽']:.0f}px")
+    if geo["건물오른쪽"] > geo["화면폭"] + 2:
+        fail(f"{page} {w}px: 히어로에서 건물 오른쪽이 화면 밖으로 잘린다 — "
+             f"건물 끝 {geo['건물오른쪽']:.0f}px, 화면 {geo['화면폭']}px")
+
+
 def check_browser(save_shots=False):
     from playwright.sync_api import sync_playwright
 
@@ -274,11 +395,22 @@ def check_browser(save_shots=False):
                   const off = document.createElement('style');
                   off.textContent = '*{transition:none !important}';
                   document.head.appendChild(off);
+                  const 보이나 = e => {
+                    if (!e) return false;
+                    const r = e.getBoundingClientRect();
+                    return r.width > 0 && r.height > 0 && getComputedStyle(e).visibility !== 'hidden';
+                  };
                   const pick = () => {
                     const a = t.querySelector('.gnb a:not(.btn)');
                     const k = t.querySelector('.brand__ko');
-                    return { 메뉴: a && getComputedStyle(a).color, 교명: k && getComputedStyle(k).color,
-                             바탕: getComputedStyle(t).backgroundColor };
+                    const b = t.querySelector('.nav-toggle span');
+                    return {
+                      // 화면에 실제로 보이는 것만 검사한다. 닫혀 있는 서랍 메뉴는 색이 무엇이든 상관없다
+                      메뉴: 보이나(a) ? getComputedStyle(a).color : null,
+                      교명: 보이나(k) ? getComputedStyle(k).color : null,
+                      '메뉴 버튼': 보이나(t.querySelector('.nav-toggle')) && b
+                                 ? getComputedStyle(b).backgroundColor : null,
+                      바탕: getComputedStyle(t).backgroundColor };
                   };
                   const before = t.className;
                   t.classList.remove('is-stuck', 'is-open');
@@ -292,9 +424,18 @@ def check_browser(save_shots=False):
                   return { 투명, 내림, 열림 };
                 }""")
                 if head:
-                    # 밝은 바탕이 되는 두 상태에서 글자가 흰색이면 안 보인다
-                    for 상태 in ("내림", "열림"):
-                        for 무엇 in ("메뉴", "교명"):
+                    # 헤더가 히어로 사진 위에 얹히지 않는 폭(sticky)에서는
+                    # 맨 위에서도 바탕이 크림색 본문이다. 흰 글자면 통째로 묻힌다.
+                    # 860px 에서 교명과 메뉴 버튼이 실제로 그렇게 묻혀 있었다
+                    겹침 = pg.evaluate("""() => {
+                      const t = document.querySelector('.site-top');
+                      const h = document.querySelector('.hero, .subhero');
+                      if (!t || !h) return null;
+                      return t.getBoundingClientRect().bottom > h.getBoundingClientRect().top + 1;
+                    }""")
+                    상태들 = ["내림", "열림"] if 겹침 else ["투명", "내림", "열림"]
+                    for 상태 in 상태들:
+                        for 무엇 in ("메뉴", "교명", "메뉴 버튼"):
                             c = head[상태][무엇]
                             if c and re.match(r"rgba?\(\s*2[45]\d,\s*2[45]\d,\s*2[45]\d", c):
                                 fail(f"{page} {w}px: 상단이 흰 바탕인데({상태}) {무엇} 글자가 흰색이다 — {c}")
@@ -320,6 +461,16 @@ def check_browser(save_shots=False):
                             pg.screenshot(path=f"{shots}/{page}-{w}-menu.png")
                         tog.click()
                         pg.wait_for_timeout(300)
+
+                # 히어로 — 사진 위에 얹힌 글자가 실제로 읽히는지 픽셀로 잰다.
+                # CSS 로 배경색을 따라가는 대비 검사는 사진 위에서는 통하지 않는다.
+                # 표어가 건물 흰 벽·밝은 지붕 위에 얹혀 배포된 적이 있다(노트북 폭에서 가장 심했다).
+                if page == "index.html" and pg.query_selector(".hero__title-en"):
+                    # 켄번스 확대가 돌고 있으면 잴 때마다 값이 달라진다. 멈추고 잰다
+                    pg.add_style_tag(content=".hero__slide img { animation: none !important; }")
+                    pg.wait_for_timeout(150)
+                    check_hero_frame(pg, page, w)
+                    check_hero_text(pg, page, w)
 
                 if save_shots and w in (1440, 390):
                     pg.screenshot(path=f"{shots}/{page}-{w}.png", full_page=False)

@@ -266,7 +266,13 @@ ul { margin: 0; padding: 0; list-style: none; }
 .nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
 
 /* ── 히어로 ───────────────────────────── */
-.hero { position: relative; overflow: hidden; background: var(--navy-deep); min-height: min(100svh, 940px); }
+/* 56vw 상한이 있는 이유 — 히어로가 높을수록 object-fit: cover 가 사진의 가로를 더 잘라 낸다.
+   많이 잘릴수록 건물이 화면에서 차지하는 비율이 커져, 1080~1280px 처럼
+   가로가 짧은 노트북에서는 건물이 화면 절반을 먹고 표어 자리가 사라졌다.
+   보이는 원본 폭 = 화면폭 x 872 / (히어로높이 x 1.12) 이므로,
+   원본의 70% 이상이 보이게 하려면 히어로높이 <= 0.556 x 화면폭 이어야 한다. */
+.hero { position: relative; overflow: hidden; background: var(--navy-deep);
+        min-height: min(100svh, 1100px, 56vw); }
 .hero__media { position: absolute; inset: -6% 0; will-change: transform; }
 .hero__slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.4s var(--ease); }
 .hero__slide.is-active { opacity: 1; }
@@ -275,7 +281,13 @@ ul { margin: 0; padding: 0; list-style: none; }
 /* 항공샷은 건물이 화면 위쪽(세로 12~48%)에 있다. 잘릴 때 건물이 남도록 기준점을 위로 올린다.
    좁은 화면에서는 건물 중심으로 미리 세로로 자른 사진을 따로 내려보낸다 (picture) */
 .hero__slide img[src*="hero-aerial"] { object-position: center 34%; }
-.hero__slide:nth-child(1) img { object-position: 70% 50%; }
+.hero__slide:nth-child(1) img { object-position: 32% 50%; }
+/* 32% 인 이유 — 70% 일 때는 건물이 화면 왼쪽(1280px 에서 x=362)으로 와서
+   표어 FOR ALL NATIONS! (x=537 까지) 가 건물 벽 위에 얹혔다. 노트북에서 가장 심했다.
+   너무 밀면(25%) 이번에는 건물 오른쪽 날개가 화면 밖으로 잘린다.
+   양쪽을 다 만족하는 구간은 좁다. 1080px 에서 0.260~0.385 로 가장 좁고,
+   그 구간 안에 드는 값이 1080~2400px 전체를 만족시킨다. 그래서 0.32 다.
+   check.py 가 폭마다 실제로 재서 잡는다 — 눈대중으로 고치지 말 것 */
 .hero__slide:nth-child(2) img { object-position: 78% 55%; }
 .hero__slide:nth-child(3) img { object-position: 66% 48%; }
 .hero__slide.is-active img { animation: kenBurns 9s ease-out forwards; }
@@ -284,7 +296,9 @@ ul { margin: 0; padding: 0; list-style: none; }
 /* 기존 홈페이지의 메인 카피 — 영문 대문자 슬로건이 앞, 한글이 부제 */
 .hero__title-en {
   display: block; color: #fff; font-weight: 800;
-  font-size: clamp(38px, 10.4vw, 60px); line-height: 1.02;
+  /* 576~1179px 구간에서 60px 로 고정돼 표어가 화면 폭의 65%를 먹었고,
+     그만큼 건물이 들어올 자리가 없어졌다. 폭을 따라 줄어들게 한다 */
+  font-size: clamp(38px, 5.6vw, 60px); line-height: 1.02;
   letter-spacing: -0.022em; word-break: keep-all;
   text-shadow: 0 2px 10px rgba(4, 14, 30, .5), 0 8px 34px rgba(4, 14, 30, .38);
 }
@@ -294,7 +308,9 @@ ul { margin: 0; padding: 0; list-style: none; }
   text-shadow: 0 1px 8px rgba(4, 14, 30, .7), 0 4px 20px rgba(4, 14, 30, .5);
 }
 @media (min-width: 1180px) {
-  .hero__title-en { font-size: clamp(58px, 4.7vw, 92px); letter-spacing: -0.028em; }
+  /* 상한이 92px 이던 때, 1920·2400px 에서 표어가 건물까지 번져 나갔다.
+     64px 위로는 키우지 않는다 — 단 폭이 1232px 이라 이 이상은 비례도 맞지 않는다 */
+  .hero__title-en { font-size: clamp(58px, 4.7vw, 64px); letter-spacing: -0.028em; }
   .hero__title-ko { margin-top: 20px; font-size: 27px; }
 }
 
@@ -341,7 +357,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 .hero__inner {
   position: relative; display: flex; flex-direction: column; justify-content: center;
-  min-height: min(100svh, 940px); padding-top: clamp(130px, 12vw, 180px); padding-bottom: clamp(100px, 9vw, 140px);
+  min-height: min(100svh, 1100px, 56vw); padding-top: clamp(130px, 12vw, 180px); padding-bottom: clamp(100px, 9vw, 140px);
   max-width: min(1000px, 72%);
 }
 /* 사진은 열어두고, 글자가 앉는 자리만 국소적으로 눌러 읽히게 한다 */
@@ -782,23 +798,23 @@ ul { margin: 0; padding: 0; list-style: none; }
   /* 세로로 긴 화면에서는 가로로 넓은 건물이 다 안 들어온다.
      보이는 사진 폭 = 390 x 사진높이(872) / 히어로높이 이므로,
      건물(600px)이 들어오려면 히어로가 520px 이하여야 한다 */
-  /* 휴대폰에서는 헤더가 사진을 덮지 않는다. 덮으면 건물 윗부분이 가린다 */
+  /* 휴대폰·태블릿에서는 헤더가 사진을 덮지 않는다. 덮으면 건물 윗부분이 가린다 */
   .site-top { position: sticky; }
-  .hero { min-height: min(56svh, 470px); }
-  .hero__inner { min-height: min(56svh, 470px); justify-content: flex-end; padding-top: 24px; padding-bottom: 58px; max-width: none; }
-  .hero__lead { display: none; }   /* 자리를 만들기 위해 휴대폰에서는 뺀다 */
-  .hero__ctrl { bottom: 12px; }    /* 버튼과 겹치지 않게 아래로 내린다 */
-  .hero .btn { min-height: 54px; font-size: 16px; }
-  .hero__lead { margin-top: 22px; }
-  .hero__actions { margin-top: 28px; }
-  /* 휴대폰은 건물이 화면을 꽉 채워 사진이 밝다.
-     글자가 얹히는 구간(위쪽 눈썹, 가운데 제목)을 충분히 눌러 준다 */
-  .hero__veil::before { background: linear-gradient(180deg, rgba(8, 20, 42, .52) 0%, rgba(8, 20, 42, .34) 20%, rgba(8, 20, 42, .46) 42%, rgba(8, 20, 42, .66) 72%, rgba(8, 20, 42, .82) 100%); }
-  .hero__veil::after { display: none; }
-  .hero__actions .btn { flex: 1 1 100%; }
-  .hero__scroll { display: none; }
-  .hero__marks { bottom: 26px; }
-  .hero__mark { width: 34px; }
+  /* 그래서 헤더는 사진이 아니라 크림색 본문 배경 위에 앉는다.
+     그런데 글자색은 '사진 위' 기준인 흰색이라 교명과 메뉴 버튼이 통째로 묻혀 있었다.
+     이 폭에서는 처음부터 '내려온 상태' 의 색을 쓴다 */
+  .site-top { background: rgba(255, 255, 255, .985); box-shadow: 0 1px 16px rgba(14, 34, 69, .13); }
+  .site-top .brand__ko { color: var(--navy-deep); text-shadow: none; }
+  .site-top .brand__kind,
+  .site-top .brand__en { color: var(--gold-dark); }
+  .site-top .brand img { filter: none; }
+  .site-top .nav-toggle { background: transparent; border-color: var(--line); }
+  .site-top .nav-toggle span { background: var(--navy-deep); }
+  .site-top .header { border-bottom-color: var(--line); }
+  .site-top .utility { background: #EEF1F6; color: #4B5568; border-bottom-color: rgba(14, 34, 69, .07); }
+  .site-top .utility a { color: #4B5568; }
+  .site-top .utility__tel { color: var(--navy-deep); }
+  .site-top .utility__badge { border-color: rgba(14, 34, 69, .28); color: var(--navy-deep); }
   /* 모바일에서는 유틸바를 카카오 상담 버튼 한 줄로 줄인다 */
   .utility > .wrap > span:first-child { display: none; }
   .utility__links > *:not(.utility__kakao) { display: none; }
@@ -923,3 +939,48 @@ ul { margin: 0; padding: 0; list-style: none; }
 .form-card, .contact-card, .map-frame, .field, .field-grid { min-width: 0; max-width: 100%; }
 .field input:not([type="radio"]):not([type="checkbox"]), .field select, .field textarea { width: 100%; }
 @media (min-width: 1081px) { .page--faq { grid-template-columns: 320px minmax(0, 1fr); } }
+
+/* 휴대폰 세로 컷(hero-aerial-m.jpg)은 건물 중심으로 미리 잘라 둔 사진이라 기준점이 다르다.
+   <picture> 가 이 사진을 실제로 내려보내는 폭(700px 이하)에서만 걸어야 한다.
+   한때 860px 이하에 걸어 두었더니, 가로 사진이 내려가는 701~860px 구간에서
+   건물이 왼쪽으로 끌려와 표어 위에 얹혔다 */
+/* 701~1000px (태블릿 · 작은 노트북) — 가로 항공샷으로는 글자와 건물을 나란히 놓을 수 없다.
+   860px 에서 건물이 433px, 표어가 439px 이라 둘을 합치면 화면 폭을 넘는다(계산으로 확인).
+   그래서 이 구간만 글자를 건물 아래 앞마당 쪽으로 내려 위아래로 나눈다.
+   내린 자리는 아스팔트라 밝다 — 아래쪽 장막을 같이 올린다 */
+@media (min-width: 701px) and (max-width: 1000px) {
+  /* 이 구간은 사진이 가장 심하게 잘려 건물이 화면을 꽉 채운다.
+     기준점을 오른쪽으로 더 밀어야 건물 오른쪽 날개가 화면 안에 남는다
+     710~1000px 전 구간이 겹치는 허용 구간은 0.494~0.547 뿐이다 — 계산으로 구했다 */
+  .hero__slide:nth-child(1) img { object-position: 52% 50%; }
+  /* 표어를 세 줄로 접는다. 한 줄이 짧아지는 만큼 건물이 들어설 자리가 생긴다.
+     글자를 건물 아래로 내리는 방법도 해 봤지만, 건물이 히어로 높이의 48%까지
+     내려와 있어 남는 아래쪽에 글자가 들어가지 않는다(계산으로 확인) */
+  .hero__title-en { max-width: 6.8em; }
+  .hero__inner { max-width: none; }
+  .hero__lead { display: none; }
+  .hero__veil::before { background: linear-gradient(180deg, rgba(8, 20, 42, .34) 0%, rgba(8, 20, 42, .16) 26%, rgba(8, 20, 42, .44) 52%, rgba(8, 20, 42, .72) 78%, rgba(8, 20, 42, .84) 100%); }
+  .hero__veil::after { display: none; }
+  .hero__scroll { display: none; }
+}
+
+@media (max-width: 700px) {
+  .hero__slide:nth-child(1) img { object-position: 70% 50%; }
+  /* 세로로 긴 화면에서는 가로로 넓은 건물이 다 안 들어온다.
+     보이는 사진 폭 = 390 x 사진높이(872) / 히어로높이 이므로,
+     건물(600px)이 들어오려면 히어로가 520px 이하여야 한다 */
+  .hero { min-height: min(56svh, 470px); }
+  .hero__inner { min-height: min(56svh, 470px); justify-content: flex-end; padding-top: 24px; padding-bottom: 58px; max-width: none; }
+  .hero__lead { display: none; }   /* 자리를 만들기 위해 휴대폰에서는 뺀다 */
+  .hero__ctrl { bottom: 12px; }    /* 버튼과 겹치지 않게 아래로 내린다 */
+  .hero .btn { min-height: 54px; font-size: 16px; }
+  .hero__actions { margin-top: 28px; }
+  /* 휴대폰은 건물이 화면을 꽉 채워 사진이 밝다.
+     글자가 얹히는 구간(위쪽 눈썹, 가운데 제목)을 충분히 눌러 준다 */
+  .hero__veil::before { background: linear-gradient(180deg, rgba(8, 20, 42, .52) 0%, rgba(8, 20, 42, .34) 20%, rgba(8, 20, 42, .46) 42%, rgba(8, 20, 42, .66) 72%, rgba(8, 20, 42, .82) 100%); }
+  .hero__veil::after { display: none; }
+  .hero__actions .btn { flex: 1 1 100%; }
+  .hero__scroll { display: none; }
+  .hero__marks { bottom: 26px; }
+  .hero__mark { width: 34px; }
+}
