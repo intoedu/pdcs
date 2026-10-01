@@ -305,8 +305,7 @@ UNCONFIRMED = [
     (r"선생님 <span data-count", "「선생님 16명」 — 16명에 행정 · 자문이 들어 있다. 「섬기는 분」으로 쓴다"),
 ]
 # 같은 장면을 다른 크기로 자른 사진들. 한 페이지에 둘이 같이 나오면 같은 사진을 두 번 보여 주는 것이다
-# (slide1-aerial.jpg 와 slide1-aerial-m.jpg 는 한 <picture> 안의 폭별 사본이라 같이 있어도 된다)
-SAME_SHOT = [{"hero-aerial.jpg", "aerial.webp", "slide1-aerial.jpg"}, {"aerial.webp", "slide1-aerial-m.jpg"},
+SAME_SHOT = [{"hero-aerial.jpg", "aerial.webp", "slide1-aerial.jpg"}, 
              {"hero-main.jpg", "front.jpg", "slide2-main.jpg"}, {"court.jpg", "slide3-court.jpg"},
              {"hero-dorm.jpg", "dorm.jpg", "slide4-dorm.jpg"}]
 

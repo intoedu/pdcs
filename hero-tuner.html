@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="only light">
 <title>첫 화면 사진 위치 조정 — 폴앤다니엘기독학교</title>
 <link rel="icon" href="assets/img/favicon-64.png" sizes="64x64">
-<link rel="stylesheet" href="assets/css/style.css?v=9fa08b82">
+<link rel="stylesheet" href="assets/css/style.css?v=e29b94c1">
 <!--
   학교가 메인 첫 화면(히어로) 사진 위치를 직접 고르는 도구.
   서버가 없으므로 저장은 「복사 → GitHub 에서 assets/css/hero-position.css 에 붙여 넣기」로 한다.
@@ -252,6 +252,11 @@
     /* 사진이 그 방향으로 꽉 차 있으면 값을 바꿔도 화면이 그대로다 — 막대를 잠그고 확대하라고 알린다 */
     rx.disabled = dw - S.width < 2; ry.disabled = dh - S.height < 2;
     drawFrame(b);
+    /* 화질 — 원본 1px 이 고화질 화면(컴퓨터 · 태블릿 2배, 휴대폰 3배)에서 몇 배로 늘어나는지.
+       1.6배를 넘으면 흐려 보인다. 학교 지적: "사진이 너무 저화질" */
+    var stretch = sc * (b === 'mob' ? 3 : 2);
+    if (stretch > 1.6) tips.unshift('화질: 맥북 · 아이폰 같은 고화질 화면에서 원본이 ' + stretch.toFixed(1) +
+      '배로 늘어나 흐려 보일 수 있습니다' + (v[2] > 1.05 ? '. 틀을 키우면(확대를 줄이면) 선명해집니다.' : '. 더 선명하려면 원본 사진이 필요합니다.'));
     if (rx.disabled) tips.push('사진이 가로로 꽉 차 있어 좌우로는 안 움직입니다. 「확대」를 조금 올리면 움직일 수 있습니다.');
     if (ry.disabled) tips.push('사진이 세로로 꽉 차 있어 위아래로는 안 움직입니다. 「확대」를 조금 올리면 움직일 수 있습니다.');
     if (bd && (img.currentSrc || img.src).indexOf(bd.file) > -1) {
