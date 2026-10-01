@@ -1,7 +1,7 @@
-# 주의: 이 사이트는 intoedu.github.io/pdcs/ 아래에 있어, 검색엔진은 이 파일을 읽지 않는다
-# (호스트 맨 위 /robots.txt 만 읽는다). 검색 제외는 각 페이지의 <meta name="robots" content="noindex"> 가 맡는다.
-# 사이트맵은 저장소 소유자가 Google Search Console · 네이버 서치어드바이저에 직접 제출한다.
+# 사이트가 도메인 맨 위(www.pdcs.kr/)에 있으므로 검색엔진이 이 파일을 읽는다.
+# 개인정보처리방침 · 404 는 막지 않는다 — 막으면 검색엔진이 그 페이지의 noindex 를 못 읽는다.
+# 검색 제외는 각 페이지의 <meta name="robots" content="noindex"> 가 맡는다.
 User-agent: *
 Allow: /
 
-Sitemap: https://intoedu.github.io/pdcs/sitemap.xml
+Sitemap: https://www.pdcs.kr/sitemap.xml

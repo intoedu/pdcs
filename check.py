@@ -38,6 +38,8 @@ BANNED = ["School of Tomorrow", "IGNITIA", "ACSI", r"140여? ?개국", "S\\.O\\.
 LEFTOVER = [r"［[^］]*］", r"\bTODO\b", r"\bFIXME\b", "lorem ipsum", "여기에 내용"]
 
 # 학교 대표번호 — 눌렀을 때 걸리는 번호는 이것뿐이어야 한다 (CLAUDE.md 참조)
+# 사이트 주소 — 가비아 pdcs.kr, GitHub Pages 맞춤 도메인 www.pdcs.kr (2026-10-01 연결)
+SITE = "https://www.pdcs.kr/"
 TEL_MAIN = "041-425-0085"
 # 화면에 적어도 되는 번호 (tel: 링크가 아닌 안내용 표기 포함)
 TEL_OK = {"041-425-0085", "041-425-0096", "042-623-7067", "010-9665-7391", "010-6628-8290",
@@ -65,6 +67,15 @@ def ok(msg):
 
 # ── 파일만 보고 알 수 있는 것 ────────────────────────────────
 def check_source():
+    # 도메인 — CNAME 파일이 사라지면 www.pdcs.kr 연결이 통째로 끊긴다.
+    # 옛 주소(intoedu.github.io/pdcs)가 남으면 공유 썸네일 · 검색 주소가 옛 곳을 가리킨다
+    cn = os.path.join(ROOT, "CNAME")
+    if not os.path.exists(cn) or open(cn, encoding="utf-8").read().strip() != "www.pdcs.kr":
+        fail("CNAME: www.pdcs.kr 가 아니다 — 도메인 연결이 끊긴다")
+    for n in PAGES + ["sitemap.xml", "robots.txt"]:
+        t = open(os.path.join(ROOT, n), encoding="utf-8").read()
+        if "intoedu.github.io" in t or "/pdcs/" in t:
+            fail(f"{n}: 옛 주소(intoedu.github.io/pdcs)가 남아 있다")
     print("\n[소스]")
     for name in PAGES:
         s = open(os.path.join(ROOT, name), encoding="utf-8").read()
@@ -418,8 +429,8 @@ def check_meta():
             if k not in meta:
                 fail(f"{name}: 공유 정보 {k} 가 없다 — 카톡·페북 미리보기가 불완전해진다")
         img = meta.get("og:image", "")
-        if Image and "og:image:width" in meta and img.startswith("https://intoedu.github.io/pdcs/"):
-            p = os.path.join(ROOT, img[len("https://intoedu.github.io/pdcs/"):])
+        if Image and "og:image:width" in meta and img.startswith(SITE):
+            p = os.path.join(ROOT, img[len(SITE):])
             if not os.path.exists(p):
                 fail(f"{name}: og:image 파일이 없다 — {img}")
             else:
@@ -427,11 +438,11 @@ def check_meta():
                 if (meta.get("og:image:width"), meta.get("og:image:height")) != (str(w), str(h)):
                     fail(f"{name}: og:image 크기 표기가 실제와 다르다 — 실제 {w}x{h}, 표기 "
                          f"{meta.get('og:image:width')}x{meta.get('og:image:height')}")
-        # robots.txt 는 /pdcs/ 아래라 검색엔진이 읽지 않는다. 검색 제외는 noindex 만 통한다
+        # 검색 제외는 noindex 가 맡는다. robots.txt 로 막으면 검색엔진이 noindex 를 못 읽는다
         noindex = re.search(r'<meta name="robots" content="[^"]*noindex', s)
         if name in ("privacy.html", "404.html") and not noindex:
             fail(f"{name}: noindex 가 없다 — robots.txt 로는 검색에서 빠지지 않는다")
-        loc = "https://intoedu.github.io/pdcs/" + ("" if name == "index.html" else name)
+        loc = SITE + ("" if name == "index.html" else name)
         if noindex and loc in sitemap:
             fail(f"sitemap.xml: 검색에서 뺀 페이지가 사이트맵에 있다 — {name}")
         if not noindex and f"<loc>{loc}</loc>" not in sitemap:
@@ -797,7 +808,7 @@ def check_browser(save_shots=False):
                 errs = []
                 pg.on("pageerror", lambda e: errs.append(str(e)))
                 pg.on("response", lambda r: errs.append(f"{r.status} {r.url.split('/')[-1]}") if r.status >= 400 else None)
-                pg.goto(f"http://localhost:{PORT}/pdcs/{page}", wait_until="networkidle")
+                pg.goto(f"http://localhost:{PORT}/{page}", wait_until="networkidle")
                 pg.wait_for_timeout(500)
 
                 r = pg.evaluate(PROBE)
@@ -971,7 +982,7 @@ def check_browser(save_shots=False):
                 pg.close()
         for w, h in HERO_EXTRA:
             pg = b.new_page(viewport={"width": w, "height": h})
-            pg.goto(f"http://localhost:{PORT}/pdcs/index.html", wait_until="networkidle")
+            pg.goto(f"http://localhost:{PORT}/index.html", wait_until="networkidle")
             pg.add_style_tag(content=".hero__slide img { animation: none !important; }")
             pg.wait_for_timeout(300)
             if pg.evaluate("document.documentElement.scrollWidth > innerWidth + 1"):
@@ -990,7 +1001,7 @@ def check_browser(save_shots=False):
 # ── 스크립트 동작 — 실제로 눌러 본다 ──────────────────────────
 # 상담 양식 · 모바일 메뉴 · 슬라이더 · 옆 메뉴. 전부 "보기엔 멀쩡한데 눌러 보면 틀린" 것이었다
 def check_behaviour(b):
-    base = f"http://localhost:{PORT}/pdcs/"
+    base = f"http://localhost:{PORT}/"
     def new(w, h, **kw):
         ctx = b.new_context(viewport={"width": w, "height": h}, **kw)
         pg = ctx.new_page()
@@ -1135,15 +1146,8 @@ def check_behaviour(b):
 
 
 class Quiet(http.server.SimpleHTTPRequestHandler):
-    """배포본은 /pdcs/ 아래에 놓인다. 404.html 이 절대경로를 쓰므로
-    검사도 같은 주소 구조로 해야 의미가 있다."""
-
-    def translate_path(self, path):
-        if path.startswith("/pdcs/"):
-            path = path[len("/pdcs"):]
-        elif path == "/pdcs":
-            path = "/"
-        return super().translate_path(path)
+    """배포본은 도메인 맨 위(https://www.pdcs.kr/)에 놓인다. 검사도 같은 주소 구조로 띄운다.
+    (2026-10 까지는 intoedu.github.io/pdcs/ 아래였다)"""
 
     def log_message(self, *args):
         pass
