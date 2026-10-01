@@ -376,7 +376,12 @@ ul { margin: 0; padding: 0; list-style: none; }
    원본의 70% 이상이 보이게 하려면 히어로높이 <= 0.556 x 화면폭 이어야 한다. */
 .hero { position: relative; overflow: hidden; background: var(--navy-deep);
         min-height: min(100svh, 1100px, 56vw); }
-.hero__media { position: absolute; inset: -6% 0; will-change: transform; }
+.hero__media { position: absolute; inset: 0 0 -12% 0; will-change: transform; }
+/* 사진 상자를 위로 6% 넘치게 두었더니, 원본 위쪽에 바짝 붙어 찍힌 지붕과 별관이
+   화면 밖으로 나가고 나머지는 투명 헤더 밑에 깔렸다("살짝 잘린다").
+   스크롤 효과는 사진을 아래로만 민다(main.js: translateY(+0.26 x 스크롤)).
+   그래서 위쪽 틈은 늘 화면 밖이고, 여유분은 아래에만 있으면 된다.
+   높이는 112% 그대로라 가로 구도(32% 등)의 계산은 바뀌지 않는다 */
 .hero__slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.4s var(--ease); }
 .hero__slide.is-active { opacity: 1; }
 .hero__slide img { width: 100%; height: 100%; object-fit: cover; filter: contrast(1.05) saturate(1.04); }
@@ -390,9 +395,14 @@ ul { margin: 0; padding: 0; list-style: none; }
    양쪽을 다 만족하는 구간은 좁다. 1080px 에서 0.260~0.385 로 가장 좁고,
    그 구간 안에 드는 값이 1080~2400px 전체를 만족시킨다. 그래서 0.32 다.
    check.py 가 폭마다 실제로 재서 잡는다 — 눈대중으로 고치지 말 것 */
-.hero__slide:nth-child(2) img { object-position: 78% 55%; }
+.hero__slide:nth-child(2) img { object-position: 28% 50%; }
+/* 2번 본관 정면 — 건물이 원본 가로 23~70% 에 있다(격자로 실측).
+   78% 이던 때는 화면이 오른쪽 나무·전봇대·주차 차량 쪽으로 밀려,
+   건물 왼쪽 날개가 화면 밖으로 잘리고 현관이 표어 밑에 깔렸다.
+   28% 면 1021~2400px 에서 건물이 통째로 들어온다(1024px 이 가장 빠듯하다. 14% 면 거기서 잘렸다) */
 .hero__slide:nth-child(3) img { object-position: 66% 48%; }
-.hero__slide.is-active img { animation: kenBurns 9s ease-out forwards; }
+.hero__slide.is-active img { animation: kenBurns 9s ease-out forwards; transform-origin: 50% 0; }
+/* 확대 기준점을 위쪽 가운데로 둔다. 가운데를 기준으로 키우면 지붕이 4% 더 잘린다 */
 
 /* 기존 홈페이지의 메인 카피 — 영문 대문자 슬로건이 앞, 한글이 부제 */
 .hero__title-en {
@@ -1068,6 +1078,7 @@ ul { margin: 0; padding: 0; list-style: none; }
      기준점을 오른쪽으로 더 밀어야 건물 오른쪽 날개가 화면 안에 남는다
      710~1000px 전 구간이 겹치는 허용 구간은 0.494~0.547 뿐이다 — 계산으로 구했다 */
   .hero__slide:nth-child(1) img { object-position: 52% 50%; }
+  .hero__slide:nth-child(2) img { object-position: 42% 50%; }   /* 0.36~0.49 사이라야 본관이 안 잘린다 */
   /* 표어를 세 줄로 접는다. 한 줄이 짧아지는 만큼 건물이 들어설 자리가 생긴다.
      글자를 건물 아래로 내리는 방법도 해 봤지만, 건물이 히어로 높이의 48%까지
      내려와 있어 남는 아래쪽에 글자가 들어가지 않는다(계산으로 확인) */
@@ -1088,21 +1099,28 @@ ul { margin: 0; padding: 0; list-style: none; }
    한때 860px 이하에 걸어 두었더니, 가로 사진이 내려가는 701~860px 구간에서
    건물이 왼쪽으로 끌려와 표어 위에 얹혔다 */
 @media (max-width: 700px) {
-  .hero__slide:nth-child(1) img { object-position: 70% 50%; }
-  /* 세로로 긴 화면에서는 가로로 넓은 건물이 다 안 들어온다.
-     보이는 사진 폭 = 390 x 사진높이(872) / 히어로높이 이므로,
-     건물(600px)이 들어오려면 히어로가 520px 이하여야 한다 */
-  .hero { min-height: min(56svh, 470px); }
-  .hero__inner { min-height: min(56svh, 470px); justify-content: flex-end; padding-top: 24px; padding-bottom: 58px; max-width: none; }
-  .hero__lead { display: none; }   /* 자리를 만들기 위해 휴대폰에서는 뺀다 */
-  .hero__ctrl { bottom: 12px; }    /* 버튼과 겹치지 않게 아래로 내린다 */
-  .hero .btn { min-height: 54px; font-size: 16px; }
-  .hero__actions { margin-top: 28px; }
-  /* 휴대폰은 건물이 화면을 꽉 채워 사진이 밝다.
-     글자가 얹히는 구간(위쪽 눈썹, 가운데 제목)을 충분히 눌러 준다 */
-  .hero__veil::before { background: linear-gradient(180deg, rgba(8, 20, 42, .52) 0%, rgba(8, 20, 42, .34) 20%, rgba(8, 20, 42, .46) 42%, rgba(8, 20, 42, .66) 72%, rgba(8, 20, 42, .82) 100%); }
-  .hero__veil::after { display: none; }
-  .hero__actions .btn { flex: 1 1 100%; }
+  /* 휴대폰은 사진을 위에, 글자를 아래 남색 칸에 나눠 놓는다.
+     전에는 표어 · 교명 · 큰 버튼 두 개 · 슬라이더가 사진 위에 겹쳐 건물이 거의 안 보였다.
+     사진 칸은 74vw(390px 에서 289px) — 첫 화면에 사진과 두 버튼이 함께 들어온다.
+     키가 작은 휴대폰(360x640)은 화면 높이의 40% 를 넘지 않게 해 버튼이 밀려나지 않게 한다 */
+  .hero { min-height: 0; --hero-photo: min(74vw, 40svh); }
+  .hero__media { position: relative; inset: auto; height: var(--hero-photo); transform: none !important; }
+  .hero__media::after {   /* 슬라이더 조작이 밝은 앞마당 위에서도 보이게 아래만 살짝 누른다 */
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 72px; pointer-events: none;
+    background: linear-gradient(180deg, rgba(8, 20, 42, 0), rgba(8, 20, 42, .6));
+  }
+  .hero__veil, .hero__inner::before, .hero__lead { display: none; }
+  .hero__inner { min-height: 0; justify-content: flex-start; padding-top: 26px; padding-bottom: 30px; max-width: none; }
+  .hero__ctrl { top: calc(var(--hero-photo) - 48px); bottom: auto; }   /* 사진 칸 아래쪽 */
+  /* 사진 번호는 사진 위에 바로 얹힌다. 4번(흰 외벽 기숙사)은 아래쪽이 밝아
+     번호가 2.3:1 로 묻혔다. 받침을 깔아 어떤 사진 위에서도 읽히게 한다 */
+  .hero__nums { background: rgba(8, 20, 42, .72); border-radius: 999px; padding: 7px 13px; }
+  /* 1번은 건물 중심 세로 컷(hero-aerial-m.jpg). 위쪽을 기준으로 지붕부터 앞마당까지 */
+  .hero__slide:nth-child(1) img { object-position: 50% 6%; }
+  .hero__slide:nth-child(2) img { object-position: 42% 50%; }
+  .hero .btn { min-height: 52px; font-size: 15.5px; padding-left: 10px; padding-right: 10px; }
+  .hero__actions { margin-top: 24px; flex-wrap: nowrap; }
+  .hero__actions .btn { flex: 1 1 0; }
 }
 
 /* 1081~1279px — 학교소개 인사말. 사진 420px 고정이라 글 단이 257~456px 로 좁아져 한 줄이 열 글자 남짓이었다 */

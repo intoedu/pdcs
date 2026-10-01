@@ -750,6 +750,37 @@ def check_rendered_font(pg, page):
         fail(f"{page}: 버튼이 브라우저 기본 회색 바탕이다 — \"{t}\"")
 
 
+# ── 히어로 2번(본관 정면) — 건물이 화면 밖으로 잘리지 않는지 ──────────
+# hero-main.jpg 안에서 본관은 가로 23~70% 에 있다(격자 실측).
+# object-position 78% 이던 때 왼쪽 날개가 잘리고 현관이 표어 밑에 깔렸다.
+# 14% 로 고쳤을 때는 1021~1180px 에서 오른쪽 끝이 또 잘렸다 — 그래서 폭마다 잰다.
+SLIDE2_X = (0.23, 0.70)
+
+
+def check_hero_slide2(pg, page, w):
+    if w <= 720:     # 700px 근처는 본관이 화면보다 넓어 들어갈 수 없다(계산으로 확인)
+        return
+    g = pg.evaluate("""(bx) => new Promise(done => {
+      const s = [...document.querySelectorAll('.hero__slide')];
+      if (s.length < 2) return done(null);
+      const img = s[1].querySelector('img');
+      if (img.dataset.src && !img.src.includes(img.dataset.src)) img.src = img.dataset.src;
+      s.forEach((e, i) => e.classList.toggle('is-active', i === 1));
+      const go = () => {
+        const r = img.getBoundingClientRect(), nw = img.naturalWidth, nh = img.naturalHeight;
+        const sc = Math.max(r.width / nw, r.height / nh);
+        const off = (r.width - nw * sc) * parseFloat(getComputedStyle(img).objectPosition) / 100;
+        const at = f => r.left + off + f * nw * sc;
+        s.forEach((e, i) => e.classList.toggle('is-active', i === 0));
+        done({ 왼쪽: at(bx[0]), 오른쪽: at(bx[1]), 폭: innerWidth });
+      };
+      (img.complete && img.naturalWidth) ? go() : (img.onload = go);
+    })""", list(SLIDE2_X))
+    if g and (g["왼쪽"] < -2 or g["오른쪽"] > g["폭"] + 2):
+        fail(f"{page} {w}px: 히어로 2번(본관) 건물이 화면 밖으로 잘린다 — "
+             f"{g['왼쪽']:.0f}~{g['오른쪽']:.0f}px, 화면 {g['폭']}px")
+
+
 def check_browser(save_shots=False):
     from playwright.sync_api import sync_playwright
 
@@ -925,6 +956,7 @@ def check_browser(save_shots=False):
                     pg.add_style_tag(content=".hero__slide img { animation: none !important; }")
                     pg.wait_for_timeout(150)
                     check_hero_frame(pg, page, w)
+                    check_hero_slide2(pg, page, w)
                     check_hero_text(pg, page, w)
 
                 check_layout(pg, page, w, h)
