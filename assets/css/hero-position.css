@@ -2,9 +2,10 @@
    값은 www.pdcs.kr/hero-tuner.html 에서 사진을 움직여 보고 「값 복사」한 것을 통째로 붙여 넣는다.
    x · y: 0 = 사진의 왼쪽(위쪽) 끝을 화면에 맞춤, 100 = 오른쪽(아래쪽) 끝. z: 확대(1 = 화면에 꽉 맞춤, 1.5 = 1.5배)
    pc: 1021px 이상 · tab: 701~1020px · mob: 700px 이하 */
+/* 선명도 한계: 원본 1px 이 고화질 화면(맥북 · 아이패드 2배, 아이폰 3배)에서 1.5배 넘게 늘어나지 않게 확대를 묶었다 */
 :root {
-  --hero1-pc-x: 36; --hero1-pc-y: 5; --hero1-pc-z: 1.46;  --hero1-tab-x: 48; --hero1-tab-y: 3; --hero1-tab-z: 1.46;  --hero1-mob-x: 62; --hero1-mob-y: 22; --hero1-mob-z: 2.05;
-  --hero2-pc-x: 38; --hero2-pc-y: 17; --hero2-pc-z: 1.35;  --hero2-tab-x: 40; --hero2-tab-y: 7; --hero2-tab-z: 1.25;  --hero2-mob-x: 40; --hero2-mob-y: 8; --hero2-mob-z: 1.27;
-  --hero3-pc-x: 55; --hero3-pc-y: 10; --hero3-pc-z: 1.35;  --hero3-tab-x: 55; --hero3-tab-y: 0; --hero3-tab-z: 1.21;  --hero3-mob-x: 55; --hero3-mob-y: 18; --hero3-mob-z: 1.44;
-  --hero4-pc-x: 43; --hero4-pc-y: 20; --hero4-pc-z: 1.35;  --hero4-tab-x: 42; --hero4-tab-y: 9; --hero4-tab-z: 1.35;  --hero4-mob-x: 45; --hero4-mob-y: 4; --hero4-mob-z: 1.4;
+  --hero1-pc-x: 2; --hero1-pc-y: 0; --hero1-pc-z: 1.01;  --hero1-tab-x: 48; --hero1-tab-y: 3; --hero1-tab-z: 1.45;  --hero1-mob-x: 62; --hero1-mob-y: 22; --hero1-mob-z: 2.05;
+  --hero2-pc-x: 11; --hero2-pc-y: 50; --hero2-pc-z: 1.0;  --hero2-tab-x: 40; --hero2-tab-y: 7; --hero2-tab-z: 1.25;  --hero2-mob-x: 40; --hero2-mob-y: 8; --hero2-mob-z: 1.27;
+  --hero3-pc-x: 66; --hero3-pc-y: 50; --hero3-pc-z: 1.0;  --hero3-tab-x: 55; --hero3-tab-y: 0; --hero3-tab-z: 1.21;  --hero3-mob-x: 55; --hero3-mob-y: 18; --hero3-mob-z: 1.44;
+  --hero4-pc-x: 27; --hero4-pc-y: 50; --hero4-pc-z: 1.0;  --hero4-tab-x: 42; --hero4-tab-y: 3; --hero4-tab-z: 1.28;  --hero4-mob-x: 45; --hero4-mob-y: 4; --hero4-mob-z: 1.4;
 }

@@ -161,7 +161,11 @@
      1번 휴대폰은 건물 중심으로 미리 자른 다른 사진이라 재지 않는다 */
   var BUILDING = { 1: { x: [0.455, 0.70], y: [0.12, 0.49], file: 'slide1-aerial' },
                    2: { x: [0.23, 0.70], y: [0.26, 0.63], file: 'slide2-main', big: true } };
-  var DRAFT_KEY = 'pdcs-hero-tuner-v3';   /* v3: 사진이 잘리지 않은 원본으로 바뀌어 v2 이전 임시값은 좌표가 달라 버린다 */
+  /* 선명도 한계 — 원본 1px 이 고화질 화면에서 이 배수보다 더 늘어나면 흐려 보인다(학교: "안 흐려지는 선에서").
+     컴퓨터 · 태블릿은 2배 화면(맥북 · 아이패드), 휴대폰은 3배 화면(아이폰) 기준 */
+  var SHARP = 1.5, DPR = { pc: 2, tab: 2, mob: 3 };
+  var zMax = function (b, g) { return g ? Math.max(1, SHARP / (g.cover * DPR[b])) : 2.5; };
+  var DRAFT_KEY = 'pdcs-hero-tuner-v4';   /* v4: 선명도 한계가 생겼다 — 이전 임시값은 버린다 */
   var fileVals = {}, vals = {}, slide = 1, bare = false;
   var cards = {};
   Array.prototype.forEach.call(document.querySelectorAll('[data-band]'), function (c) { cards[c.getAttribute('data-band')] = c; });
@@ -218,8 +222,8 @@
     return { l: -ox / sc / g.nw, t: (g.vy0 - oy) / sc / g.nh, w: g.Sw / sc / g.nw, h: (g.vy1 - g.vy0) / sc / g.nh };
   };
   /* 원본 위 틀 → 값. 틀이 원본보다 커질 수는 없다(z ≥ 1) */
-  var fromFrame = function (g, f) {
-    var z = Math.min(2.5, Math.max(1, 1 / (f.w * g.nw * g.cover / g.Sw)));
+  var fromFrame = function (g, f, zm) {
+    var z = Math.min(zm || 2.5, Math.max(1, 1 / (f.w * g.nw * g.cover / g.Sw)));
     var sc = g.cover * z, dw = g.nw * sc, dh = g.nh * sc;
     var rx = g.Sw - dw, ry = g.Sh - dh;
     var x = Math.abs(rx) < 0.5 ? 50 : (-f.l * g.nw * sc) / rx * 100;
@@ -254,9 +258,10 @@
     drawFrame(b);
     /* 화질 — 원본 1px 이 고화질 화면(컴퓨터 · 태블릿 2배, 휴대폰 3배)에서 몇 배로 늘어나는지.
        1.6배를 넘으면 흐려 보인다. 학교 지적: "사진이 너무 저화질" */
-    var stretch = sc * (b === 'mob' ? 3 : 2);
-    if (stretch > 1.6) tips.unshift('화질: 맥북 · 아이폰 같은 고화질 화면에서 원본이 ' + stretch.toFixed(1) +
-      '배로 늘어나 흐려 보일 수 있습니다' + (v[2] > 1.05 ? '. 틀을 키우면(확대를 줄이면) 선명해집니다.' : '. 더 선명하려면 원본 사진이 필요합니다.'));
+    var zm = zMax(b, geom(b)), rz = card.querySelector('[data-axis=z]');
+    rz.max = Math.max(100, Math.floor(zm * 100));
+    if (zm <= 1.001) tips.unshift('선명도: 이 화면은 사진을 꽉 맞춘 상태가 가장 선명합니다. 더 확대하면 흐려져서 확대를 막아 두었습니다.');
+    else if (v[2] >= zm - 0.01) tips.unshift('선명도: 흐려지지 않는 한계(' + Math.round(zm * 100) + '%)까지 확대했습니다.');
     if (rx.disabled) tips.push('사진이 가로로 꽉 차 있어 좌우로는 안 움직입니다. 「확대」를 조금 올리면 움직일 수 있습니다.');
     if (ry.disabled) tips.push('사진이 세로로 꽉 차 있어 위아래로는 안 움직입니다. 「확대」를 조금 올리면 움직일 수 있습니다.');
     if (bd && (img.currentSrc || img.src).indexOf(bd.file) > -1) {
@@ -343,7 +348,7 @@
     var end = function () { if (start) { start = null; paintAll(); } };
     drag.addEventListener('pointerup', end); drag.addEventListener('pointercancel', end);
     card.querySelectorAll('input[type=range]').forEach(function (r, i) {
-      r.addEventListener('input', function () { vals[key(slide, b)][i] = i === 2 ? +r.value / 100 : +r.value; paint(b); output(); store(); });
+      r.addEventListener('input', function () { vals[key(slide, b)][i] = i === 2 ? Math.min(+r.value / 100, zMax(b, geom(b))) : +r.value; paint(b); output(); store(); });
     });
     var orig = card.querySelector('.tn-orig'), frame = card.querySelector('.tn-frame'), fs = null;
     var onDown = function (e, mode) {
@@ -361,7 +366,7 @@
         var k = Math.max(0.2, 1 + Math.max(dx / fs.f.w, dy / fs.f.h)), cx = f.l + f.w / 2, cy = f.t + f.h / 2;
         f.w = fs.f.w * k; f.h = fs.f.h * k; f.l = cx - f.w / 2; f.t = cy - f.h / 2;
       }
-      vals[key(slide, b)] = fromFrame(fs.g, f); paint(b); output();
+      vals[key(slide, b)] = fromFrame(fs.g, f, zMax(b, fs.g)); paint(b); output();
     });
     var up = function () { if (fs) { fs = null; paintAll(); } };
     orig.addEventListener('pointerup', up); orig.addEventListener('pointercancel', up);
