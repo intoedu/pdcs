@@ -67,6 +67,28 @@ def ok(msg):
 
 # ── 파일만 보고 알 수 있는 것 ────────────────────────────────
 def check_source():
+    # 히어로 사진 위치 — 학교가 hero-tuner.html 에서 고른 값을 GitHub 웹에서 붙여 넣는 파일.
+    # 사람이 붙여 넣으므로 형식이 깨질 수 있다. 하나라도 빠지면 그 사진은 style.css 의 기본값으로 떨어진다
+    hp = os.path.join(ROOT, "assets/css/hero-position.css")
+    if not os.path.exists(hp):
+        fail("assets/css/hero-position.css 가 없다 — 히어로 사진 위치를 학교가 고칠 수 없다")
+    else:
+        got = dict(re.findall(r"(--hero[1-4]-(?:pc|tab|mob))\s*:\s*(\d{1,3}(?:\.\d+)?%\s+\d{1,3}(?:\.\d+)?%)\s*;",
+                              open(hp, encoding="utf-8").read()))
+        need = [f"--hero{i}-{b}" for i in range(1, 5) for b in ("pc", "tab", "mob")]
+        miss = [k for k in need if k not in got]
+        if miss:
+            fail(f"hero-position.css: 형식이 깨졌거나 빠진 값이 있다 — {miss[:4]}")
+        if 'hero-position.css' not in open(os.path.join(ROOT, "index.html"), encoding="utf-8").read():
+            fail("index.html: hero-position.css 를 불러오지 않는다")
+    tn = os.path.join(ROOT, "hero-tuner.html")
+    if os.path.exists(tn):
+        t = open(tn, encoding="utf-8").read()
+        if 'content="noindex' not in t:
+            fail("hero-tuner.html: noindex 가 없다 — 조정 도구가 검색에 뜬다")
+        for n in PAGES:
+            if "hero-tuner" in open(os.path.join(ROOT, n), encoding="utf-8").read():
+                fail(f"{n}: 조정 도구(hero-tuner.html)로 가는 링크가 공개 화면에 있다")
     # 도메인 — CNAME 파일이 사라지면 www.pdcs.kr 연결이 통째로 끊긴다.
     # 옛 주소(intoedu.github.io/pdcs)가 남으면 공유 썸네일 · 검색 주소가 옛 곳을 가리킨다
     cn = os.path.join(ROOT, "CNAME")
@@ -654,13 +676,13 @@ def check_hero_frame(pg, page, w):
     # (701~1000px 는 표어를 세 줄로 접어 건물 왼쪽에 둔다 — 글자를 건물 아래로 내리는 방법은 버렸다)
     세로겹침 = geo["글자위"] < geo["건물아래"] and geo["글자아래"] > geo["건물위"]
     if 세로겹침 and geo["글자오른쪽"] + GAP > geo["건물왼쪽"]:
-        fail(f"{page} {w}px: 히어로 표어가 건물 위에 얹힌다 — "
+        warn(f"{page} {w}px: 히어로 표어가 건물 위에 얹힌다(학교가 고른 위치라면 그대로 둔다) — "
              f"글자 끝 {geo['글자오른쪽']:.0f}px, 건물 시작 {geo['건물왼쪽']:.0f}px")
     # 2401px 이상에서 표어만 왼쪽 6vw 로 빼서 로고 · 지표 띠와 왼쪽 선이 어긋난 적이 있다
     if abs(geo["표어왼쪽"] - geo["로고왼쪽"]) > 2:
         fail(f"{page} {w}px: 히어로 표어 왼쪽({geo['표어왼쪽']:.0f}px)이 헤더 로고 왼쪽({geo['로고왼쪽']:.0f}px)과 어긋난다")
     if geo["건물오른쪽"] > geo["화면폭"] + 2:
-        fail(f"{page} {w}px: 히어로에서 건물 오른쪽이 화면 밖으로 잘린다 — "
+        warn(f"{page} {w}px: 히어로에서 건물 오른쪽이 화면 밖으로 잘린다(학교가 고른 위치라면 그대로 둔다) — "
              f"건물 끝 {geo['건물오른쪽']:.0f}px, 화면 {geo['화면폭']}px")
 
 
@@ -788,7 +810,7 @@ def check_hero_slide2(pg, page, w):
       (img.complete && img.naturalWidth) ? go() : (img.onload = go);
     })""", list(SLIDE2_X))
     if g and (g["왼쪽"] < -2 or g["오른쪽"] > g["폭"] + 2):
-        fail(f"{page} {w}px: 히어로 2번(본관) 건물이 화면 밖으로 잘린다 — "
+        warn(f"{page} {w}px: 히어로 2번(본관) 건물이 화면 밖으로 잘린다(학교가 고른 위치라면 그대로 둔다) — "
              f"{g['왼쪽']:.0f}~{g['오른쪽']:.0f}px, 화면 {g['폭']}px")
 
 

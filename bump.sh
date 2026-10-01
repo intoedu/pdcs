@@ -9,7 +9,7 @@ v = {p: hashlib.sha1(pathlib.Path(p).read_bytes()).hexdigest()[:8]
      for p in ("assets/css/style.css", "assets/js/main.js")}
 # 404.html 은 어느 주소에서 떠도 자원을 찾도록 절대경로(/assets/...)를 쓴다.
 # 빠뜨리면 404 화면만 옛 스타일로 남는다
-for name in ("index.html", "about.html", "admission.html", "privacy.html", "404.html"):
+for name in ("index.html", "about.html", "admission.html", "privacy.html", "404.html", "hero-tuner.html"):
     p = pathlib.Path(name); s = p.read_text(encoding="utf-8")
     s = re.sub(r'href="(/)?assets/css/style\.css(\?v=[0-9a-f]+)?"',
                lambda m: f'href="{m.group(1) or ""}assets/css/style.css?v={v["assets/css/style.css"]}"', s)

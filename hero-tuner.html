@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="only light">
+<title>첫 화면 사진 위치 조정 — 폴앤다니엘기독학교</title>
+<link rel="icon" href="assets/img/favicon-64.png" sizes="64x64">
+<link rel="stylesheet" href="assets/css/style.css?v=f23dae52">
+<!--
+  학교가 메인 첫 화면(히어로) 사진 위치를 직접 고르는 도구.
+  서버가 없으므로 저장은 「복사 → GitHub 에서 assets/css/hero-position.css 에 붙여 넣기」로 한다.
+  메뉴 · 사이트맵 어디에도 연결하지 않는다(noindex). 이 페이지는 사이트를 바꾸지 못한다 — 보여 주기만 한다.
+-->
+<style>
+  body.tn { background: #F3F1EA; color: var(--ink); padding-bottom: 60px; }
+  .tn-wrap { max-width: 1480px; margin: 0 auto; padding: 0 20px; }
+  .tn-head { padding: 28px 0 8px; }
+  .tn-head h1 { font-size: 26px; font-weight: 800; color: var(--navy-deep); letter-spacing: -0.02em; }
+  .tn-head p { margin-top: 8px; color: var(--muted); font-size: 15px; line-height: 1.7; }
+  .tn-bar { position: sticky; top: 0; z-index: 5; background: #F3F1EA; padding: 14px 0; border-bottom: 1px solid rgba(14,34,69,.12);
+            display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; }
+  .tn-tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tn-tab { font: inherit; font-size: 15px; font-weight: 600; padding: 9px 16px; border-radius: 999px; cursor: pointer;
+            border: 1px solid rgba(14,34,69,.25); background: #fff; color: var(--navy-deep); }
+  .tn-tab[aria-pressed="true"] { background: var(--navy-deep); color: #fff; border-color: var(--navy-deep); }
+  .tn-check { display: inline-flex; gap: 8px; align-items: center; font-size: 15px; cursor: pointer; }
+  .tn-check input { width: 18px; height: 18px; margin: 0; }
+  .tn-grid { display: grid; grid-template-columns: minmax(0, 2.3fr) minmax(0, 1.25fr) minmax(0, .75fr); gap: 18px; margin-top: 18px; align-items: start; }
+  @media (max-width: 1100px) { .tn-grid { grid-template-columns: minmax(0, 1fr); } }
+  .tn-card { background: #fff; border-radius: 10px; box-shadow: 0 2px 14px rgba(14,34,69,.08); padding: 16px; }
+  .tn-card h2 { font-size: 17px; font-weight: 700; color: var(--navy-deep); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .tn-card h2 small { font-size: 13px; font-weight: 500; color: var(--muted); }
+  .tn-card select { font: inherit; font-size: 14px; padding: 4px 6px; border: 1px solid rgba(14,34,69,.25); border-radius: 6px; background: #fff; }
+  .tn-stage { position: relative; margin-top: 12px; overflow: hidden; border-radius: 6px; background: #0E2245; }
+  .tn-stage iframe { position: absolute; left: 0; top: 0; border: 0; transform-origin: 0 0; pointer-events: none; background: #fff; }
+  .tn-drag { position: absolute; inset: 0; cursor: grab; touch-action: none; }
+  .tn-drag:active { cursor: grabbing; }
+  .tn-drag::after { content: "사진을 끌어서 옮기세요"; position: absolute; right: 8px; bottom: 8px; font-size: 12px; color: #fff;
+                    background: rgba(8,20,42,.7); padding: 3px 8px; border-radius: 999px; pointer-events: none; }
+  .tn-row { display: grid; grid-template-columns: 4.2em minmax(0, 1fr) 3.4em; gap: 10px; align-items: center; margin-top: 12px; font-size: 14px; }
+  .tn-row input[type="range"] { width: 100%; accent-color: var(--navy-deep); }
+  .tn-row input[type="range"]:disabled { opacity: .35; }
+  .tn-row output { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+  .tn-note { margin-top: 10px; font-size: 13.5px; line-height: 1.6; min-height: 1.6em; }
+  .tn-note.is-warn { color: #9A1C22; font-weight: 600; }
+  .tn-note.is-ok { color: #1E6B3A; }
+  .tn-mini { font: inherit; font-size: 13px; padding: 5px 10px; border-radius: 6px; border: 1px solid rgba(14,34,69,.25); background: #fff; cursor: pointer; margin-top: 10px; }
+  .tn-save { margin-top: 22px; }
+  .tn-save ol { margin: 10px 0 0 1.3em; font-size: 15px; line-height: 1.9; }
+  .tn-save textarea { width: 100%; height: 190px; margin-top: 12px; font: 13px/1.6 ui-monospace, Menlo, Consolas, monospace;
+                      border: 1px solid rgba(14,34,69,.2); border-radius: 8px; padding: 12px; background: #FAF8F3; }
+  .tn-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+  .tn-btn { font: inherit; font-size: 15.5px; font-weight: 600; padding: 12px 20px; border-radius: 8px; cursor: pointer;
+            border: 1px solid var(--navy-deep); background: #fff; color: var(--navy-deep); text-decoration: none; }
+  .tn-btn--main { background: var(--navy-deep); color: #fff; }
+  .tn-msg { margin-top: 10px; font-size: 14px; color: #1E6B3A; min-height: 1.4em; }
+  .tn-draft { margin-top: 12px; padding: 10px 14px; border-radius: 8px; background: #FFF6DE; font-size: 14px; display: none; }
+  .tn-draft.is-on { display: block; }
+</style>
+</head>
+<body class="tn">
+<div class="tn-wrap">
+  <header class="tn-head">
+    <h1>첫 화면 사진 위치 조정</h1>
+    <p>사진을 고르고, 아래 미리보기에서 <b>사진을 끌거나</b> 가로 · 세로 막대를 움직여 보세요.
+       컴퓨터 · 태블릿 · 휴대폰은 화면 비율이 달라 위치를 따로 정합니다.
+       이 페이지에서 움직여도 홈페이지는 바뀌지 않습니다. 마음에 들면 맨 아래 순서대로 저장해 주세요.</p>
+    <p class="tn-draft" id="tn-draft">저장하지 않고 조정하던 값을 불러왔습니다.
+      <button type="button" class="tn-mini" id="tn-from-file" style="margin:0 0 0 8px">홈페이지에 지금 걸린 값으로 돌아가기</button></p>
+  </header>
+
+  <div class="tn-bar">
+    <div class="tn-tabs" role="group" aria-label="사진 고르기">
+      <button type="button" class="tn-tab" data-slide="1" aria-pressed="true">1 · 학교 항공 전경</button>
+      <button type="button" class="tn-tab" data-slide="2" aria-pressed="false">2 · 본관</button>
+      <button type="button" class="tn-tab" data-slide="3" aria-pressed="false">3 · 운동장</button>
+      <button type="button" class="tn-tab" data-slide="4" aria-pressed="false">4 · 기숙사동</button>
+    </div>
+    <label class="tn-check"><input type="checkbox" id="tn-bare"> 글자 숨기고 사진만 보기</label>
+  </div>
+
+  <div class="tn-grid">
+    <section class="tn-card" data-band="pc">
+      <h2>컴퓨터 <small>1021px 이상
+        <select aria-label="미리보기 화면 크기" id="tn-pc-size">
+          <option value="1366x768">1366 × 768 (흔한 노트북)</option>
+          <option value="1920x1080">1920 × 1080 (큰 모니터)</option>
+          <option value="1280x800">1280 × 800</option>
+        </select></small></h2>
+      <div class="tn-stage"><iframe title="컴퓨터 미리보기" tabindex="-1"></iframe><div class="tn-drag"></div></div>
+      <div class="tn-row"><span>가로</span><input type="range" min="0" max="100" step="1" data-axis="x" aria-label="컴퓨터 가로 위치"><output></output></div>
+      <div class="tn-row"><span>세로</span><input type="range" min="0" max="100" step="1" data-axis="y" aria-label="컴퓨터 세로 위치"><output></output></div>
+      <p class="tn-note" aria-live="polite"></p>
+      <button type="button" class="tn-mini" data-reset>이 화면만 원래대로</button>
+    </section>
+
+    <section class="tn-card" data-band="tab">
+      <h2>태블릿 <small>701~1020px · 860 × 900</small></h2>
+      <div class="tn-stage"><iframe title="태블릿 미리보기" tabindex="-1"></iframe><div class="tn-drag"></div></div>
+      <div class="tn-row"><span>가로</span><input type="range" min="0" max="100" step="1" data-axis="x" aria-label="태블릿 가로 위치"><output></output></div>
+      <div class="tn-row"><span>세로</span><input type="range" min="0" max="100" step="1" data-axis="y" aria-label="태블릿 세로 위치"><output></output></div>
+      <p class="tn-note" aria-live="polite"></p>
+      <button type="button" class="tn-mini" data-reset>이 화면만 원래대로</button>
+    </section>
+
+    <section class="tn-card" data-band="mob">
+      <h2>휴대폰 <small>700px 이하 · 390 × 844</small></h2>
+      <div class="tn-stage"><iframe title="휴대폰 미리보기" tabindex="-1"></iframe><div class="tn-drag"></div></div>
+      <div class="tn-row"><span>가로</span><input type="range" min="0" max="100" step="1" data-axis="x" aria-label="휴대폰 가로 위치"><output></output></div>
+      <div class="tn-row"><span>세로</span><input type="range" min="0" max="100" step="1" data-axis="y" aria-label="휴대폰 세로 위치"><output></output></div>
+      <p class="tn-note" aria-live="polite"></p>
+      <button type="button" class="tn-mini" data-reset>이 화면만 원래대로</button>
+    </section>
+  </div>
+
+  <section class="tn-card tn-save">
+    <h2>저장하기</h2>
+    <ol>
+      <li><b>「값 복사」</b>를 누릅니다.</li>
+      <li><b>「GitHub 에서 열기」</b>를 누르면 사진 위치 파일 편집 화면이 열립니다(GitHub 로그인 필요).</li>
+      <li>편집 칸을 누르고 <b>전체 선택(Ctrl+A / ⌘A) → 붙여넣기(Ctrl+V / ⌘V)</b> 합니다.</li>
+      <li>오른쪽 위 초록색 <b>「Commit changes…」 → 「Commit changes」</b>를 누릅니다.</li>
+      <li>보통 몇 분 안에 홈페이지에 반영됩니다. 안 바뀌어 보이면 새로고침해 주세요.</li>
+    </ol>
+    <textarea id="tn-out" readonly aria-label="저장할 값"></textarea>
+    <div class="tn-actions">
+      <button type="button" class="tn-btn tn-btn--main" id="tn-copy">값 복사</button>
+      <a class="tn-btn" href="https://github.com/intoedu/pdcs/edit/main/assets/css/hero-position.css" target="_blank" rel="noopener">GitHub 에서 열기<span class="sr-only">(새 창)</span></a>
+      <button type="button" class="tn-btn" id="tn-reset-all">전부 홈페이지 값으로 되돌리기</button>
+    </div>
+    <p class="tn-msg" id="tn-msg" aria-live="polite"></p>
+  </section>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var BANDS = { pc: [1366, 768], tab: [860, 900], mob: [390, 844] };
+  /* 건물 자리(원본 사진 안 비율) — check.py 의 BUILDING_X · BUILDING_Y · SLIDE2_X 와 같은 값.
+     1번 휴대폰은 건물 중심으로 미리 자른 다른 사진이라 재지 않는다 */
+  var BUILDING = { 1: { x: [0.47, 0.74], y: [0, 0.48], file: 'hero-aerial.jpg' },
+                   2: { x: [0.23, 0.70], y: [0.30, 0.80], file: 'hero-main', big: true } };
+  var DRAFT_KEY = 'pdcs-hero-tuner-v1';
+  var fileVals = {}, vals = {}, slide = 1, bare = false;
+  var cards = {};
+  Array.prototype.forEach.call(document.querySelectorAll('[data-band]'), function (c) { cards[c.getAttribute('data-band')] = c; });
+
+  var key = function (s, b) { return '--hero' + s + '-' + b; };
+  var parse = function (css) {
+    var out = {}, re = /--hero([1-4])-(pc|tab|mob)\s*:\s*([\d.]+)%\s+([\d.]+)%/g, m;
+    while ((m = re.exec(css))) out[key(m[1], m[2])] = [parseFloat(m[3]), parseFloat(m[4])];
+    return out;
+  };
+  var clone = function (o) { return JSON.parse(JSON.stringify(o)); };
+  var store = function () { try { localStorage.setItem(DRAFT_KEY, JSON.stringify(vals)); } catch (e) {} };
+  var same = function (a, b) { return JSON.stringify(a) === JSON.stringify(b); };
+
+  var fmt = function (v) { return Math.round(v[0]) + '% ' + Math.round(v[1]) + '%'; };
+  var output = function () {
+    var L = ['/* 메인 첫 화면(히어로) 사진 위치 — 이 파일만 고치면 된다.',
+      '   값은 www.pdcs.kr/hero-tuner.html 에서 사진을 움직여 보고 「복사」한 것을 통째로 붙여 넣는다.',
+      '   "가로% 세로%" — 0% 는 사진의 왼쪽(위쪽) 끝, 100% 는 오른쪽(아래쪽) 끝을 화면에 맞춘다.',
+      '   pc: 1021px 이상 · tab: 701~1020px · mob: 700px 이하 */', ':root {'];
+    for (var s = 1; s <= 4; s++) {
+      L.push('  ' + ['pc', 'tab', 'mob'].map(function (b) {
+        return (key(s, b) + ': ' + fmt(vals[key(s, b)]) + ';').padEnd(22);
+      }).join(' ').replace(/\s+$/, ''));
+    }
+    L.push('}');
+    document.getElementById('tn-out').value = L.join('\n') + '\n';
+  };
+
+  var doc = function (b) { var f = cards[b].querySelector('iframe'); return f.contentDocument; };
+  var activeImg = function (b) {
+    var d = doc(b); if (!d) return null;
+    var s = d.querySelectorAll('.hero__slide')[slide - 1];
+    return s && s.querySelector('img');
+  };
+
+  /* 미리보기 한 칸에 값을 넣고, 건물이 잘리거나 표어와 겹치는지 알린다 */
+  var paint = function (b) {
+    var d = doc(b); if (!d || !d.documentElement) return;
+    for (var k in vals) d.documentElement.style.setProperty(k, fmt(vals[k]));
+    var v = vals[key(slide, b)], card = cards[b];
+    card.querySelectorAll('input[type=range]').forEach(function (r, i) { r.value = Math.round(v[i]); });
+    card.querySelectorAll('output').forEach(function (o, i) { o.textContent = Math.round(v[i]) + '%'; });
+    var note = card.querySelector('.tn-note'); note.className = 'tn-note'; note.textContent = '';
+    var img = activeImg(b), bd = BUILDING[slide];
+    if (!img || !img.naturalWidth) return;
+    var r = img.getBoundingClientRect(), nw = img.naturalWidth, nh = img.naturalHeight;
+    var sc = Math.max(r.width / nw, r.height / nh), dw = nw * sc, dh = nh * sc;
+    var tips = [], rx = card.querySelector('[data-axis=x]'), ry = card.querySelector('[data-axis=y]');
+    /* 사진이 그 방향으로 꽉 차 있으면 값을 바꿔도 화면이 그대로다 — 막대를 잠가 헛수고를 막는다 */
+    rx.disabled = dw - r.width < 2; ry.disabled = dh - r.height < 2;
+    if (rx.disabled) tips.push('이 화면에서는 사진이 가로로 꽉 차 있어 위아래로만 움직입니다.');
+    if (ry.disabled) tips.push('이 화면에서는 사진이 세로로 꽉 차 있어 좌우로만 움직입니다.');
+    if (bd && (img.currentSrc || img.src).indexOf(bd.file) > -1) {
+      var W = d.defaultView.innerWidth;
+      var ox = (r.width - dw) * v[0] / 100, oy = (r.height - dh) * v[1] / 100;
+      var L = r.left + ox + bd.x[0] * dw, R = r.left + ox + bd.x[1] * dw;
+      var T = r.top + oy + bd.y[0] * dh, B = r.top + oy + bd.y[1] * dh;
+      var warn = [];
+      if (L < -2 || R > W + 2) warn.push('건물이 화면 밖으로 잘립니다');
+      var t = d.querySelector('.hero__title-en');
+      if (t && !bare && b !== 'mob') {
+        var rg = d.createRange(); rg.selectNodeContents(t);
+        var tr = t.getBoundingClientRect(), right = 0;
+        Array.prototype.forEach.call(rg.getClientRects(), function (q) { if (q.width) right = Math.max(right, q.right); });
+        if (tr.top < B && tr.bottom > T && right + 16 > L) {
+          /* 2번은 건물이 화면 폭의 70% 를 넘게 차지해 어떤 위치로도 표어와 나란히 놓을 수 없다(계산으로 확인) */
+          if (bd.big) tips.push('본관이 커서 표어가 건물 왼쪽에 얹히는 사진입니다. 건물이 잘리지 않는 범위에서 골라 주세요.');
+          else warn.push('표어가 건물 위에 겹칩니다');
+        }
+      }
+      if (warn.length) { note.className = 'tn-note is-warn'; note.textContent = '⚠ ' + warn.join(' · ') + ' (이 크기 화면 기준)'; return; }
+      note.className = 'tn-note is-ok';
+      note.textContent = '✓ 건물이 화면 안에 다 들어옵니다' + (tips.length ? ' · ' + tips.join(' ') : (b !== 'mob' ? ' · 표어와 겹치지 않습니다' : ''));
+      return;
+    }
+    if (tips.length && !note.textContent) note.textContent = tips.join(' ');
+  };
+  var paintAll = function () { Object.keys(cards).forEach(paint); output(); store(); };
+
+  /* 미리보기 페이지를 멈춰 세우고 고른 사진을 띄운다 */
+  var prep = function (b) {
+    var d = doc(b); if (!d || !d.querySelector('.hero')) return;
+    if (!d.getElementById('tn-freeze')) {
+      var st = d.createElement('style'); st.id = 'tn-freeze';
+      st.textContent = '.hero__slide img{animation:none!important}.hero__slide{transition:none!important}';
+      d.head.appendChild(st);
+    }
+    var bs = d.getElementById('tn-bare');
+    if (bare && !bs) { bs = d.createElement('style'); bs.id = 'tn-bare'; bs.textContent = '.hero .wrap,.hero__ctrl,.hero__veil{visibility:hidden!important}'; d.head.appendChild(bs); }
+    if (!bare && bs) bs.remove();
+    var play = d.getElementById('hero-play');
+    if (play && /멈추/.test(play.getAttribute('aria-label') || '')) play.click();
+    var num = d.querySelector('.hero__num[data-go="' + (slide - 1) + '"]');
+    if (num) num.click();
+    var img = activeImg(b);
+    if (img && !img.complete) img.addEventListener('load', function () { paint(b); }, { once: true });
+    paint(b);
+  };
+
+  var fit = function (b) {
+    var card = cards[b], stage = card.querySelector('.tn-stage'), f = card.querySelector('iframe');
+    var size = BANDS[b], s = stage.clientWidth / size[0];
+    f.width = size[0]; f.height = size[1];
+    f.style.width = size[0] + 'px'; f.style.height = size[1] + 'px';
+    f.style.transform = 'scale(' + s + ')';
+    stage.style.height = Math.round(size[1] * s) + 'px';
+    card._scale = s;
+  };
+  var load = function (b) {
+    var f = cards[b].querySelector('iframe');
+    fit(b);
+    f.onload = function () { setTimeout(function () { prep(b); }, 250); };
+    f.src = 'index.html?tuner=' + b;
+  };
+
+  /* 끌기 — 사진을 오른쪽으로 끌면 사진이 오른쪽으로 따라온다 */
+  Object.keys(cards).forEach(function (b) {
+    var card = cards[b], drag = card.querySelector('.tn-drag'), start = null;
+    drag.addEventListener('pointerdown', function (e) {
+      var img = activeImg(b); if (!img || !img.naturalWidth) return;
+      var r = img.getBoundingClientRect(), sc = Math.max(r.width / img.naturalWidth, r.height / img.naturalHeight);
+      start = { x: e.clientX, y: e.clientY, v: vals[key(slide, b)].slice(),
+                rx: img.naturalWidth * sc - r.width, ry: img.naturalHeight * sc - r.height };
+      drag.setPointerCapture(e.pointerId);
+    });
+    drag.addEventListener('pointermove', function (e) {
+      if (!start) return;
+      var s = card._scale || 1, v = start.v.slice();
+      if (start.rx > 1) v[0] = Math.min(100, Math.max(0, start.v[0] - (e.clientX - start.x) / s / start.rx * 100));
+      if (start.ry > 1) v[1] = Math.min(100, Math.max(0, start.v[1] - (e.clientY - start.y) / s / start.ry * 100));
+      vals[key(slide, b)] = v; paint(b);
+    });
+    var end = function () { if (start) { start = null; paintAll(); } };
+    drag.addEventListener('pointerup', end); drag.addEventListener('pointercancel', end);
+    card.querySelectorAll('input[type=range]').forEach(function (r, i) {
+      r.addEventListener('input', function () { vals[key(slide, b)][i] = +r.value; paint(b); output(); store(); });
+    });
+    card.querySelector('[data-reset]').addEventListener('click', function () {
+      vals[key(slide, b)] = fileVals[key(slide, b)].slice(); paintAll();
+    });
+  });
+
+  document.querySelectorAll('.tn-tab').forEach(function (t) {
+    t.addEventListener('click', function () {
+      slide = +t.getAttribute('data-slide');
+      document.querySelectorAll('.tn-tab').forEach(function (x) { x.setAttribute('aria-pressed', String(x === t)); });
+      Object.keys(cards).forEach(prep);
+    });
+  });
+  document.getElementById('tn-bare').addEventListener('change', function (e) { bare = e.target.checked; Object.keys(cards).forEach(prep); });
+  document.getElementById('tn-pc-size').addEventListener('change', function (e) {
+    BANDS.pc = e.target.value.split('x').map(Number); load('pc');
+  });
+  window.addEventListener('resize', function () { Object.keys(cards).forEach(function (b) { fit(b); paint(b); }); });
+
+  var msg = function (t) { document.getElementById('tn-msg').textContent = t; };
+  document.getElementById('tn-copy').addEventListener('click', function () {
+    var ta = document.getElementById('tn-out'), text = ta.value;
+    var done = function () { msg('복사했습니다. 「GitHub 에서 열기」를 눌러 붙여 넣어 주세요.'); };
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(done, function () { ta.select(); document.execCommand('copy'); done(); });
+    else { ta.select(); document.execCommand('copy'); done(); }
+  });
+  var toFile = function () {
+    vals = clone(fileVals); document.getElementById('tn-draft').classList.remove('is-on');
+    try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
+    paintAll(); msg('홈페이지에 지금 걸린 값으로 되돌렸습니다.');
+  };
+  document.getElementById('tn-reset-all').addEventListener('click', toFile);
+  document.getElementById('tn-from-file').addEventListener('click', toFile);
+
+  /* 시작 — 홈페이지에 지금 걸린 값을 읽는다. 저장 안 한 조정값이 있으면 그것부터 보여 준다 */
+  fetch('assets/css/hero-position.css', { cache: 'no-store' }).then(function (r) { return r.text(); }).then(function (css) {
+    fileVals = parse(css);
+    for (var s = 1; s <= 4; s++) ['pc', 'tab', 'mob'].forEach(function (b) { if (!fileVals[key(s, b)]) fileVals[key(s, b)] = [50, 50]; });
+    vals = clone(fileVals);
+    try {
+      var d = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null');
+      if (d && Object.keys(d).length === 12 && !same(d, fileVals)) { vals = d; document.getElementById('tn-draft').classList.add('is-on'); }
+    } catch (e) {}
+    output();
+    Object.keys(cards).forEach(load);
+  });
+})();
+</script>
+</body>
+</html>

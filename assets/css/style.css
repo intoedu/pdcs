@@ -388,19 +388,21 @@ ul { margin: 0; padding: 0; list-style: none; }
 .hero__slide picture { display: block; width: 100%; height: 100%; }
 /* 항공샷 기준점 — 폭마다 다르다(1001px 이상 32% · 701~1000px 52% · 700px 이하 70%).
    좁은 화면에서는 건물 중심으로 미리 세로로 자른 사진을 따로 내려보낸다 (picture) */
-.hero__slide:nth-child(1) img { object-position: 32% 50%; }
+/* 기준점 값은 assets/css/hero-position.css 에 있다(학교가 hero-tuner.html 로 직접 고른다). 괄호 안은 그 파일이 없을 때 쓰는 값 */
+.hero__slide:nth-child(1) img { object-position: var(--hero1-pc, 32% 50%); }
 /* 32% 인 이유 — 70% 일 때는 건물이 화면 왼쪽(1280px 에서 x=362)으로 와서
    표어 FOR ALL NATIONS! (x=537 까지) 가 건물 벽 위에 얹혔다. 노트북에서 가장 심했다.
    너무 밀면(25%) 이번에는 건물 오른쪽 날개가 화면 밖으로 잘린다.
    양쪽을 다 만족하는 구간은 좁다. 1080px 에서 0.260~0.385 로 가장 좁고,
    그 구간 안에 드는 값이 1080~2400px 전체를 만족시킨다. 그래서 0.32 다.
    check.py 가 폭마다 실제로 재서 잡는다 — 눈대중으로 고치지 말 것 */
-.hero__slide:nth-child(2) img { object-position: 28% 50%; }
+.hero__slide:nth-child(2) img { object-position: var(--hero2-pc, 28% 50%); }
 /* 2번 본관 정면 — 건물이 원본 가로 23~70% 에 있다(격자로 실측).
    78% 이던 때는 화면이 오른쪽 나무·전봇대·주차 차량 쪽으로 밀려,
    건물 왼쪽 날개가 화면 밖으로 잘리고 현관이 표어 밑에 깔렸다.
    28% 면 1021~2400px 에서 건물이 통째로 들어온다(1024px 이 가장 빠듯하다. 14% 면 거기서 잘렸다) */
-.hero__slide:nth-child(3) img { object-position: 66% 48%; }
+.hero__slide:nth-child(3) img { object-position: var(--hero3-pc, 66% 48%); }
+.hero__slide:nth-child(4) img { object-position: var(--hero4-pc, 50% 50%); }
 .hero__slide.is-active img { animation: kenBurns 9s ease-out forwards; transform-origin: 50% 0; }
 /* 확대 기준점을 위쪽 가운데로 둔다. 가운데를 기준으로 키우면 지붕이 4% 더 잘린다 */
 
@@ -1077,8 +1079,10 @@ ul { margin: 0; padding: 0; list-style: none; }
   /* 이 구간은 사진이 가장 심하게 잘려 건물이 화면을 꽉 채운다.
      기준점을 오른쪽으로 더 밀어야 건물 오른쪽 날개가 화면 안에 남는다
      710~1000px 전 구간이 겹치는 허용 구간은 0.494~0.547 뿐이다 — 계산으로 구했다 */
-  .hero__slide:nth-child(1) img { object-position: 52% 50%; }
-  .hero__slide:nth-child(2) img { object-position: 42% 50%; }   /* 0.36~0.49 사이라야 본관이 안 잘린다 */
+  .hero__slide:nth-child(1) img { object-position: var(--hero1-tab, 52% 50%); }
+  .hero__slide:nth-child(2) img { object-position: var(--hero2-tab, 42% 50%); }   /* 0.36~0.49 사이라야 본관이 안 잘린다 */
+  .hero__slide:nth-child(3) img { object-position: var(--hero3-tab, 66% 48%); }
+  .hero__slide:nth-child(4) img { object-position: var(--hero4-tab, 50% 50%); }
   /* 표어를 세 줄로 접는다. 한 줄이 짧아지는 만큼 건물이 들어설 자리가 생긴다.
      글자를 건물 아래로 내리는 방법도 해 봤지만, 건물이 히어로 높이의 48%까지
      내려와 있어 남는 아래쪽에 글자가 들어가지 않는다(계산으로 확인) */
@@ -1116,8 +1120,10 @@ ul { margin: 0; padding: 0; list-style: none; }
      번호가 2.3:1 로 묻혔다. 받침을 깔아 어떤 사진 위에서도 읽히게 한다 */
   .hero__nums { background: rgba(8, 20, 42, .72); border-radius: 999px; padding: 7px 13px; }
   /* 1번은 건물 중심 세로 컷(hero-aerial-m.jpg). 위쪽을 기준으로 지붕부터 앞마당까지 */
-  .hero__slide:nth-child(1) img { object-position: 50% 6%; }
-  .hero__slide:nth-child(2) img { object-position: 42% 50%; }
+  .hero__slide:nth-child(1) img { object-position: var(--hero1-mob, 50% 6%); }
+  .hero__slide:nth-child(2) img { object-position: var(--hero2-mob, 42% 50%); }
+  .hero__slide:nth-child(3) img { object-position: var(--hero3-mob, 66% 48%); }
+  .hero__slide:nth-child(4) img { object-position: var(--hero4-mob, 50% 50%); }
   .hero .btn { min-height: 52px; font-size: 15.5px; padding-left: 10px; padding-right: 10px; }
   .hero__actions { margin-top: 24px; flex-wrap: nowrap; }
   .hero__actions .btn { flex: 1 1 0; }
