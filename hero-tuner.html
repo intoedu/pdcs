@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="only light">
 <title>첫 화면 사진 위치 조정 — 폴앤다니엘기독학교</title>
 <link rel="icon" href="assets/img/favicon-64.png" sizes="64x64">
-<link rel="stylesheet" href="assets/css/style.css?v=f23dae52">
+<link rel="stylesheet" href="assets/css/style.css?v=01130bf0">
 <!--
   학교가 메인 첫 화면(히어로) 사진 위치를 직접 고르는 도구.
   서버가 없으므로 저장은 「복사 → GitHub 에서 assets/css/hero-position.css 에 붙여 넣기」로 한다.
@@ -65,6 +65,7 @@
   <header class="tn-head">
     <h1>첫 화면 사진 위치 조정</h1>
     <p>사진을 고르고, 아래 미리보기에서 <b>사진을 끌거나</b> 가로 · 세로 막대를 움직여 보세요.
+       한쪽으로 안 움직이면 <b>「확대」</b>를 조금 올려 주세요. 사진이 커지면서 양쪽으로 움직일 여유가 생깁니다.
        컴퓨터 · 태블릿 · 휴대폰은 화면 비율이 달라 위치를 따로 정합니다.
        이 페이지에서 움직여도 홈페이지는 바뀌지 않습니다. 마음에 들면 맨 아래 순서대로 저장해 주세요.</p>
     <p class="tn-draft" id="tn-draft">저장하지 않고 조정하던 값을 불러왔습니다.
@@ -92,6 +93,7 @@
       <div class="tn-stage"><iframe title="컴퓨터 미리보기" tabindex="-1"></iframe><div class="tn-drag"></div></div>
       <div class="tn-row"><span>가로</span><input type="range" min="0" max="100" step="1" data-axis="x" aria-label="컴퓨터 가로 위치"><output></output></div>
       <div class="tn-row"><span>세로</span><input type="range" min="0" max="100" step="1" data-axis="y" aria-label="컴퓨터 세로 위치"><output></output></div>
+      <div class="tn-row"><span>확대</span><input type="range" min="100" max="250" step="5" data-axis="z" aria-label="컴퓨터 확대"><output></output></div>
       <p class="tn-note" aria-live="polite"></p>
       <button type="button" class="tn-mini" data-reset>이 화면만 원래대로</button>
     </section>
@@ -101,6 +103,7 @@
       <div class="tn-stage"><iframe title="태블릿 미리보기" tabindex="-1"></iframe><div class="tn-drag"></div></div>
       <div class="tn-row"><span>가로</span><input type="range" min="0" max="100" step="1" data-axis="x" aria-label="태블릿 가로 위치"><output></output></div>
       <div class="tn-row"><span>세로</span><input type="range" min="0" max="100" step="1" data-axis="y" aria-label="태블릿 세로 위치"><output></output></div>
+      <div class="tn-row"><span>확대</span><input type="range" min="100" max="250" step="5" data-axis="z" aria-label="태블릿 확대"><output></output></div>
       <p class="tn-note" aria-live="polite"></p>
       <button type="button" class="tn-mini" data-reset>이 화면만 원래대로</button>
     </section>
@@ -110,6 +113,7 @@
       <div class="tn-stage"><iframe title="휴대폰 미리보기" tabindex="-1"></iframe><div class="tn-drag"></div></div>
       <div class="tn-row"><span>가로</span><input type="range" min="0" max="100" step="1" data-axis="x" aria-label="휴대폰 가로 위치"><output></output></div>
       <div class="tn-row"><span>세로</span><input type="range" min="0" max="100" step="1" data-axis="y" aria-label="휴대폰 세로 위치"><output></output></div>
+      <div class="tn-row"><span>확대</span><input type="range" min="100" max="250" step="5" data-axis="z" aria-label="휴대폰 확대"><output></output></div>
       <p class="tn-note" aria-live="polite"></p>
       <button type="button" class="tn-mini" data-reset>이 화면만 원래대로</button>
     </section>
@@ -142,31 +146,36 @@
      1번 휴대폰은 건물 중심으로 미리 자른 다른 사진이라 재지 않는다 */
   var BUILDING = { 1: { x: [0.47, 0.74], y: [0, 0.48], file: 'hero-aerial.jpg' },
                    2: { x: [0.23, 0.70], y: [0.30, 0.80], file: 'hero-main', big: true } };
-  var DRAFT_KEY = 'pdcs-hero-tuner-v1';
+  var DRAFT_KEY = 'pdcs-hero-tuner-v2';   /* v2: 확대(z) 가 생겼다 — v1 임시값은 형식이 달라 버린다 */
   var fileVals = {}, vals = {}, slide = 1, bare = false;
   var cards = {};
   Array.prototype.forEach.call(document.querySelectorAll('[data-band]'), function (c) { cards[c.getAttribute('data-band')] = c; });
 
   var key = function (s, b) { return '--hero' + s + '-' + b; };
   var parse = function (css) {
-    var out = {}, re = /--hero([1-4])-(pc|tab|mob)\s*:\s*([\d.]+)%\s+([\d.]+)%/g, m;
-    while ((m = re.exec(css))) out[key(m[1], m[2])] = [parseFloat(m[3]), parseFloat(m[4])];
+    /* 값마다 [가로 0~100, 세로 0~100, 확대 1~2.5] */
+    var out = {}, re = /--hero([1-4])-(pc|tab|mob)-([xyz])\s*:\s*([\d.]+)/g, m, AX = { x: 0, y: 1, z: 2 };
+    while ((m = re.exec(css))) {
+      var k = key(m[1], m[2]); out[k] = out[k] || [50, 50, 1];
+      out[k][AX[m[3]]] = parseFloat(m[4]);
+    }
     return out;
   };
   var clone = function (o) { return JSON.parse(JSON.stringify(o)); };
   var store = function () { try { localStorage.setItem(DRAFT_KEY, JSON.stringify(vals)); } catch (e) {} };
   var same = function (a, b) { return JSON.stringify(a) === JSON.stringify(b); };
 
-  var fmt = function (v) { return Math.round(v[0]) + '% ' + Math.round(v[1]) + '%'; };
+  var num = function (v, i) { return i === 2 ? String(Math.round(v[i] * 100) / 100) : String(Math.round(v[i])); };
   var output = function () {
     var L = ['/* 메인 첫 화면(히어로) 사진 위치 — 이 파일만 고치면 된다.',
-      '   값은 www.pdcs.kr/hero-tuner.html 에서 사진을 움직여 보고 「복사」한 것을 통째로 붙여 넣는다.',
-      '   "가로% 세로%" — 0% 는 사진의 왼쪽(위쪽) 끝, 100% 는 오른쪽(아래쪽) 끝을 화면에 맞춘다.',
+      '   값은 www.pdcs.kr/hero-tuner.html 에서 사진을 움직여 보고 「값 복사」한 것을 통째로 붙여 넣는다.',
+      '   x · y: 0 = 사진의 왼쪽(위쪽) 끝을 화면에 맞춤, 100 = 오른쪽(아래쪽) 끝. z: 확대(1 = 화면에 꽉 맞춤, 1.5 = 1.5배)',
       '   pc: 1021px 이상 · tab: 701~1020px · mob: 700px 이하 */', ':root {'];
     for (var s = 1; s <= 4; s++) {
       L.push('  ' + ['pc', 'tab', 'mob'].map(function (b) {
-        return (key(s, b) + ': ' + fmt(vals[key(s, b)]) + ';').padEnd(22);
-      }).join(' ').replace(/\s+$/, ''));
+        var v = vals[key(s, b)];
+        return ['x', 'y', 'z'].map(function (a, i) { return key(s, b) + '-' + a + ': ' + num(v, i) + ';'; }).join(' ');
+      }).join('  '));
     }
     L.push('}');
     document.getElementById('tn-out').value = L.join('\n') + '\n';
@@ -182,20 +191,21 @@
   /* 미리보기 한 칸에 값을 넣고, 건물이 잘리거나 표어와 겹치는지 알린다 */
   var paint = function (b) {
     var d = doc(b); if (!d || !d.documentElement) return;
-    for (var k in vals) d.documentElement.style.setProperty(k, fmt(vals[k]));
+    for (var k in vals) ['x', 'y', 'z'].forEach(function (a, i) { d.documentElement.style.setProperty(k + '-' + a, num(vals[k], i)); });
     var v = vals[key(slide, b)], card = cards[b];
-    card.querySelectorAll('input[type=range]').forEach(function (r, i) { r.value = Math.round(v[i]); });
-    card.querySelectorAll('output').forEach(function (o, i) { o.textContent = Math.round(v[i]) + '%'; });
+    card.querySelectorAll('input[type=range]').forEach(function (r, i) { r.value = i === 2 ? Math.round(v[2] * 100) : Math.round(v[i]); });
+    card.querySelectorAll('output').forEach(function (o, i) { o.textContent = Math.round(i === 2 ? v[2] * 100 : v[i]) + '%'; });
     var note = card.querySelector('.tn-note'); note.className = 'tn-note'; note.textContent = '';
     var img = activeImg(b), bd = BUILDING[slide];
     if (!img || !img.naturalWidth) return;
     var r = img.getBoundingClientRect(), nw = img.naturalWidth, nh = img.naturalHeight;
     var sc = Math.max(r.width / nw, r.height / nh), dw = nw * sc, dh = nh * sc;
+    var S = img.closest('.hero__slide').getBoundingClientRect();
     var tips = [], rx = card.querySelector('[data-axis=x]'), ry = card.querySelector('[data-axis=y]');
-    /* 사진이 그 방향으로 꽉 차 있으면 값을 바꿔도 화면이 그대로다 — 막대를 잠가 헛수고를 막는다 */
-    rx.disabled = dw - r.width < 2; ry.disabled = dh - r.height < 2;
-    if (rx.disabled) tips.push('이 화면에서는 사진이 가로로 꽉 차 있어 위아래로만 움직입니다.');
-    if (ry.disabled) tips.push('이 화면에서는 사진이 세로로 꽉 차 있어 좌우로만 움직입니다.');
+    /* 사진이 그 방향으로 꽉 차 있으면 값을 바꿔도 화면이 그대로다 — 막대를 잠그고 확대하라고 알린다 */
+    rx.disabled = dw - S.width < 2; ry.disabled = dh - S.height < 2;
+    if (rx.disabled) tips.push('사진이 가로로 꽉 차 있어 좌우로는 안 움직입니다. 「확대」를 조금 올리면 움직일 수 있습니다.');
+    if (ry.disabled) tips.push('사진이 세로로 꽉 차 있어 위아래로는 안 움직입니다. 「확대」를 조금 올리면 움직일 수 있습니다.');
     if (bd && (img.currentSrc || img.src).indexOf(bd.file) > -1) {
       var W = d.defaultView.innerWidth;
       var ox = (r.width - dw) * v[0] / 100, oy = (r.height - dh) * v[1] / 100;
@@ -265,8 +275,9 @@
     drag.addEventListener('pointerdown', function (e) {
       var img = activeImg(b); if (!img || !img.naturalWidth) return;
       var r = img.getBoundingClientRect(), sc = Math.max(r.width / img.naturalWidth, r.height / img.naturalHeight);
+      var S = img.closest('.hero__slide').getBoundingClientRect();
       start = { x: e.clientX, y: e.clientY, v: vals[key(slide, b)].slice(),
-                rx: img.naturalWidth * sc - r.width, ry: img.naturalHeight * sc - r.height };
+                rx: img.naturalWidth * sc - S.width, ry: img.naturalHeight * sc - S.height };
       drag.setPointerCapture(e.pointerId);
     });
     drag.addEventListener('pointermove', function (e) {
@@ -279,7 +290,7 @@
     var end = function () { if (start) { start = null; paintAll(); } };
     drag.addEventListener('pointerup', end); drag.addEventListener('pointercancel', end);
     card.querySelectorAll('input[type=range]').forEach(function (r, i) {
-      r.addEventListener('input', function () { vals[key(slide, b)][i] = +r.value; paint(b); output(); store(); });
+      r.addEventListener('input', function () { vals[key(slide, b)][i] = i === 2 ? +r.value / 100 : +r.value; paint(b); output(); store(); });
     });
     card.querySelector('[data-reset]').addEventListener('click', function () {
       vals[key(slide, b)] = fileVals[key(slide, b)].slice(); paintAll();
@@ -317,11 +328,11 @@
   /* 시작 — 홈페이지에 지금 걸린 값을 읽는다. 저장 안 한 조정값이 있으면 그것부터 보여 준다 */
   fetch('assets/css/hero-position.css', { cache: 'no-store' }).then(function (r) { return r.text(); }).then(function (css) {
     fileVals = parse(css);
-    for (var s = 1; s <= 4; s++) ['pc', 'tab', 'mob'].forEach(function (b) { if (!fileVals[key(s, b)]) fileVals[key(s, b)] = [50, 50]; });
+    for (var s = 1; s <= 4; s++) ['pc', 'tab', 'mob'].forEach(function (b) { if (!fileVals[key(s, b)]) fileVals[key(s, b)] = [50, 50, 1]; });
     vals = clone(fileVals);
     try {
       var d = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null');
-      if (d && Object.keys(d).length === 12 && !same(d, fileVals)) { vals = d; document.getElementById('tn-draft').classList.add('is-on'); }
+      if (d && Object.keys(d).length === 12 && Object.keys(d).every(function (k) { return d[k].length === 3; }) && !same(d, fileVals)) { vals = d; document.getElementById('tn-draft').classList.add('is-on'); }
     } catch (e) {}
     output();
     Object.keys(cards).forEach(load);

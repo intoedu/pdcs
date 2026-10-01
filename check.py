@@ -68,15 +68,20 @@ def ok(msg):
 # ── 파일만 보고 알 수 있는 것 ────────────────────────────────
 def check_source():
     # 히어로 사진 위치 — 학교가 hero-tuner.html 에서 고른 값을 GitHub 웹에서 붙여 넣는 파일.
-    # 사람이 붙여 넣으므로 형식이 깨질 수 있다. 하나라도 빠지면 그 사진은 style.css 의 기본값으로 떨어진다
+    # 사람이 붙여 넣으므로 형식이 깨질 수 있다. 하나라도 빠지면 그 사진은 style.css 의 기본값으로 떨어진다(36개 = 4장 x 3화면 x 가로·세로·확대)
     hp = os.path.join(ROOT, "assets/css/hero-position.css")
     if not os.path.exists(hp):
         fail("assets/css/hero-position.css 가 없다 — 히어로 사진 위치를 학교가 고칠 수 없다")
     else:
-        got = dict(re.findall(r"(--hero[1-4]-(?:pc|tab|mob))\s*:\s*(\d{1,3}(?:\.\d+)?%\s+\d{1,3}(?:\.\d+)?%)\s*;",
+        got = dict(re.findall(r"(--hero[1-4]-(?:pc|tab|mob)-[xyz])\s*:\s*(\d+(?:\.\d+)?)\s*;",
                               open(hp, encoding="utf-8").read()))
-        need = [f"--hero{i}-{b}" for i in range(1, 5) for b in ("pc", "tab", "mob")]
+        need = [f"--hero{i}-{b}-{a}" for i in range(1, 5) for b in ("pc", "tab", "mob") for a in "xyz"]
         miss = [k for k in need if k not in got]
+        # 위치는 0~100, 확대는 1~3 — 벗어나면 사진 밖 빈 곳이 보인다
+        bad = [k for k, v in got.items() if (k.endswith("-z") and not 1 <= float(v) <= 3)
+               or (not k.endswith("-z") and not 0 <= float(v) <= 100)]
+        if bad:
+            fail(f"hero-position.css: 범위를 벗어난 값이 있다(위치 0~100, 확대 1~3) — {bad[:4]}")
         if miss:
             fail(f"hero-position.css: 형식이 깨졌거나 빠진 값이 있다 — {miss[:4]}")
         if 'hero-position.css' not in open(os.path.join(ROOT, "index.html"), encoding="utf-8").read():
