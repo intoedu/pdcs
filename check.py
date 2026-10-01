@@ -305,9 +305,10 @@ UNCONFIRMED = [
     (r"선생님 <span data-count", "「선생님 16명」 — 16명에 행정 · 자문이 들어 있다. 「섬기는 분」으로 쓴다"),
 ]
 # 같은 장면을 다른 크기로 자른 사진들. 한 페이지에 둘이 같이 나오면 같은 사진을 두 번 보여 주는 것이다
-# (hero-aerial.jpg 와 hero-aerial-m.jpg 는 한 <picture> 안의 폭별 사본이라 같이 있어도 된다)
-SAME_SHOT = [{"hero-aerial.jpg", "aerial.webp"}, {"hero-aerial-m.jpg", "aerial.webp"}, {"hero-main.jpg", "front.jpg"},
-             {"hero-nature.jpg", "court.jpg"}, {"hero-dorm.jpg", "dorm.jpg"}]
+# (slide1-aerial.jpg 와 slide1-aerial-m.jpg 는 한 <picture> 안의 폭별 사본이라 같이 있어도 된다)
+SAME_SHOT = [{"hero-aerial.jpg", "aerial.webp", "slide1-aerial.jpg"}, {"aerial.webp", "slide1-aerial-m.jpg"},
+             {"hero-main.jpg", "front.jpg", "slide2-main.jpg"}, {"court.jpg", "slide3-court.jpg"},
+             {"hero-dorm.jpg", "dorm.jpg", "slide4-dorm.jpg"}]
 
 
 def check_copy():
@@ -635,13 +636,13 @@ def check_hero_text(pg, page, w):
 
 
 # ── 히어로 구도 — 표어가 건물 위에 얹히지 않는지 ────────────────
-# 항공샷 hero-aerial.jpg 안에서 건물은 가로 47~74%, 세로 0~48% 자리에 있다(합성본 2000x872 에 격자를 얹어 실측).
+# 항공샷 slide1-aerial.jpg(잘리지 않은 원본) 안에서 건물은 가로 45.5~70%, 세로 12~49% 자리에 있다(격자 실측).
 # object-fit: cover 는 화면 비율에 따라 사진을 잘라 옮기므로,
 # 같은 object-position 이라도 폭마다 건물이 화면의 다른 자리에 온다.
 # object-position 70% 일 때 1280px 에서 건물이 x=362 로 와서 표어(x=537까지)가 건물 벽에 얹혔다.
 # 값을 바꿀 때는 사진에 격자를 얹어 건물 구간을 다시 재고 이 상수를 고친다.
-BUILDING_X = (0.47, 0.74)     # 원본 사진 안에서 건물이 차지하는 가로 구간 (격자를 얹어 실측)
-BUILDING_Y = (0.00, 0.48)     # 세로 구간 — 건물은 사진 위쪽에 있다 (위는 지붕까지 여유를 둔다)
+BUILDING_X = (0.455, 0.70)    # 잘리지 않은 원본 slide1-aerial.jpg 안에서 건물이 차지하는 가로 구간 (격자 실측)
+BUILDING_Y = (0.12, 0.49)     # 세로 구간 — 물탱크 별관 꼭대기부터 앞계단까지
 GAP = 16                      # 글자 끝과 건물 사이에 최소한 남겨야 하는 여백(px)
 
 
@@ -651,7 +652,7 @@ def check_hero_frame(pg, page, w):
       const img = document.querySelector('.hero__slide.is-active img');
       const t = document.querySelector('.hero__title-en');
       if (!img || !t) return null;
-      if (!/hero-aerial\\.jpg/.test(img.currentSrc)) return null;   // 휴대폰 세로 컷은 기준이 다르다
+      if (!/slide1-aerial/.test(img.currentSrc)) return null;
       const r = img.getBoundingClientRect();
       const nw = img.naturalWidth, nh = img.naturalHeight;
       if (!nw || !nh) return null;
@@ -789,10 +790,10 @@ def check_rendered_font(pg, page):
 
 
 # ── 히어로 2번(본관 정면) — 건물이 화면 밖으로 잘리지 않는지 ──────────
-# hero-main.jpg 안에서 본관은 가로 23~70% 에 있다(격자 실측).
+# slide2-main.jpg(본관 정면 원본) 안에서 본관은 가로 23~70% 에 있다(격자 실측).
 # object-position 78% 이던 때 왼쪽 날개가 잘리고 현관이 표어 밑에 깔렸다.
 # 14% 로 고쳤을 때는 1021~1180px 에서 오른쪽 끝이 또 잘렸다 — 그래서 폭마다 잰다.
-SLIDE2_X = (0.23, 0.70)
+SLIDE2_X = (0.23, 0.70)       # slide2-main.jpg — 원본 가로 전체라 예전 hero-main 과 같은 비율
 
 
 def check_hero_slide2(pg, page, w):

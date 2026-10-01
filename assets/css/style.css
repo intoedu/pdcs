@@ -382,7 +382,7 @@ ul { margin: 0; padding: 0; list-style: none; }
    스크롤 효과는 사진을 아래로만 민다(main.js: translateY(+0.26 x 스크롤)).
    그래서 위쪽 틈은 늘 화면 밖이고, 여유분은 아래에만 있으면 된다.
    높이는 112% 그대로라 가로 구도(32% 등)의 계산은 바뀌지 않는다 */
-.hero__slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.4s var(--ease); }
+.hero__slide { position: absolute; inset: 0; overflow: hidden; opacity: 0; transition: opacity 1.4s var(--ease); }
 .hero__slide.is-active { opacity: 1; }
 .hero__slide img {
   /* 위치(--x · --y, 0~100)와 확대(--z, 1 = 꽉 맞춤)는 assets/css/hero-position.css 에서 온다.
@@ -392,6 +392,8 @@ ul { margin: 0; padding: 0; list-style: none; }
   position: absolute;
   width: calc(var(--z, 1) * 100%); height: calc(var(--z, 1) * 100%);
   max-width: none;   /* 전체 img 규칙의 max-width: 100% 가 확대한 가로만 막아 오른쪽에 빈 곳이 생겼다 */
+  /* 확대한 상자는 슬라이드 밖으로 넘친다 — .hero__slide 의 overflow: hidden 이 자른다.
+     없으면 휴대폰(사진 칸 74vw)에서 사진이 아래 글자 칸까지 흘러내렸다 */
   left: calc((1 - var(--z, 1)) * var(--x, 50) * 1%);
   top: calc((1 - var(--z, 1)) * var(--y, 50) * 1%);
   object-fit: cover; object-position: calc(var(--x, 50) * 1%) calc(var(--y, 50) * 1%);
@@ -401,20 +403,20 @@ ul { margin: 0; padding: 0; list-style: none; }
 /* 항공샷 기준점 — 폭마다 다르다(1001px 이상 32% · 701~1000px 52% · 700px 이하 70%).
    좁은 화면에서는 건물 중심으로 미리 세로로 자른 사진을 따로 내려보낸다 (picture) */
 /* 위치 · 확대 값은 assets/css/hero-position.css 에 있다(학교가 hero-tuner.html 로 직접 고른다). 괄호 안은 그 파일이 없을 때 쓰는 값 */
-.hero__slide:nth-child(1) img { --x: var(--hero1-pc-x, 32); --y: var(--hero1-pc-y, 50); --z: var(--hero1-pc-z, 1); }
+.hero__slide:nth-child(1) img { --x: var(--hero1-pc-x, 35); --y: var(--hero1-pc-y, 48); --z: var(--hero1-pc-z, 1.46); }
 /* 32% 인 이유 — 70% 일 때는 건물이 화면 왼쪽(1280px 에서 x=362)으로 와서
    표어 FOR ALL NATIONS! (x=537 까지) 가 건물 벽 위에 얹혔다. 노트북에서 가장 심했다.
    너무 밀면(25%) 이번에는 건물 오른쪽 날개가 화면 밖으로 잘린다.
    양쪽을 다 만족하는 구간은 좁다. 1080px 에서 0.260~0.385 로 가장 좁고,
    그 구간 안에 드는 값이 1080~2400px 전체를 만족시킨다. 그래서 0.32 다.
    check.py 가 폭마다 실제로 재서 잡는다 — 눈대중으로 고치지 말 것 */
-.hero__slide:nth-child(2) img { --x: var(--hero2-pc-x, 28); --y: var(--hero2-pc-y, 50); --z: var(--hero2-pc-z, 1); }
+.hero__slide:nth-child(2) img { --x: var(--hero2-pc-x, 28); --y: var(--hero2-pc-y, 14); --z: var(--hero2-pc-z, 1.35); }
 /* 2번 본관 정면 — 건물이 원본 가로 23~70% 에 있다(격자로 실측).
    78% 이던 때는 화면이 오른쪽 나무·전봇대·주차 차량 쪽으로 밀려,
    건물 왼쪽 날개가 화면 밖으로 잘리고 현관이 표어 밑에 깔렸다.
    28% 면 1021~2400px 에서 건물이 통째로 들어온다(1024px 이 가장 빠듯하다. 14% 면 거기서 잘렸다) */
-.hero__slide:nth-child(3) img { --x: var(--hero3-pc-x, 66); --y: var(--hero3-pc-y, 48); --z: var(--hero3-pc-z, 1); }
-.hero__slide:nth-child(4) img { --x: var(--hero4-pc-x, 50); --y: var(--hero4-pc-y, 50); --z: var(--hero4-pc-z, 1); }
+.hero__slide:nth-child(3) img { --x: var(--hero3-pc-x, 66); --y: var(--hero3-pc-y, 0); --z: var(--hero3-pc-z, 1.35); }
+.hero__slide:nth-child(4) img { --x: var(--hero4-pc-x, 50); --y: var(--hero4-pc-y, 21); --z: var(--hero4-pc-z, 1.35); }
 .hero__slide.is-active img { animation: kenBurns 9s ease-out forwards; transform-origin: 50% 0; }
 /* 확대 기준점을 위쪽 가운데로 둔다. 가운데를 기준으로 키우면 지붕이 4% 더 잘린다 */
 
@@ -1091,10 +1093,10 @@ ul { margin: 0; padding: 0; list-style: none; }
   /* 이 구간은 사진이 가장 심하게 잘려 건물이 화면을 꽉 채운다.
      기준점을 오른쪽으로 더 밀어야 건물 오른쪽 날개가 화면 안에 남는다
      710~1000px 전 구간이 겹치는 허용 구간은 0.494~0.547 뿐이다 — 계산으로 구했다 */
-  .hero__slide:nth-child(1) img { --x: var(--hero1-tab-x, 52); --y: var(--hero1-tab-y, 50); --z: var(--hero1-tab-z, 1); }
-  .hero__slide:nth-child(2) img { --x: var(--hero2-tab-x, 42); --y: var(--hero2-tab-y, 50); --z: var(--hero2-tab-z, 1); }   /* 0.36~0.49 사이라야 본관이 안 잘린다 */
-  .hero__slide:nth-child(3) img { --x: var(--hero3-tab-x, 66); --y: var(--hero3-tab-y, 48); --z: var(--hero3-tab-z, 1); }
-  .hero__slide:nth-child(4) img { --x: var(--hero4-tab-x, 50); --y: var(--hero4-tab-y, 50); --z: var(--hero4-tab-z, 1); }
+  .hero__slide:nth-child(1) img { --x: var(--hero1-tab-x, 49); --y: var(--hero1-tab-y, 48); --z: var(--hero1-tab-z, 1.46); }
+  .hero__slide:nth-child(2) img { --x: var(--hero2-tab-x, 42); --y: var(--hero2-tab-y, 14); --z: var(--hero2-tab-z, 1.35); }   /* 0.36~0.49 사이라야 본관이 안 잘린다 */
+  .hero__slide:nth-child(3) img { --x: var(--hero3-tab-x, 66); --y: var(--hero3-tab-y, 0); --z: var(--hero3-tab-z, 1.35); }
+  .hero__slide:nth-child(4) img { --x: var(--hero4-tab-x, 50); --y: var(--hero4-tab-y, 21); --z: var(--hero4-tab-z, 1.35); }
   /* 표어를 세 줄로 접는다. 한 줄이 짧아지는 만큼 건물이 들어설 자리가 생긴다.
      글자를 건물 아래로 내리는 방법도 해 봤지만, 건물이 히어로 높이의 48%까지
      내려와 있어 남는 아래쪽에 글자가 들어가지 않는다(계산으로 확인) */
@@ -1110,7 +1112,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   .hero__veil::before { background: linear-gradient(180deg, rgba(8, 20, 42, .66) 0, rgba(8, 20, 42, .56) 106px, rgba(8, 20, 42, .16) 26%, rgba(8, 20, 42, .44) 52%, rgba(8, 20, 42, .72) 78%, rgba(8, 20, 42, .84) 100%); }
 }
 
-/* 휴대폰 세로 컷(hero-aerial-m.jpg)은 건물 중심으로 미리 잘라 둔 사진이라 기준점이 다르다.
+/* 휴대폰은 같은 원본을 줄인 사본(slide1-aerial-m.jpg)을 받는다 — 비율이 같아 x · y · z 의 뜻도 같다.
    <picture> 가 이 사진을 실제로 내려보내는 폭(700px 이하)에서만 걸어야 한다.
    한때 860px 이하에 걸어 두었더니, 가로 사진이 내려가는 701~860px 구간에서
    건물이 왼쪽으로 끌려와 표어 위에 얹혔다 */
@@ -1131,11 +1133,11 @@ ul { margin: 0; padding: 0; list-style: none; }
   /* 사진 번호는 사진 위에 바로 얹힌다. 4번(흰 외벽 기숙사)은 아래쪽이 밝아
      번호가 2.3:1 로 묻혔다. 받침을 깔아 어떤 사진 위에서도 읽히게 한다 */
   .hero__nums { background: rgba(8, 20, 42, .72); border-radius: 999px; padding: 7px 13px; }
-  /* 1번은 건물 중심 세로 컷(hero-aerial-m.jpg). 위쪽을 기준으로 지붕부터 앞마당까지 */
-  .hero__slide:nth-child(1) img { --x: var(--hero1-mob-x, 50); --y: var(--hero1-mob-y, 6); --z: var(--hero1-mob-z, 1); }
-  .hero__slide:nth-child(2) img { --x: var(--hero2-mob-x, 42); --y: var(--hero2-mob-y, 50); --z: var(--hero2-mob-z, 1); }
-  .hero__slide:nth-child(3) img { --x: var(--hero3-mob-x, 66); --y: var(--hero3-mob-y, 48); --z: var(--hero3-mob-z, 1); }
-  .hero__slide:nth-child(4) img { --x: var(--hero4-mob-x, 50); --y: var(--hero4-mob-y, 50); --z: var(--hero4-mob-z, 1); }
+  /* 휴대폰 1번은 확대(z ≈ 2)해 건물 중심으로 보여 준다 — 예전 세로 컷과 같은 범위 */
+  .hero__slide:nth-child(1) img { --x: var(--hero1-mob-x, 62); --y: var(--hero1-mob-y, 32); --z: var(--hero1-mob-z, 2.05); }
+  .hero__slide:nth-child(2) img { --x: var(--hero2-mob-x, 42); --y: var(--hero2-mob-y, 14); --z: var(--hero2-mob-z, 1.35); }
+  .hero__slide:nth-child(3) img { --x: var(--hero3-mob-x, 66); --y: var(--hero3-mob-y, 0); --z: var(--hero3-mob-z, 1.35); }
+  .hero__slide:nth-child(4) img { --x: var(--hero4-mob-x, 50); --y: var(--hero4-mob-y, 21); --z: var(--hero4-mob-z, 1.35); }
   .hero .btn { min-height: 52px; font-size: 15.5px; padding-left: 10px; padding-right: 10px; }
   .hero__actions { margin-top: 24px; flex-wrap: nowrap; }
   .hero__actions .btn { flex: 1 1 0; }

@@ -1,10 +1,10 @@
 /* 메인 첫 화면(히어로) 사진 위치 — 이 파일만 고치면 된다.
-   값은 www.pdcs.kr/hero-tuner.html 에서 사진을 움직여 보고 「값 복사」한 것을 통째로 붙여 넣는다.
-   x · y: 0 = 사진의 왼쪽(위쪽) 끝을 화면에 맞춤, 100 = 오른쪽(아래쪽) 끝. z: 확대(1 = 화면에 꽉 맞춤, 1.5 = 1.5배)
-   pc: 1021px 이상 · tab: 701~1020px · mob: 700px 이하 */
+   값은 www.pdcs.kr/hero-tuner.html 에서 원본 위에 틀을 옮겨 보고 「값 복사」한 것을 통째로 붙여 넣는다.
+   사진은 잘리지 않은 원본이다(slide1~4). x · y: 0 = 원본의 왼쪽(위쪽) 끝을 화면에 맞춤, 100 = 오른쪽(아래쪽) 끝.
+   z: 확대(1 = 원본이 화면에 꽉 맞게 가장 넓게 보임, 클수록 가까이). pc: 1021px 이상 · tab: 701~1020px · mob: 700px 이하 */
 :root {
-  --hero1-pc-x: 32; --hero1-pc-y: 50; --hero1-pc-z: 1;  --hero1-tab-x: 52; --hero1-tab-y: 50; --hero1-tab-z: 1;  --hero1-mob-x: 50; --hero1-mob-y: 6; --hero1-mob-z: 1;
-  --hero2-pc-x: 28; --hero2-pc-y: 50; --hero2-pc-z: 1;  --hero2-tab-x: 42; --hero2-tab-y: 50; --hero2-tab-z: 1;  --hero2-mob-x: 42; --hero2-mob-y: 50; --hero2-mob-z: 1;
-  --hero3-pc-x: 66; --hero3-pc-y: 48; --hero3-pc-z: 1;  --hero3-tab-x: 66; --hero3-tab-y: 48; --hero3-tab-z: 1;  --hero3-mob-x: 66; --hero3-mob-y: 48; --hero3-mob-z: 1;
-  --hero4-pc-x: 50; --hero4-pc-y: 50; --hero4-pc-z: 1;  --hero4-tab-x: 50; --hero4-tab-y: 50; --hero4-tab-z: 1;  --hero4-mob-x: 50; --hero4-mob-y: 50; --hero4-mob-z: 1;
+  --hero1-pc-x: 35; --hero1-pc-y: 48; --hero1-pc-z: 1.46;  --hero1-tab-x: 49; --hero1-tab-y: 48; --hero1-tab-z: 1.46;  --hero1-mob-x: 62; --hero1-mob-y: 32; --hero1-mob-z: 2.05;
+  --hero2-pc-x: 28; --hero2-pc-y: 14; --hero2-pc-z: 1.35;  --hero2-tab-x: 42; --hero2-tab-y: 14; --hero2-tab-z: 1.35;  --hero2-mob-x: 42; --hero2-mob-y: 14; --hero2-mob-z: 1.35;
+  --hero3-pc-x: 66; --hero3-pc-y: 0; --hero3-pc-z: 1.35;  --hero3-tab-x: 66; --hero3-tab-y: 0; --hero3-tab-z: 1.35;  --hero3-mob-x: 66; --hero3-mob-y: 0; --hero3-mob-z: 1.35;
+  --hero4-pc-x: 50; --hero4-pc-y: 21; --hero4-pc-z: 1.35;  --hero4-tab-x: 50; --hero4-tab-y: 21; --hero4-tab-z: 1.35;  --hero4-mob-x: 50; --hero4-mob-y: 21; --hero4-mob-z: 1.35;
 }

@@ -7,7 +7,7 @@
 <meta name="color-scheme" content="only light">
 <title>첫 화면 사진 위치 조정 — 폴앤다니엘기독학교</title>
 <link rel="icon" href="assets/img/favicon-64.png" sizes="64x64">
-<link rel="stylesheet" href="assets/css/style.css?v=01130bf0">
+<link rel="stylesheet" href="assets/css/style.css?v=9fa08b82">
 <!--
   학교가 메인 첫 화면(히어로) 사진 위치를 직접 고르는 도구.
   서버가 없으므로 저장은 「복사 → GitHub 에서 assets/css/hero-position.css 에 붙여 넣기」로 한다.
@@ -46,6 +46,15 @@
   .tn-note { margin-top: 10px; font-size: 13.5px; line-height: 1.6; min-height: 1.6em; }
   .tn-note.is-warn { color: #9A1C22; font-weight: 600; }
   .tn-note.is-ok { color: #1E6B3A; }
+  .tn-orig-lab { margin-top: 14px; font-size: 13.5px; color: var(--muted); line-height: 1.55; }
+  .tn-orig-lab b { color: var(--navy-deep); }
+  .tn-orig { position: relative; margin-top: 6px; overflow: hidden; border-radius: 6px; background: #0E2245; touch-action: none; user-select: none; }
+  .tn-orig img { display: block; width: 100%; height: auto; pointer-events: none; }
+  .tn-frame { position: absolute; box-sizing: border-box; border: 2px solid #fff; cursor: move;
+              box-shadow: 0 0 0 9999px rgba(8, 20, 42, .58), inset 0 0 0 1px rgba(8, 20, 42, .5); }
+  .tn-handle { position: absolute; right: -9px; bottom: -9px; width: 18px; height: 18px; border-radius: 50%;
+               background: #fff; border: 2px solid var(--navy-deep); cursor: nwse-resize; }
+  .tn-handle::before { content: ""; position: absolute; inset: -12px; }   /* 손가락으로 잡기 쉽게 */
   .tn-mini { font: inherit; font-size: 13px; padding: 5px 10px; border-radius: 6px; border: 1px solid rgba(14,34,69,.25); background: #fff; cursor: pointer; margin-top: 10px; }
   .tn-save { margin-top: 22px; }
   .tn-save ol { margin: 10px 0 0 1.3em; font-size: 15px; line-height: 1.9; }
@@ -64,7 +73,7 @@
 <div class="tn-wrap">
   <header class="tn-head">
     <h1>첫 화면 사진 위치 조정</h1>
-    <p>사진을 고르고, 아래 미리보기에서 <b>사진을 끌거나</b> 가로 · 세로 막대를 움직여 보세요.
+    <p>사진을 고르고, 각 화면 아래 <b>원본 사진 위의 밝은 틀</b>을 끌어 보이는 범위를 정하세요. 미리보기 사진을 직접 끌거나 막대를 움직여도 됩니다.
        한쪽으로 안 움직이면 <b>「확대」</b>를 조금 올려 주세요. 사진이 커지면서 양쪽으로 움직일 여유가 생깁니다.
        컴퓨터 · 태블릿 · 휴대폰은 화면 비율이 달라 위치를 따로 정합니다.
        이 페이지에서 움직여도 홈페이지는 바뀌지 않습니다. 마음에 들면 맨 아래 순서대로 저장해 주세요.</p>
@@ -91,6 +100,8 @@
           <option value="1280x800">1280 × 800</option>
         </select></small></h2>
       <div class="tn-stage"><iframe title="컴퓨터 미리보기" tabindex="-1"></iframe><div class="tn-drag"></div></div>
+      <p class="tn-orig-lab"><b>원본 사진</b> — 밝은 틀 안이 컴퓨터 화면에 보입니다. 틀을 끌어 옮기고, 오른쪽 아래 동그라미를 끌어 크기를 바꾸세요.</p>
+      <div class="tn-orig"><img alt="" draggable="false"><div class="tn-frame"><span class="tn-handle"></span></div></div>
       <div class="tn-row"><span>가로</span><input type="range" min="0" max="100" step="1" data-axis="x" aria-label="컴퓨터 가로 위치"><output></output></div>
       <div class="tn-row"><span>세로</span><input type="range" min="0" max="100" step="1" data-axis="y" aria-label="컴퓨터 세로 위치"><output></output></div>
       <div class="tn-row"><span>확대</span><input type="range" min="100" max="250" step="5" data-axis="z" aria-label="컴퓨터 확대"><output></output></div>
@@ -101,6 +112,8 @@
     <section class="tn-card" data-band="tab">
       <h2>태블릿 <small>701~1020px · 860 × 900</small></h2>
       <div class="tn-stage"><iframe title="태블릿 미리보기" tabindex="-1"></iframe><div class="tn-drag"></div></div>
+      <p class="tn-orig-lab"><b>원본 사진</b> — 밝은 틀 안이 태블릿 화면에 보입니다. 틀을 끌어 옮기고, 오른쪽 아래 동그라미를 끌어 크기를 바꾸세요.</p>
+      <div class="tn-orig"><img alt="" draggable="false"><div class="tn-frame"><span class="tn-handle"></span></div></div>
       <div class="tn-row"><span>가로</span><input type="range" min="0" max="100" step="1" data-axis="x" aria-label="태블릿 가로 위치"><output></output></div>
       <div class="tn-row"><span>세로</span><input type="range" min="0" max="100" step="1" data-axis="y" aria-label="태블릿 세로 위치"><output></output></div>
       <div class="tn-row"><span>확대</span><input type="range" min="100" max="250" step="5" data-axis="z" aria-label="태블릿 확대"><output></output></div>
@@ -111,6 +124,8 @@
     <section class="tn-card" data-band="mob">
       <h2>휴대폰 <small>700px 이하 · 390 × 844</small></h2>
       <div class="tn-stage"><iframe title="휴대폰 미리보기" tabindex="-1"></iframe><div class="tn-drag"></div></div>
+      <p class="tn-orig-lab"><b>원본 사진</b> — 밝은 틀 안이 휴대폰 화면에 보입니다. 틀을 끌어 옮기고, 오른쪽 아래 동그라미를 끌어 크기를 바꾸세요.</p>
+      <div class="tn-orig"><img alt="" draggable="false"><div class="tn-frame"><span class="tn-handle"></span></div></div>
       <div class="tn-row"><span>가로</span><input type="range" min="0" max="100" step="1" data-axis="x" aria-label="휴대폰 가로 위치"><output></output></div>
       <div class="tn-row"><span>세로</span><input type="range" min="0" max="100" step="1" data-axis="y" aria-label="휴대폰 세로 위치"><output></output></div>
       <div class="tn-row"><span>확대</span><input type="range" min="100" max="250" step="5" data-axis="z" aria-label="휴대폰 확대"><output></output></div>
@@ -144,9 +159,9 @@
   var BANDS = { pc: [1366, 768], tab: [860, 900], mob: [390, 844] };
   /* 건물 자리(원본 사진 안 비율) — check.py 의 BUILDING_X · BUILDING_Y · SLIDE2_X 와 같은 값.
      1번 휴대폰은 건물 중심으로 미리 자른 다른 사진이라 재지 않는다 */
-  var BUILDING = { 1: { x: [0.47, 0.74], y: [0, 0.48], file: 'hero-aerial.jpg' },
-                   2: { x: [0.23, 0.70], y: [0.30, 0.80], file: 'hero-main', big: true } };
-  var DRAFT_KEY = 'pdcs-hero-tuner-v2';   /* v2: 확대(z) 가 생겼다 — v1 임시값은 형식이 달라 버린다 */
+  var BUILDING = { 1: { x: [0.455, 0.70], y: [0.12, 0.49], file: 'slide1-aerial' },
+                   2: { x: [0.23, 0.70], y: [0.26, 0.63], file: 'slide2-main', big: true } };
+  var DRAFT_KEY = 'pdcs-hero-tuner-v3';   /* v3: 사진이 잘리지 않은 원본으로 바뀌어 v2 이전 임시값은 좌표가 달라 버린다 */
   var fileVals = {}, vals = {}, slide = 1, bare = false;
   var cards = {};
   Array.prototype.forEach.call(document.querySelectorAll('[data-band]'), function (c) { cards[c.getAttribute('data-band')] = c; });
@@ -188,6 +203,38 @@
     return s && s.querySelector('img');
   };
 
+  /* 미리보기 안 사진의 기하 — 슬라이드 상자(S), 그중 화면에 실제 보이는 세로 구간(vy0~vy1), 꽉 맞춤 배율(cover) */
+  var geom = function (b) {
+    var d = doc(b), img = activeImg(b); if (!img || !img.naturalWidth) return null;
+    var S = img.closest('.hero__slide').getBoundingClientRect(), H = d.querySelector('.hero').getBoundingClientRect();
+    var top = Math.max(S.top, H.top, 0), bot = Math.min(S.bottom, H.bottom, d.defaultView.innerHeight);
+    return { img: img, nw: img.naturalWidth, nh: img.naturalHeight, Sw: S.width, Sh: S.height,
+             vy0: top - S.top, vy1: bot - S.top, cover: Math.max(S.width / img.naturalWidth, S.height / img.naturalHeight) };
+  };
+  /* 값(x · y · z) → 원본 위 틀(원본에 대한 비율 0~1) */
+  var toFrame = function (g, v) {
+    var sc = g.cover * v[2], dw = g.nw * sc, dh = g.nh * sc;
+    var ox = (g.Sw - dw) * v[0] / 100, oy = (g.Sh - dh) * v[1] / 100;
+    return { l: -ox / sc / g.nw, t: (g.vy0 - oy) / sc / g.nh, w: g.Sw / sc / g.nw, h: (g.vy1 - g.vy0) / sc / g.nh };
+  };
+  /* 원본 위 틀 → 값. 틀이 원본보다 커질 수는 없다(z ≥ 1) */
+  var fromFrame = function (g, f) {
+    var z = Math.min(2.5, Math.max(1, 1 / (f.w * g.nw * g.cover / g.Sw)));
+    var sc = g.cover * z, dw = g.nw * sc, dh = g.nh * sc;
+    var rx = g.Sw - dw, ry = g.Sh - dh;
+    var x = Math.abs(rx) < 0.5 ? 50 : (-f.l * g.nw * sc) / rx * 100;
+    var y = Math.abs(ry) < 0.5 ? 50 : (g.vy0 - f.t * g.nh * sc) / ry * 100;
+    return [Math.min(100, Math.max(0, x)), Math.min(100, Math.max(0, y)), z];
+  };
+  var drawFrame = function (b) {
+    var g = geom(b), card = cards[b]; if (!g) return;
+    var pic = card.querySelector('.tn-orig img'), src = g.img.currentSrc || g.img.src;
+    if (pic.getAttribute('src') !== src) pic.setAttribute('src', src);
+    var f = toFrame(g, vals[key(slide, b)]), fr = card.querySelector('.tn-frame');
+    fr.style.left = (f.l * 100) + '%'; fr.style.top = (f.t * 100) + '%';
+    fr.style.width = (f.w * 100) + '%'; fr.style.height = (f.h * 100) + '%';
+  };
+
   /* 미리보기 한 칸에 값을 넣고, 건물이 잘리거나 표어와 겹치는지 알린다 */
   var paint = function (b) {
     var d = doc(b); if (!d || !d.documentElement) return;
@@ -204,6 +251,7 @@
     var tips = [], rx = card.querySelector('[data-axis=x]'), ry = card.querySelector('[data-axis=y]');
     /* 사진이 그 방향으로 꽉 차 있으면 값을 바꿔도 화면이 그대로다 — 막대를 잠그고 확대하라고 알린다 */
     rx.disabled = dw - S.width < 2; ry.disabled = dh - S.height < 2;
+    drawFrame(b);
     if (rx.disabled) tips.push('사진이 가로로 꽉 차 있어 좌우로는 안 움직입니다. 「확대」를 조금 올리면 움직일 수 있습니다.');
     if (ry.disabled) tips.push('사진이 세로로 꽉 차 있어 위아래로는 안 움직입니다. 「확대」를 조금 올리면 움직일 수 있습니다.');
     if (bd && (img.currentSrc || img.src).indexOf(bd.file) > -1) {
@@ -292,6 +340,27 @@
     card.querySelectorAll('input[type=range]').forEach(function (r, i) {
       r.addEventListener('input', function () { vals[key(slide, b)][i] = i === 2 ? +r.value / 100 : +r.value; paint(b); output(); store(); });
     });
+    var orig = card.querySelector('.tn-orig'), frame = card.querySelector('.tn-frame'), fs = null;
+    var onDown = function (e, mode) {
+      var g = geom(b); if (!g) return;
+      e.preventDefault(); e.stopPropagation();
+      fs = { mode: mode, x: e.clientX, y: e.clientY, g: g, f: toFrame(g, vals[key(slide, b)]), box: orig.getBoundingClientRect() };
+      orig.setPointerCapture(e.pointerId);
+    };
+    frame.addEventListener('pointerdown', function (e) { onDown(e, e.target.classList.contains('tn-handle') ? 'size' : 'move'); });
+    orig.addEventListener('pointermove', function (e) {
+      if (!fs) return;
+      var dx = (e.clientX - fs.x) / fs.box.width, dy = (e.clientY - fs.y) / fs.box.height, f = Object.assign({}, fs.f);
+      if (fs.mode === 'move') { f.l += dx; f.t += dy; }
+      else {   /* 화면 비율은 그대로 두고 크기만 — 틀 가운데를 기준으로 */
+        var k = Math.max(0.2, 1 + Math.max(dx / fs.f.w, dy / fs.f.h)), cx = f.l + f.w / 2, cy = f.t + f.h / 2;
+        f.w = fs.f.w * k; f.h = fs.f.h * k; f.l = cx - f.w / 2; f.t = cy - f.h / 2;
+      }
+      vals[key(slide, b)] = fromFrame(fs.g, f); paint(b); output();
+    });
+    var up = function () { if (fs) { fs = null; paintAll(); } };
+    orig.addEventListener('pointerup', up); orig.addEventListener('pointercancel', up);
+
     card.querySelector('[data-reset]').addEventListener('click', function () {
       vals[key(slide, b)] = fileVals[key(slide, b)].slice(); paintAll();
     });
