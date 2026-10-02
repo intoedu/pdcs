@@ -684,15 +684,29 @@ ul { margin: 0; padding: 0; list-style: none; }
 .footer__col a:hover { color: #fff; }
 /* 바깥 사이트로 나간다는 표시 — 새 탭으로 열리므로 학교 사이트는 닫히지 않는다 */
 .footer__col .ext { margin-left: 5px; font-size: 11px; opacity: .7; }
-.sns { margin-top: 22px; display: flex; gap: 10px; flex-wrap: wrap; }
-.sns a {
-  width: 38px; height: 38px; border-radius: 50%;
-  display: inline-flex; align-items: center; justify-content: center;
-  border: 1px solid var(--navy-line); color: var(--on-navy-dim);
-  transition: background .25s var(--ease), color .25s var(--ease), border-color .25s var(--ease);
+/* SNS — 학교 요청(2026-10): 색을 입혀 눈에 띄게. 바탕은 남색 그대로,
+   각 서비스 고유색은 동그란 아이콘에만 쓴다. 글자는 남색 위 흰색이라 어느 서비스든 읽힌다
+   (고유색 바탕에 흰 글자를 얹으면 유튜브 4.0 · 페이스북 4.2 · 네이버 2.3:1 로 기준 4.5 에 못 미친다) */
+.sns { margin-top: 24px; }
+.sns__title { font-size: 13px; font-weight: 700; color: #fff; letter-spacing: .04em; }
+.sns__list { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; max-width: 470px; }
+.sns__list a {
+  min-height: 44px; padding: 5px 16px 5px 5px; border-radius: 999px;
+  display: inline-flex; align-items: center; gap: 9px;
+  background: rgba(255, 255, 255, .07); border: 1px solid var(--navy-line);
+  color: #fff; font-size: 14px; font-weight: 600; text-decoration: none; white-space: nowrap;
+  transition: background .25s var(--ease), border-color .25s var(--ease);
 }
-.sns a:hover { background: var(--gold); border-color: var(--gold); color: var(--navy-deep); }
-.sns a.sns--kakao:hover { background: #FEE500; border-color: #FEE500; color: #3C1E1E; }
+.sns__list a:hover { background: rgba(255, 255, 255, .16); border-color: #3B5A8C; }
+.sns__icon {
+  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+  display: inline-flex; align-items: center; justify-content: center; color: #fff;
+}
+.sns--kakao .sns__icon { background: #FEE500; color: #3C1E1E; }
+.sns--youtube .sns__icon { background: #FF0000; }
+.sns--naver .sns__icon { background: #03C75A; }
+.sns--instagram .sns__icon { background: radial-gradient(circle at 30% 107%, #FDF497 0%, #FD5949 45%, #D6249F 60%, #285AEB 90%); }
+.sns--facebook .sns__icon { background: #1877F2; }
 .footer__bottom {
   padding: 22px 0; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
   font-size: 12.5px; color: #93A6C2;
