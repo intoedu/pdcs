@@ -102,8 +102,10 @@ python3 check.py   # 통과하지 못하면 배포하지 않는다
 브라우저가 옛 파일을 계속 쓰는 것을 막는다. 이걸 빠뜨리면 고친 내용이
 방문자 화면에 반영되지 않고, 고쳤는데 안 고쳐졌다는 오해가 생긴다.
 
-**배포본은 이 작업 환경에서 열어볼 수 없다**(www.pdcs.kr · intoedu.github.io 접속 차단. DNS 조회만 된다).
-로컬 검증만으로 "됐다"고 말하지 말고, 확인은 클라이언트에게 부탁한다.
+**배포본은 2026-10-23 부터 이 작업 환경에서 열린다**(https://www.pdcs.kr — 첫 시도가 `Connection reset` 으로 끊길 때가 있다. 몇 초 뒤 다시 하면 된다).
+push 뒤 1~2분 기다렸다가 **배포본을 내려받아 저장소 파일과 바이트 단위로 대조한다**(`curl -o … https://www.pdcs.kr/<파일>?nocache=…` → `cmp`).
+같으면 「배포본이 최신과 같다」 까지는 말할 수 있다. 휴대폰 실기기 · 학교 컴퓨터의 캐시는 여전히 클라이언트에게 확인을 부탁한다.
+접속이 끝까지 안 되면 예전처럼 로컬 검증만으로 "됐다"고 말하지 않는다.
 
 ### 이 원칙을 지킨 방식
 | 기능 | 보통의 방법 | 이 프로젝트 |
@@ -171,7 +173,8 @@ python3 check.py   # 통과하지 못하면 배포하지 않는다
 - 사이트는 도메인 **맨 위**에 놓인다(`/pdcs/` 가 빠졌다). canonical · og:image · sitemap 은 `https://www.pdcs.kr/`.
   옛 주소가 남으면 check.py 가 잡는다
 - **Enforce HTTPS — 켜짐(2026-10-23 확인)**. 이 환경에서 `curl -I http://www.pdcs.kr/` · `http://pdcs.kr/` 가 둘 다
-  `server: GitHub.com` 의 `301 → https://www.pdcs.kr/` 로 답했다(켜기 전에는 http 그대로 페이지를 준다). https 페이지 자체는 여기서 못 연다(연결 끊김).
+  `server: GitHub.com` 의 `301 → https://www.pdcs.kr/` 로 답했다(켜기 전에는 http 그대로 페이지를 준다). https 도 열린다 — 인증서 Let's Encrypt(YR2), www.pdcs.kr · pdcs.kr 둘 다 검증 통과, 2026-10-01 ~ 12-30(GitHub 가 자동 갱신).
+  `https://pdcs.kr/` 은 `301 → https://www.pdcs.kr/`
   푸터 「관련 사이트」 의 http:// 두 곳은 나가는 링크라 혼합 콘텐츠가 아니다
 
 ### 학교가 말한 "글 색상을 검은색으로" — 무슨 뜻이었는지 확인됨
