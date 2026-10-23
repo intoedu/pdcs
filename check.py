@@ -65,6 +65,52 @@ def ok(msg):
     print(f"  \033[32m✓\033[0m {msg}")
 
 
+# ── 선생님 약력 인원 — about.html 과 두 문서가 같은 말을 하는지 ─────────────
+# 11명이 올라간 뒤에도 필요한자료.md(학교에 보내는 목록)가 「여덟 분」 이었다
+KO_NUM = {1: "한", 2: "두", 3: "세", 4: "네", 5: "다섯", 6: "여섯", 7: "일곱", 8: "여덟", 9: "아홉", 10: "열",
+          11: "열한", 12: "열두", 13: "열세", 14: "열네", 15: "열다섯", 16: "열여섯", 17: "열일곱", 18: "열여덟"}
+
+
+def staff_bio_doc_issues(about, claude, needs):
+    out = []
+    m = re.search(r'id="staff".*?</section>', about, re.S)
+    if not m:
+        return ["about.html: #staff 섹션을 찾지 못했다"]
+    sec = m.group(0)
+    names = re.findall(r'class="staff__name">([^<]+)<', sec)
+    bios = re.findall(r'<details class="staff__item staff__item--bio">\s*<summary>.*?class="staff__name">([^<]+)<', sec, re.S)
+    nobio = [n for n in names if n not in bios]
+    nb, nn = len(bios), len(nobio)
+    c = re.search(r"\*\*(\d+)명\*\*의 약력을 넣었다 — (.*?)\. 나머지 (\d+)명\((.*?)\)", claude, re.S)
+    if not c:
+        out.append("CLAUDE.md: 「**N명**의 약력을 넣었다 — … 나머지 N명(…)」 문장을 찾지 못했다")
+    else:
+        if int(c.group(1)) != nb or int(c.group(3)) != nn:
+            out.append(f"CLAUDE.md: 약력 {c.group(1)}명 · 나머지 {c.group(3)}명 — 실제는 {nb}명 · {nn}명")
+        miss = [n for n in bios if n not in c.group(2)] + [n for n in nobio if n not in c.group(4)]
+        if miss:
+            out.append(f"CLAUDE.md: 약력 명단에 빠진 이름 — {miss}")
+    k = KO_NUM.get(nb, str(nb))
+    for pat, what in [(r"약력이 들어간 \*\*(\S+) 분 우선\*\*", "「선생님 사진」"),
+                      (r"(\S+) 분 약력을 주신 문장", "「선생님 약력에 틀린 곳이 없는지」")]:
+        g = re.search(pat, needs)
+        if not g:
+            out.append(f"필요한자료.md: {what} 의 약력 인원 문장을 찾지 못했다")
+        elif g.group(1) != k:
+            out.append(f"필요한자료.md: {what} 에 「{g.group(1)} 분」 — 실제 약력은 {k} 분({nb}명)")
+    g = re.search(r"나머지 (\S+) 분은", needs)
+    if g and g.group(1) != KO_NUM.get(nn, str(nn)):
+        out.append(f"필요한자료.md: 「나머지 {g.group(1)} 분」 — 실제 약력 없는 분은 {nn}명")
+    g = re.search(r"아직 약력이 없는 분: (.*)", needs)
+    if not g:
+        out.append("필요한자료.md: 「아직 약력이 없는 분:」 줄을 찾지 못했다")
+    else:
+        listed = [x.strip() for x in g.group(1).split("·") if x.strip()]
+        if sorted(listed) != sorted(nobio):
+            out.append(f"필요한자료.md: 「아직 약력이 없는 분」 {listed} — 실제 {nobio}")
+    return out
+
+
 # ── 파일만 보고 알 수 있는 것 ────────────────────────────────
 def check_source():
     # 히어로 사진 위치 — 학교가 hero-tuner.html 에서 고른 값을 GitHub 웹에서 붙여 넣는 파일.
@@ -96,6 +142,9 @@ def check_source():
                 fail(f"{n}: 조정 도구(hero-tuner.html)로 가는 링크가 공개 화면에 있다")
     # 도메인 — CNAME 파일이 사라지면 www.pdcs.kr 연결이 통째로 끊긴다.
     # 옛 주소(intoedu.github.io/pdcs)가 남으면 공유 썸네일 · 검색 주소가 옛 곳을 가리킨다
+    rd = lambda n: open(os.path.join(ROOT, n), encoding="utf-8").read()
+    for msg in staff_bio_doc_issues(rd("about.html"), rd("CLAUDE.md"), rd("필요한자료.md")):
+        fail(msg)
     cn = os.path.join(ROOT, "CNAME")
     if not os.path.exists(cn) or open(cn, encoding="utf-8").read().strip() != "www.pdcs.kr":
         fail("CNAME: www.pdcs.kr 가 아니다 — 도메인 연결이 끊긴다")
