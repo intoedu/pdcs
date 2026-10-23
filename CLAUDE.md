@@ -170,7 +170,9 @@ python3 check.py   # 통과하지 못하면 배포하지 않는다
   **지우면 도메인 연결이 통째로 끊긴다** — check.py 가 검사한다
 - 사이트는 도메인 **맨 위**에 놓인다(`/pdcs/` 가 빠졌다). canonical · og:image · sitemap 은 `https://www.pdcs.kr/`.
   옛 주소가 남으면 check.py 가 잡는다
-- **Enforce HTTPS** 는 인증서가 나온 뒤 저장소 관리자가 켠다(최대 24시간). 켰는지 아직 확인하지 못했다
+- **Enforce HTTPS — 켜짐(2026-10-23 확인)**. 이 환경에서 `curl -I http://www.pdcs.kr/` · `http://pdcs.kr/` 가 둘 다
+  `server: GitHub.com` 의 `301 → https://www.pdcs.kr/` 로 답했다(켜기 전에는 http 그대로 페이지를 준다). https 페이지 자체는 여기서 못 연다(연결 끊김).
+  푸터 「관련 사이트」 의 http:// 두 곳은 나가는 링크라 혼합 콘텐츠가 아니다
 
 ### 학교가 말한 "글 색상을 검은색으로" — 무슨 뜻이었는지 확인됨
 **모바일 메뉴 글자가 안 보이던 것**을 가리킨 말이다(학교 확인 완료).
