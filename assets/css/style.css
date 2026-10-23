@@ -812,6 +812,9 @@ ul { margin: 0; padding: 0; list-style: none; }
   content: ""; position: absolute; left: 0; top: 9px;
   width: 4px; height: 4px; border-radius: 50%; background: var(--gold);
 }
+/* 학교가 보낸 묶음 제목(연도영 「약력」) — 원문 그대로 두되 글머리표 없이 소제목으로 */
+.staff__bio li.staff__bio-head { padding-left: 0; margin-top: 4px; font-weight: 700; color: var(--ink); }
+.staff__bio li.staff__bio-head::before { content: none; }
 
 /* ── 자주 묻는 것 — 답할 수 있는 것은 펼쳐서 답한다 ── */
 .faq-head { font-size: 13px; font-weight: 700; letter-spacing: .02em; color: var(--gold-dark); }

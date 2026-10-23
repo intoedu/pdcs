@@ -92,7 +92,7 @@ def staff_bio_doc_issues(about, claude, needs):
             out.append(f"CLAUDE.md: 약력 명단에 빠진 이름 — {miss}")
     k = KO_NUM.get(nb, str(nb))
     for pat, what in [(r"약력이 들어간 \*\*(\S+) 분 우선\*\*", "「선생님 사진」"),
-                      (r"(\S+) 분 약력을 주신 문장", "「선생님 약력에 틀린 곳이 없는지」")]:
+                      (r"(\S+) 분 약력을 (?:\*\*)?(?:보내 )?주신", "「선생님 약력에 틀린 곳이 없는지」")]:
         g = re.search(pat, needs)
         if not g:
             out.append(f"필요한자료.md: {what} 의 약력 인원 문장을 찾지 못했다")
